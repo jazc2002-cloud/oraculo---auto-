@@ -1,0 +1,16 @@
+{
+  "clasico": {
+    "title": "SAB 13 SEP 19:00 - Monterrey vs Tigres CLASICO 139",
+    "liga": "MX",
+    "tv": "ViX Premium + TUDN 19:00",
+    "mejor": {"pick": "Monterrey ML @2.15 62%", "valor": "+33.3%"},
+    "scan": {"analisis": "Rayados invicto en BBVA, Tigres irregular de visita J7"}
+  },
+  "hoy": {
+    "title": "HOY 10 SEP 21:00 - Pumas vs Leon",
+    "liga": "HOY",
+    "tv": "ViX 21:00",
+    "mejor": {"pick": "Pumas ML @2.05 55%", "valor": "+12.7%"},
+    "scan": {"analisis": "Pumas fuerte en CU"}
+  }
+}
