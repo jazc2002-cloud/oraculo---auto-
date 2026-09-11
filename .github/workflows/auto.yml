@@ -1,5 +1,6 @@
 name: Auto Oraculo
 on:
+  push:
   schedule:
     - cron: '15 15 * * *'
   workflow_dispatch:
