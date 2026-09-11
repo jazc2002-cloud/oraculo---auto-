@@ -11,12 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update timestamp
-        run: |
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - run: python update.py
+      - run: |
           git config user.name "bot"
           git config user.email "bot@oraculo.com"
-          date_str=$(date '+%Y-%m-%d %H:%M CDMX')
-          echo "$date_str" > last_update.txt
-          git add .
-          git commit -m "Auto $date_str" || echo "Sin cambios"
+          git add index.html last_update.txt
+          git commit -m "Auto V63 formato completo" || echo "Sin cambios"
           git push
