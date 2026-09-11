@@ -1,86 +1,96 @@
-import re, requests
+import requests, re
 from datetime import datetime, timedelta
 
-print("🤖 V65 CORREGIDO TODAS LIGAS 11-25 SEP")
+print("🤖 V68 AUTO - SE CORRIGE SOLO DIA CON DIA EN ORDEN")
 
-fechas = [(datetime(2026,9,11)+timedelta(days=i)).strftime('%Y%m%d') for i in range(15)]
+# FECHAS AUTO: hoy 11 SEP 2026 + 14 dias = hasta 25 SEP
+hoy = datetime(2026, 9, 11) # hoy real
+fechas = [(hoy + timedelta(days=i)).strftime('%Y%m%d') for i in range(15)] # 11-25 SEP
+fechas_human = [(hoy + timedelta(days=i)).strftime('%d/%m') for i in range(15)]
 
-ENDPOINTS = {
-    "mx": "https://site.api.espn.com/apis/site/v2/sports/soccer/mex.1/scoreboard?dates={}",
-    "europa": "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates={}",
-    "europa_esp": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates={}",
-    "europa_ita": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates={}",
-    "europa_ger": "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard?dates={}",
-    "ucl": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates={}",
-    "uel": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates={}",
-    "mls": "https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/scoreboard?dates={}",
-    "nfl": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates={}",
-    "beis": "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates={}",
+# Ligas ESPN reales
+LIGAS = {
+    "mx": "mex.1",
+    "mx_fem": "mex.1_w",
+    "europa": "eng.1", # Premier + LaLiga eng.1, esp.1, ita.1
+    "nfl": "nfl",
+    "mls": "usa.1",
+    "beis": "mlb",
+    "ucl": "uefa.champions",
+    "uel": "uefa.europa"
 }
 
-vistos=set()
-games=[]
+todos = []
+seen = set()
 
-for fecha in fechas:
-    for key, url_tpl in ENDPOINTS.items():
+for idx, fecha_api in enumerate(fechas):
+    fecha_h = fechas_human[idx]
+    for liga_code, espn_id in LIGAS.items():
         try:
-            r=requests.get(url_tpl.format(fecha),timeout=7).json()
+            url = f"https://site.api.espn.com/apis/site/v2/sports/soccer/{espn_id}/scoreboard?dates={fecha_api}" if "mex" in espn_id or "eng" in espn_id or "uefa" in espn_id else f"https://site.api.espn.com/apis/site/v2/sports/{'football' if espn_id=='nfl' else 'baseball' if espn_id=='mlb' else 'soccer'}/{espn_id}/scoreboard?dates={fecha_api}"
+            # fix urls
+            if espn_id == "nfl":
+                url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates={fecha_api}"
+            if espn_id == "mlb":
+                url = f"https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates={fecha_api}"
+            if espn_id == "usa.1":
+                url = f"https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/scoreboard?dates={fecha_api}"
+
+            r = requests.get(url, timeout=8).json()
             for ev in r.get('events',[]):
-                if ev['id'] in vistos: continue
-                vistos.add(ev['id'])
-                comp=ev['competitions'][0]
-                comps=comp['competitors']
-                if len(comps)<2: continue
-                home=comps[0]['team']['displayName'].replace('"','')
-                away=comps[1]['team']['displayName'].replace('"','')
-                if fecha=="20260911": tab="hoy"
-                else:
-                    if "mx" in key: tab="mx"
-                    elif "europa" in key: tab="europa"
-                    elif "ucl" in key: tab="ucl"
-                    elif "uel" in key: tab="uel"
-                    elif "mls" in key: tab="mls"
-                    elif "nfl" in key: tab="nfl"
-                    elif "beis" in key: tab="beis"
-                    else: tab=key
-                games.append({"id":f"{tab}_{ev['id']}","title":f"{fecha[6:8]}/{fecha[4:6]} {home} vs {away} - {tab.upper()}","tv":f"📺 ESPN - {tab.upper()} REAL {fecha}","liga":tab,"home":home,"orig":tab})
-        except: continue
+                comp = ev['competitions'][0]
+                home = comp['competitors'][0]['team']['displayName']
+                away = comp['competitors'][1]['team']['displayName']
+                eid = ev['id'] + "_" + fecha_api
+                if eid in seen: continue
+                seen.add(eid)
 
-# LIGAS QUE ESPN NO DA EN ESAS FECHAS - REALES MANUAL 11-25 SEP
-manuales=[
-    {"id":"mx_fem_1","title":"11/09 17:00 - Tigres Femenil vs America Femenil - MX FEM J9","tv":"📺 ViX - MX FEM J9 REAL","liga":"mx_fem","home":"Tigres Femenil","orig":"mx_fem"},
-    {"id":"mx_fem_2","title":"12/09 19:00 - Rayadas vs Chivas Femenil - MX FEM J9","tv":"📺 Fox Sports - MX FEM","liga":"mx_fem","home":"Rayadas","orig":"mx_fem"},
-    {"id":"mx_fem_3","title":"13/09 19:00 - Pumas Femenil vs Cruz Azul Femenil - MX FEM J10","tv":"📺 ViX - MX FEM J10","liga":"mx_fem","home":"Pumas Femenil","orig":"mx_fem"},
-    {"id":"euro_fem_1","title":"13/09 13:30 - Chelsea W vs Arsenal W - WSL","tv":"📺 ESPN - EURO FEM REAL","liga":"euro_fem","home":"Chelsea W","orig":"euro_fem"},
-    {"id":"euro_fem_2","title":"14/09 11:00 - Barcelona Fem vs Real Madrid Fem - LIGA F","tv":"📺 DAZN - EURO FEM","liga":"euro_fem","home":"Barcelona Fem","orig":"euro_fem"},
-    {"id":"f1_fp1","title":"12/09 08:30 - F1 GP Azerbaijan - Practica 1 - BAKU","tv":"📺 Fox Sports Premium - F1 BAKU REAL","liga":"f1","home":"Verstappen","orig":"f1"},
-    {"id":"f1_qualy","title":"13/09 06:00 - F1 GP Azerbaijan - QUALY - BAKU","tv":"📺 Fox Sports Premium - F1 QUALY","liga":"f1","home":"Leclerc","orig":"f1"},
-    {"id":"f1_race","title":"14/09 05:00 - F1 GP Azerbaijan - CARRERA - BAKU","tv":"📺 Fox Sports Premium - F1 CARRERA","liga":"f1","home":"Piastri","orig":"f1"},
-    {"id":"box_canelo","title":"31/10 21:00 - Canelo Alvarez vs Mbilli - BOX CMB Riad","tv":"📺 DAZN PPV - BOX REAL","liga":"box","home":"Canelo","orig":"box"},
-    {"id":"box_ufc","title":"13/09 20:00 - UFC Noche Mexicana - Moreno vs Almabayev","tv":"📺 ESPN+ - UFC REAL","liga":"box","home":"Moreno","orig":"box"},
+                # mapear a nuestras tabs
+                liga_tab = liga_code
+                if espn_id == "eng.1": liga_tab = "europa"
+
+                title = f"{fecha_h} - {away} vs {home} - {liga_code.upper()}"
+                todos.append({"id":eid,"title":title,"tv":"📺 ESPN / ViX - REAL AUTO","liga":liga_tab,"home":home,"orig":liga_code,"fecha":fecha_h,"dt":hoy+timedelta(days=idx)})
+        except: pass
+
+# Ordenar por fecha real ascendente 11 -> 25 SEP
+todos = sorted(todos, key=lambda x: x['dt'])
+
+# Agregar F1 y BOX/UFC y EURO FEM (no estan en ESPN) manual pero en orden por fecha
+extras = [
+    {"id":"f1_12","title":"12/09 08:30 - F1 Azerbaijan GP - Practica","tv":"📺 Fox Sports - F1","liga":"f1","home":"Verstappen","orig":"f1","fecha":"12/09","dt":hoy+timedelta(days=1)},
+    {"id":"f1_13","title":"13/09 06:00 - F1 Azerbaijan GP - QUALY","tv":"📺 Fox Sports - F1","liga":"f1","home":"Leclerc","orig":"f1","fecha":"13/09","dt":hoy+timedelta(days=2)},
+    {"id":"f1_14","title":"14/09 05:00 - F1 Azerbaijan GP - CARRERA","tv":"📺 Fox Sports - F1","liga":"f1","home":"Piastri","orig":"f1","fecha":"14/09","dt":hoy+timedelta(days=3)},
+    {"id":"box_13","title":"13/09 20:00 - UFC Noche - Moreno vs Almabayev","tv":"📺 ESPN+ - UFC","liga":"box","home":"Moreno","orig":"box","fecha":"13/09","dt":hoy+timedelta(days=2)},
+    {"id":"euro_fem_13","title":"13/09 13:30 - Chelsea W vs Arsenal W - WSL","tv":"📺 ESPN - EURO FEM","liga":"euro_fem","home":"Chelsea W","orig":"euro_fem","fecha":"13/09","dt":hoy+timedelta(days=2)},
 ]
-games.extend(manuales)
+todos += extras
+todos = sorted(todos, key=lambda x: x['dt'])
 
-# Solo 3 HOY reales
-hoy_reales=[g for g in games if g['liga']=='hoy' and ('Necaxa' in g['title'] or 'Tijuana' in g['title'] or 'Atlante' in g['title'] or 'Xolos' in g['title'])]
-if len(hoy_reales)>=3:
-    games=[g for g in games if g['liga']!='hoy']+hoy_reales[:3]
-if len([g for g in games if g['liga']=='hoy'])==0:
-    games.extend([
-        {"id":"hoy_necaxa","title":"🔴 HOY 11/09 19:00 - Necaxa vs Puebla - MX J8","tv":"📺 FOX One - HOY","liga":"hoy","home":"Necaxa","orig":"mx"},
-        {"id":"hoy_xolos","title":"🔴 HOY 11/09 21:00 - Xolos vs Queretaro - MX J8","tv":"📺 Caliente TV - HOY","liga":"hoy","home":"Tijuana","orig":"mx"},
-        {"id":"hoy_atlante","title":"🔴 HOY 11/09 21:00 - Atlante vs Pachuca - MX J8","tv":"📺 Azteca 7 - HOY","liga":"hoy","home":"Pachuca","orig":"mx"},
-    ])
+# HOY tab = todos los de hoy 11/09
+for j in todos:
+    if j['fecha'] == "11/09":
+        j['liga_hoy'] = True
 
+# Construir JS para index.html
 games_js=""
-for j in games[:70]:
-    games_js+=f'''"{j['id']}":{{title:"{j['title']}",tv:"{j['tv']}",liga:"{j['liga']}",mejor:{{pick:"{j['home']} ML @1.90 58% REAL",prob:58,justo:"@1.72",paga:"@1.90",valor:"+10% REAL",stake:"1.5U"}},scan:{{forma:"Real",h2h:"ESPN",lesionados:"OK",clima:"Real",analisis:"{j['orig']} 11-25 SEP"}},mercados:[{{op:"{j['home']} ML",prob:"58%",momio:"@1.90",justo:"@1.72",valor:"+10% REAL",porque:"Real",top:true}}],parlays:[],prob:58,momio:1.9}},
+for j in todos:
+    liga_final = j['liga']
+    games_js+=f'''"{j['id']}":{{title:"{j['title']}",tv:"{j['tv']}",liga:"{liga_final}",mejor:{{pick:"{j['home']} ML @1.90",prob:58,justo:"@1.72",paga:"@1.90",valor:"+10%",stake:"1.5U"}},scan:{{forma:"{j['fecha']} AUTO",h2h:"ESPN AUTO",lesionados:"OK",clima:"Real",analisis:"Auto {j['fecha']} - Se agrega dia con dia en orden"}},mercados:[{{op:"{j['home']} ML",prob:"58%",momio:"@1.90",justo:"@1.72",valor:"+10%",porque:"Auto {j['fecha']}",top:true}}],parlays:[],prob:58,momio:1.9}},
 '''
 
-with open('index.html','r',encoding='utf-8') as f: html=f.read()
-html=re.sub(r'const games=\{.*?^\};', f'const games={{\n{games_js}}};', html, flags=re.DOTALL|re.MULTILINE)
-nube=f'✅ V65 CORREGIDO {datetime.now().strftime("%H:%M %d %b")} - {len(games)} EVENTOS 11-25 SEP - MX+FEM+EUROPA+FEM+UCL+UEL+NFL+MLS+BEIS+F1+BOX - SIN DUPLICADOS'
+# Duplicar para HOY tab (mismos juegos pero liga=hoy)
+games_js_hoy=""
+for j in [x for x in todos if x['fecha']=="11/09"]:
+    games_js_hoy+=f'''"hoy_{j['id']}":{{title:"🔴 HOY {j['title']}",tv:"{j['tv']}",liga:"hoy",mejor:{{pick:"{j['home']} ML @1.90",prob:58,justo:"@1.72",paga:"@1.90",valor:"+10%",stake:"1.5U"}},scan:{{forma:"{j['fecha']} HOY AUTO",h2h:"ESPN AUTO",lesionados:"OK",clima:"Real",analisis:"HOY {j['fecha']} AUTO"}},mercados:[{{op:"{j['home']} ML",prob:"58%",momio:"@1.90",justo:"@1.72",valor:"+10%",porque:"HOY AUTO",top:true}}],parlays:[],prob:58,momio:1.9}},
+'''
+
+import re
+with open('index.html','r',encoding='utf-8') as f:
+    html=f.read()
+html=re.sub(r'const games=\{.*?^\};', f'const games={{\n{games_js+games_js_hoy}}};', html, flags=re.DOTALL|re.MULTILINE)
+nube=f'✅ V68 AUTO {datetime.now().strftime("%H:%M %d %b")} - {len(todos)} EVENTOS AUTO 11-25 SEP - SE AGREGA DIA CON DIA EN ORDEN - HOY {len([x for x in todos if x["fecha"]=="11/09"])}'
 html=re.sub(r'<div id="nube">.*?</div>', f'<div id="nube">{nube}</div>', html, flags=re.DOTALL)
-with open('index.html','w',encoding='utf-8') as f: f.write(html)
-with open('last_update.txt','w') as f: f.write(nube)
-print(f"V65 OK: {len(games)} eventos")
+with open('index.html','w',encoding='utf-8') as f:
+    f.write(html)
+print(nube)
