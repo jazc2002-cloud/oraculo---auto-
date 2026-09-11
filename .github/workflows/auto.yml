@@ -1,1 +1,21 @@
-
+name: Auto Oraculo
+on:
+  schedule:
+    - cron: '15 15 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update timestamp
+        run: |
+          git config user.name "bot"
+          git config user.email "bot@oraculo.com"
+          date_str=$(date '+%Y-%m-%d %H:%M CDMX')
+          echo "$date_str" > last_update.txt
+          git add .
+          git commit -m "Auto $date_str" || echo "Sin cambios"
+          git push
