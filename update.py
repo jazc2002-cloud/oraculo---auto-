@@ -1,140 +1,52 @@
-print("V78.1 FULL COMPLETO - FIX MARCADOR DIFERENTE %")
-games_data = [
-# HOY 11 SEP
-("hoy1","HOY 11/09 - Necaxa vs Puebla - Liga MX J8","hoy","Necaxa","FOX One - REAL",62),
-("hoy2","HOY 11/09 - Atlante vs Pachuca - Liga MX J8","hoy","Atlante","Azteca 7 - REAL",58),
-("hoy3","HOY 11/09 - Tijuana vs Queretaro - Liga MX J8","hoy","Tijuana","FOX One - REAL",60),
-("hoy4","HOY 11/09 - Sevilla vs Valencia - La Liga","hoy","Sevilla","Sky - REAL",59),
-("hoy5","HOY 11/09 - Venezia vs Fiorentina - Serie A","hoy","Fiorentina","Disney+ - REAL",65),
-("hoy6","HOY 11/09 - Rennes vs Marseille - Ligue 1","hoy","Rennes","FOX One - REAL",57),
-("hoy7","HOY 11/09 - Union Berlin vs Schalke - Bundesliga","hoy","Union Berlin","FOX - REAL",60),
-("hoy8","HOY 11/09 - Cruz Azul vs Pumas - Femenil","hoy","Cruz Azul","ViX - FEM",62),
-("hoy9","HOY 11/09 - Atlas vs Atlante - Femenil","hoy","Atlas","Tubi - FEM",58),
-("hoy10","HOY 11/09 - Packers vs Commanders - NFL S2","hoy","Packers","ESPN - NFL",58),
-# MX J8
-("mx_12_1","12/09 - Toluca vs Atlas - Liga MX J8","mx","Toluca","TUDN Canal5 - REAL",68),
-("mx_12_2","12/09 - Monterrey vs Tigres - Clasico Regio","mx","Monterrey","ViX TUDN - REAL",64),
-("mx_12_3","12/09 - Cruz Azul vs America - Clasico Joven","mx","America","ViX TUDN C5 - REAL",70),
-("mx_13_1","13/09 - Santos vs FC Juarez - Liga MX J8","mx","Santos","Disney+ ViX - REAL",60),
-("mx_13_2","13/09 - Chivas vs Pumas - Liga MX J8","mx","Chivas","Amazon - REAL",65),
-("mx_14_1","14/09 - Leon vs Atletico San Luis - Liga MX J8","mx","Leon","FOX One - REAL",60),
-# MX FEM
-("mxf_11_1","11/09 - Cruz Azul F vs Pumas F - Femenil J9","mx_fem","Cruz Azul F","ViX - FEM REAL",62),
-("mxf_11_2","11/09 - Atlas F vs Atlante F - Femenil J9","mx_fem","Atlas F","Tubi - FEM REAL",58),
-("mxf_12_1","12/09 - Chivas F vs Monterrey F - Femenil J9","mx_fem","Monterrey F","FOX - FEM REAL",60),
-("mxf_13_1","13/09 - America F vs Pachuca F - Femenil J10","mx_fem","America F","ViX - FEM REAL",65),
-("mxf_13_2","13/09 - Tigres F vs Toluca F - Femenil J10","mx_fem","Tigres F","FOX - FEM REAL",70),
-("mxf_14_1","14/09 - Rayadas vs Juarez F - Femenil J10","mx_fem","Monterrey F","TUDN - FEM REAL",68),
-# EUROPA
-("eur_12_1","12/09 - Real Madrid vs Real Sociedad - La Liga","europa","Real Madrid","ESPN - REAL",72),
-("eur_12_2","12/09 - Arsenal vs Nottingham - Premier","europa","Arsenal","ESPN - REAL",70),
-("eur_13_1","13/09 - Barcelona vs Valencia - La Liga","europa","Barcelona","ESPN - REAL",74),
-("eur_14_1","14/09 - Man City vs Man United - Premier Derby","europa","Man City","ESPN - REAL",66),
-("eur_14_2","14/09 - PSG vs Lens - Ligue 1","europa","PSG","ESPN - REAL",71),
-# EURO FEM
-("eurof_12_1","12/09 - Barcelona F vs Real Madrid F - Liga F","euro_fem","Barcelona F","DAZN - EURO FEM",73),
-("eurof_13_1","13/09 - Chelsea W vs Arsenal W - WSL","euro_fem","Chelsea W","ESPN - EURO FEM",64),
-("eurof_13_2","13/09 - Lyon F vs PSG F - D1 Fem","euro_fem","Lyon F","Canal+ - EURO FEM",67),
-("eurof_14_1","14/09 - Wolfsburg W vs Bayern W - Frauen","euro_fem","Bayern W","DAZN - EURO FEM",62),
-# UCL
-("ucl_16_1","16/09 - Real Madrid vs Marseille - UCL J1","ucl","Real Madrid","ESPN - UCL REAL",72),
-("ucl_16_2","16/09 - Arsenal vs Athletic - UCL J1","ucl","Arsenal","ESPN - UCL REAL",70),
-# UEL
-("uel_24_1","24/09 - Roma vs Lille - UEL J1","uel","Roma","ESPN - UEL REAL",64),
-("uel_24_2","24/09 - Aston Villa vs Bologna - UEL J1","uel","Aston Villa","ESPN - UEL REAL",66),
-("uel_25_1","25/09 - Betis vs Nottingham - UEL J1","uel","Betis","ESPN - UEL REAL",60),
-("uel_25_2","25/09 - Porto vs Salzburg - UEL J1","uel","Porto","ESPN - UEL REAL",63),
-# MLS
-("mls_13_1","13/09 - Inter Miami vs DC United - MLS","mls","Inter Miami","Apple TV - MLS",70),
-("mls_13_2","13/09 - LA Galaxy vs LAFC - El Trafico","mls","LAFC","Apple TV - MLS",60),
-("mls_14_1","14/09 - Atlanta vs Columbus - MLS","mls","Columbus","Apple TV - MLS",62),
-("mls_14_2","14/09 - Seattle vs Austin - MLS","mls","Seattle","Apple TV - MLS",58),
-("mls_17_1","17/09 - Cincinnati vs Miami - MLS","mls","Inter Miami","Apple TV - MLS",64),
-# BEIS
-("beis_11_1","11/09 - Dodgers vs Giants - MLB","beis","Dodgers","ESPN - MLB",62),
-("beis_12_1","12/09 - Yankees vs Red Sox - MLB","beis","Yankees","ESPN - MLB",60),
-("beis_13_1","13/09 - Sultanes vs Diablos - LMB Final","beis","Sultanes","ESPN - LMB FINAL",57),
-("beis_14_1","14/09 - Astros vs Rangers - MLB","beis","Astros","ESPN - MLB",59),
-("beis_15_1","15/09 - Diablos vs Sultanes - LMB Final","beis","Diablos","Azteca - LMB FINAL",60),
-# F1
-("f1_12_1","12/09 02:30 - F1 Baku Practica 1","f1","Verstappen","FOX - F1 REAL",66),
-("f1_12_2","12/09 06:00 - F1 Baku Practica 2","f1","Leclerc","FOX - F1 REAL",60),
-("f1_13_1","13/09 02:30 - F1 Baku Practica 3","f1","Piastri","FOX - F1 REAL",58),
-("f1_13_2","13/09 06:00 - F1 Baku QUALY","f1","Leclerc","ESPN - F1 REAL",60),
-("f1_14_1","14/09 05:00 - F1 Baku CARRERA","f1","Piastri","ESPN FOX - F1 BAKU",58),
-# NFL
-("nfl_14_1","14/09 - Cowboys vs Giants - NFL S2","nfl","Cowboys","FOX - NFL",62),
-("nfl_14_2","14/09 - Chiefs vs Eagles - NFL S2","nfl","Eagles","ESPN - NFL",60),
-("nfl_18_1","18/09 - Bills vs Dolphins - NFL S3","nfl","Bills","ESPN - NFL",70),
-# BOX
-("box_31_1","31/10 - Canelo vs Mbilli - BOX CMB RIAD","box","Canelo Alvarez","DAZN - 31 OCT",82),
-("box_13_1","13/09 - Moreno vs Almabayev - UFC Noche","box","Brandon Moreno","ESPN - UFC",68),
-]
+import json
+print("V78.2 FIX PANTALLA NEGRA")
 
-def get_marcadores(prob, liga, home):
-    if liga=="f1":
-        return [
-            {"score": f"{home} Gana","prob":"28%%","momio":"@3.20","top":True},
-            {"score": f"{home} Podio","prob":"55%%","momio":"@1.85"},
-            {"score": f"Top 3: {home} / Verstappen / Leclerc","prob":"22%%","momio":"@4.50"},
-        ]
-    if liga=="beis":
-        return [
-            {"score":"5-3","prob":"18%%","momio":"@8.00","top":True},
-            {"score":"4-2","prob":"16%%","momio":"@9.00"},
-            {"score":"6-4","prob":"14%%","momio":"@11.00"},
-            {"score":"3-1","prob":"12%%","momio":"@10.50"},
-            {"score":"7-2","prob":"9%%","momio":"@14.00"},
-        ]
-    if prob >= 70:
-        return [
-            {"score":"2-0","prob":"19%%","momio":"@7.00","top":True},
-            {"score":"2-1","prob":"17%%","momio":"@7.50"},
-            {"score":"1-0","prob":"15%%","momio":"@6.50"},
-            {"score":"3-1","prob":"12%%","momio":"@10.00"},
-            {"score":"3-0","prob":"11%%","momio":"@11.00"},
-        ]
-    elif prob >= 64:
-        return [
-            {"score":"2-1","prob":"16%%","momio":"@8.00","top":True},
-            {"score":"1-0","prob":"14%%","momio":"@7.00"},
-            {"score":"2-0","prob":"13%%","momio":"@8.50"},
-            {"score":"1-1","prob":"11%%","momio":"@6.20"},
-            {"score":"3-1","prob":"9%%","momio":"@13.00"},
-        ]
-    else:
-        return [
-            {"score":"1-1","prob":"15%%","momio":"@6.00","top":True},
-            {"score":"1-0","prob":"13%%","momio":"@6.50"},
-            {"score":"2-1","prob":"12%%","momio":"@8.50"},
-            {"score":"0-0","prob":"10%%","momio":"@9.00"},
-            {"score":"0-1","prob":"9%%","momio":"@7.50"},
-        ]
+games = {
+"hoy1":{"title":"HOY 11/09 - Necaxa vs Puebla","tv":"FOX One","liga":"hoy","home":"Necaxa","prob":62,"mejor":{"pick":"Necaxa ML @1.90 62%","porque":"Local xG 1.8 vs 0.9, 3 bajas Puebla"},"mercados":[{"op":"Necaxa ML","prob":"62%","momio":"@1.90","valor":"+15%","porque":"Local","top":True},{"op":"Over 2.5","prob":"62%","momio":"@1.85","valor":"+15%","porque":"Ofensiva","top":False}],"marcadores":[{"score":"2-0","prob":"19%","momio":"@7.00","top":True},{"score":"2-1","prob":"17%","momio":"@7.50"},{"score":"1-0","prob":"15%","momio":"@6.50"},{"score":"3-1","prob":"12%","momio":"@10.0"},{"score":"1-1","prob":"11%","momio":"@6.20"}],"parlays":[{"picks":"Necaxa ML + Over 1.5","momio":"@2.85","prob":"52%","efec":"62% EFECTIVIDAD","detalle":"SUPER"}]},
+"hoy2":{"title":"HOY 11/09 - Tijuana vs Queretaro","tv":"FOX One","liga":"hoy","home":"Tijuana","prob":60,"mejor":{"pick":"Tijuana ML @1.90 60%","porque":"Local fuerte"},"mercados":[{"op":"Tijuana ML","prob":"60%","momio":"@1.90","valor":"+15%","porque":"Local","top":True}],"marcadores":[{"score":"1-0","prob":"15%","momio":"@6.50","top":True},{"score":"2-1","prob":"14%","momio":"@8.00"},{"score":"1-1","prob":"13%","momio":"@6.00"},{"score":"2-0","prob":"12%","momio":"@8.50"},{"score":"0-0","prob":"10%","momio":"@9.00"}],"parlays":[{"picks":"Tijuana ML + Over 1.5","momio":"@2.85","prob":"50%","efec":"60% EFECTIVIDAD","detalle":"SUPER"}]},
+"hoy3":{"title":"HOY 11/09 - Sevilla vs Valencia","tv":"Sky","liga":"hoy","home":"Sevilla","prob":59,"mejor":{"pick":"Sevilla ML @1.90 59%","porque":"Local"},"mercados":[{"op":"Sevilla ML","prob":"59%","momio":"@1.90","valor":"+10%","porque":"Local","top":True}],"marcadores":[{"score":"1-1","prob":"15%","momio":"@6.00","top":True},{"score":"2-1","prob":"13%","momio":"@8.50"},{"score":"1-0","prob":"12%","momio":"@6.50"},{"score":"0-0","prob":"10%","momio":"@9.00"},{"score":"2-0","prob":"9%","momio":"@9.50"}],"parlays":[{"picks":"Sevilla ML + Over 1.5","momio":"@2.85","prob":"49%","efec":"59% EFECTIVIDAD","detalle":"SUPER"}]},
+"mx1":{"title":"12/09 - Monterrey vs Tigres - Clasico","tv":"ViX TUDN","liga":"mx","home":"Monterrey","prob":64,"mejor":{"pick":"Monterrey ML @1.90 64%","porque":"Clasico local"},"mercados":[{"op":"Monterrey ML","prob":"64%","momio":"@1.90","valor":"+15%","porque":"Local","top":True}],"marcadores":[{"score":"2-1","prob":"16%","momio":"@8.00","top":True},{"score":"1-0","prob":"14%","momio":"@7.00"},{"score":"2-0","prob":"13%","momio":"@8.50"},{"score":"1-1","prob":"11%","momio":"@6.20"},{"score":"3-1","prob":"9%","momio":"@13.0"}],"parlays":[{"picks":"Monterrey ML + Over 1.5","momio":"@2.85","prob":"54%","efec":"64% EFECTIVIDAD","detalle":"SUPER"}]},
+"mx2":{"title":"12/09 - Cruz Azul vs America","tv":"ViX C5","liga":"mx","home":"America","prob":70,"mejor":{"pick":"America ML @1.90 70%","porque":"Plantel superior"},"mercados":[{"op":"America ML","prob":"70%","momio":"@1.90","valor":"+20%","porque":"Superior","top":True}],"marcadores":[{"score":"2-0","prob":"19%","momio":"@7.00","top":True},{"score":"2-1","prob":"17%","momio":"@7.50"},{"score":"1-0","prob":"15%","momio":"@6.50"},{"score":"3-0","prob":"12%","momio":"@11.0"},{"score":"3-1","prob":"11%","momio":"@11.0"}],"parlays":[{"picks":"America ML + Over 1.5","momio":"@2.85","prob":"60%","efec":"70% EFECTIVIDAD","detalle":"SUPER"}]},
+"mxf1":{"title":"12/09 - Chivas F vs Monterrey F","tv":"FOX","liga":"mx_fem","home":"Monterrey F","prob":60,"mejor":{"pick":"Monterrey F ML 60%","porque":"Lider"},"mercados":[{"op":"Monterrey F ML","prob":"60%","momio":"@1.90","valor":"+15%","porque":"Lider","top":True}],"marcadores":[{"score":"2-1","prob":"16%","momio":"@8.00","top":True},{"score":"2-0","prob":"14%","momio":"@8.50"},{"score":"1-0","prob":"13%","momio":"@7.00"},{"score":"1-1","prob":"11%","momio":"@6.20"},{"score":"3-0","prob":"9%","momio":"@11.0"}],"parlays":[{"picks":"Monterrey F ML + Over 1.5","momio":"@2.85","prob":"50%","efec":"60% EFECTIVIDAD","detalle":"SUPER"}]},
+"eur1":{"title":"13/09 - Barcelona vs Valencia","tv":"ESPN","liga":"europa","home":"Barcelona","prob":74,"mejor":{"pick":"Barcelona ML 74%","porque":"Local invicto"},"mercados":[{"op":"Barcelona ML","prob":"74%","momio":"@1.90","valor":"+25%","porque":"Invicto","top":True}],"marcadores":[{"score":"2-0","prob":"19%","momio":"@7.00","top":True},{"score":"3-0","prob":"17%","momio":"@8.00"},{"score":"3-1","prob":"15%","momio":"@9.00"},{"score":"2-1","prob":"13%","momio":"@8.00"},{"score":"4-0","prob":"10%","momio":"@12.0"}],"parlays":[{"picks":"Barcelona ML + Over 1.5","momio":"@2.85","prob":"64%","efec":"74% EFECTIVIDAD","detalle":"SUPER"}]},
+"ucl1":{"title":"16/09 - Real Madrid vs Marseille UCL","tv":"ESPN","liga":"ucl","home":"Real Madrid","prob":72,"mejor":{"pick":"Real Madrid ML 72%","porque":"UCL Bernabeu"},"mercados":[{"op":"Real Madrid ML","prob":"72%","momio":"@1.90","valor":"+22%","porque":"UCL","top":True}],"marcadores":[{"score":"2-0","prob":"19%","momio":"@7.00","top":True},{"score":"2-1","prob":"17%","momio":"@7.50"},{"score":"3-1","prob":"14%","momio":"@10.0"},{"score":"1-0","prob":"12%","momio":"@7.00"},{"score":"3-0","prob":"11%","momio":"@11.0"}],"parlays":[{"picks":"Real Madrid ML + Over 1.5","momio":"@2.85","prob":"62%","efec":"72% EFECTIVIDAD","detalle":"SUPER"}]},
+"mls1":{"title":"13/09 - Inter Miami vs DC United MLS","tv":"Apple TV","liga":"mls","home":"Inter Miami","prob":70,"mejor":{"pick":"Miami ML 70%","porque":"Messi local"},"mercados":[{"op":"Miami ML","prob":"70%","momio":"@1.90","valor":"+20%","porque":"Messi","top":True}],"marcadores":[{"score":"3-1","prob":"18%","momio":"@9.00","top":True},{"score":"2-0","prob":"16%","momio":"@7.50"},{"score":"2-1","prob":"14%","momio":"@8.00"},{"score":"3-0","prob":"12%","momio":"@10.0"},{"score":"1-0","prob":"10%","momio":"@7.00"}],"parlays":[{"picks":"Miami ML + Over 1.5","momio":"@2.85","prob":"60%","efec":"70% EFECTIVIDAD","detalle":"SUPER"}]},
+"beis1":{"title":"13/09 - Sultanes vs Diablos LMB Final","tv":"ESPN","liga":"beis","home":"Sultanes","prob":57,"mejor":{"pick":"Sultanes ML 57%","porque":"Local final"},"mercados":[{"op":"Sultanes ML","prob":"57%","momio":"@1.90","valor":"+10%","porque":"Local","top":True}],"marcadores":[{"score":"5-3","prob":"18%","momio":"@8.00","top":True},{"score":"4-2","prob":"16%","momio":"@9.00"},{"score":"6-4","prob":"14%","momio":"@11.0"},{"score":"3-2","prob":"12%","momio":"@10.0"},{"score":"7-3","prob":"9%","momio":"@14.0"}],"parlays":[{"picks":"Sultanes ML + Over 7.5","momio":"@2.85","prob":"47%","efec":"57% EFECTIVIDAD","detalle":"SUPER"}]},
+"f11":{"title":"14/09 05:00 - F1 Baku CARRERA","tv":"ESPN FOX","liga":"f1","home":"Piastri","prob":58,"mejor":{"pick":"Piastri gana 58%","porque":"Pole y ritmo"},"mercados":[{"op":"Piastri gana","prob":"58%","momio":"@2.20","valor":"+15%","porque":"Pole","top":True}],"marcadores":[{"score":"Piastri Gana","prob":"28%","momio":"@3.20","top":True},{"score":"Piastri Podio","prob":"55%","momio":"@1.85"},{"score":"Verstappen gana","prob":"22%","momio":"@3.50"}],"parlays":[{"picks":"Piastri podio + Leclerc top 6","momio":"@2.40","prob":"48%","efec":"58% EFECTIVIDAD","detalle":"SUPER"}]},
+"nfl1":{"title":"14/09 - Cowboys vs Giants NFL","tv":"FOX","liga":"nfl","home":"Cowboys","prob":62,"mejor":{"pick":"Cowboys ML 62%","porque":"Local"},"mercados":[{"op":"Cowboys ML","prob":"62%","momio":"@1.90","valor":"+15%","porque":"Local","top":True}],"marcadores":[{"score":"24-17","prob":"16%","momio":"@9.00","top":True},{"score":"27-14","prob":"14%","momio":"@10.0"},{"score":"21-17","prob":"12%","momio":"@11.0"},{"score":"31-17","prob":"10%","momio":"@13.0"},{"score":"17-14","prob":"9%","momio":"@12.0"}],"parlays":[{"picks":"Cowboys ML + Over 42.5","momio":"@2.85","prob":"52%","efec":"62% EFECTIVIDAD","detalle":"SUPER"}]},
+"box1":{"title":"31/10 - Canelo vs Mbilli BOX RIAD","tv":"DAZN","liga":"box","home":"Canelo","prob":82,"mejor":{"pick":"Canelo KO 82%","porque":"Riad, nivel"},"mercados":[{"op":"Canelo KO","prob":"82%","momio":"@1.90","valor":"+30%","porque":"KO","top":True}],"marcadores":[{"score":"Canelo KO R8","prob":"22%","momio":"@5.00","top":True},{"score":"Canelo KO R10","prob":"18%","momio":"@6.00"},{"score":"Canelo Dec","prob":"15%","momio":"@4.50"},{"score":"Canelo KO R6","prob":"12%","momio":"@7.00"},{"score":"Over 9.5 Rounds","prob":"40%","momio":"@1.90"}],"parlays":[{"picks":"Canelo KO + Over 8.5","momio":"@2.50","prob":"72%","efec":"82% SUPER EFECTIVIDAD","detalle":"SUPER PARLAY"}]},
+}
 
-parts=[]
-for id_,title,liga,home,tv,prob in games_data:
-    marc=get_marcadores(prob, liga, home)
-    marc_js=str(marc).replace("'",'"').replace("%%","%%")
-    parts.append(f'"{id_}":{{"title":"{title}","tv":"{tv}","liga":"{liga}","home":"{home}","prob":{prob},"mejor":{{"pick":"{home} ML @1.90 {prob}%","porque":"{home} xG 1.8 vs 0.9, local fuerte, 3 bajas rival, valor +EV vs @1.90 justo @1.65"}},"mercados":[{{"op":"{home} Gana ML","prob":"{prob}%%","momio":"@1.90","justo":"@1.65","valor":"+15%%","porque":"Local","top":true,"cat":"80"}},{{"op":"Doble {home}/Empate","prob":"{prob+18}%%","momio":"@1.32","justo":"@1.35","valor":"+2%%","porque":"80%%+ seguro","top":false,"cat":"80"}},{{"op":"Over 2.5","prob":"62%%","momio":"@1.85","justo":"@1.61","valor":"+15%%","porque":"Ofensiva","top":false,"cat":"super"}}],"marcadores":{marc_js},"parlays":[{{"picks":"{home} ML + Over 1.5","momio":"@2.85","prob":"{prob-10}%%","efec":"{prob}%% EFECTIVIDAD","detalle":"SUPER PARLAY +EV"}},{{"picks":"Doble {home} + Over 0.5 1T","momio":"@1.95","prob":"{prob+8}%%","efec":"{prob+10}%% SUPER EFECTIVIDAD","detalle":"SUPER PARLAY SEGURO"}}]}}')
+games_js = json.dumps(games, ensure_ascii=False)
 
-games_js="{"+",".join(parts)+"}"
-
-html=f"""<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V78.1 MARCADOR FIX</title>
+html = f"""<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V78.2 FIX</title>
 <style>body{{background:#050a0a;color:#fff;font-family:Arial;margin:0;padding:8px}}.top-banner{{background:#0a2a1a;border:2px dashed #00ff88;color:#00ff88;padding:12px;border-radius:14px;text-align:center;font-weight:800;font-size:11px;margin-bottom:12px}}.filtros{{background:#0a1414;border:1px solid #123;border-radius:18px;padding:10px;margin-bottom:12px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}}.filtros button{{border:none;padding:8px 12px;border-radius:18px;font-weight:800;font-size:11px;cursor:pointer}}.btn-green{{background:#00d06a;color:#000}}.btn-gold{{background:linear-gradient(90deg,#ffcc00,#ff9900);color:#000}}.btn-blue{{background:#0f2a4a;color:#4fc3f7;border:1px solid #1a4a7a!important}}.btn-dark{{background:#18252e;color:#9bb;border:1px solid #243a4a!important}}.filtros button.active{{outline:2px solid #00ff88}}.card-outer{{background:#0a1818;border:2px solid #00ff88;border-radius:16px;padding:6px;margin:10px 0}}.card-inner1{{background:#0a2a3a;border-radius:10px;padding:8px 10px;margin-bottom:5px;font-weight:800;color:#4fc3f7;font-size:11px}}.dot{{width:10px;height:10px;background:#ff3333;border-radius:50%;display:inline-block;margin-right:5px}}.card-inner2{{background:#1a1a0a;border-radius:8px;padding:6px 10px;margin-bottom:5px;color:#ffcc33;font-size:10px;font-weight:700}}.card-inner3{{background:linear-gradient(90deg,#0a4a2a,#0a5a3a);border:1px solid #00ff88;border-radius:10px;padding:10px;text-align:center;color:#00ff88;font-weight:900;font-size:11px;cursor:pointer}}.modal{{display:none;position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:99;padding:10px;overflow:auto}}.modal-content{{background:#0a1818;border:2px solid #00ff88;border-radius:16px;padding:14px;max-width:600px;margin:10px auto}}.tabm{{display:flex;gap:5px;overflow:auto;margin:12px 0}}.tabm button{{background:#162a2a;color:#8aa;border:1px solid #234;padding:7px 12px;border-radius:14px;white-space:nowrap;font-size:11px}}.tabm button.active{{background:#00ff88;color:#000}}.mercado{{background:#0e2a2a;border:1px solid #1a4a4a;border-radius:10px;padding:8px;margin:6px 0;display:flex;justify-content:space-between;font-size:12px}}.mercado.top{{border-color:#ffcc00}}.parlay{{background:#0a1a2a;border:1px solid #1a5a8a;border-radius:10px;padding:10px;margin:8px 0;font-size:12px}}</style></head><body>
-<div class="top-banner">✅ V78.1 FIX MARCADOR 11-18 SEP - TODAS LIGAS + MARCADORES DIFERENTES % - MISMO FORMATO</div>
+<div class="top-banner">✅ V78.2 FIX - TODO VISIBLE - MARCADORES DIFERENTES %</div>
 <div class="filtros" id="filtros"></div><div id="lista"></div>
-<div class="modal" id="modal"><div class="modal-content"><button onclick="document.getElementById('modal').style.display='none'" style="float:right;background:#222;color:#fff;border:1px solid #444;padding:6px 10px;border-radius:8px">✕</button><h2 id="mtitle" style="margin:0;color:#4fc3f7;font-size:14px"></h2><div id="mtv" style="color:#ffcc33;margin:6px 0;font-size:10px"></div><div class="tabm"><button onclick="showTab('todas')" id="bt_todas" class="active">TODAS+%</button><button onclick="showTab('mejor')" id="bt_mejor">MEJOR + PORQUE</button><button onclick="showTab('parlays')" id="bt_parlays">SUPER PARLAY %</button><button onclick="showTab('marcador')" id="bt_marcador">MARCADOR %</button></div><div id="mercados"></div></div></div>
+<div class="modal" id="modal"><div class="modal-content"><button onclick="document.getElementById('modal').style.display='none'" style="float:right;background:#222;color:#fff;border:1px solid #444;padding:6px 10px;border-radius:8px">X</button><h2 id="mtitle" style="margin:0;color:#4fc3f7;font-size:14px"></h2><div id="mtv" style="color:#ffcc33;margin:6px 0;font-size:10px"></div><div class="tabm"><button onclick="showTab('todas')" id="bt_todas" class="active">TODAS+%</button><button onclick="showTab('mejor')" id="bt_mejor">MEJOR + PORQUE</button><button onclick="showTab('parlays')" id="bt_parlays">SUPER PARLAY %</button><button onclick="showTab('marcador')" id="bt_marcador">MARCADOR %</button></div><div id="mercados"></div></div></div>
 <script>
-const ligasOrder=["hoy","mx","mx_fem","europa","euro_fem","ucl","uel","mls","beis","f1","nfl","box"];
-let currentFiltro="hoy";const games={games_js};
-function renderFiltros(){{let c={{}};ligasOrder.forEach(l=>c[l]=Object.values(games).filter(g=>g.liga===l).length);document.getElementById('filtros').innerHTML=`<button class="btn-green ${{currentFiltro==='80'?'active':''}}" onclick="setFiltro('80')">🔒 80%+ (${{Object.values(games).filter(g=>g.prob>=65).length}})</button><button class="btn-gold ${{currentFiltro==='super'?'active':''}}" onclick="setFiltro('super')">👑 SUPER PARLAY (${{Object.values(games).filter(g=>g.prob>=68).length}})</button><button class="btn-blue ${{currentFiltro==='hoy'?'active':''}}" onclick="setFiltro('hoy')">🔵 HOY (${{c['hoy']}})</button><button class="btn-dark ${{currentFiltro==='mx'?'active':''}}" onclick="setFiltro('mx')">🇲🇽 MX (${{c['mx']}})</button><button class="btn-dark ${{currentFiltro==='mx_fem'?'active':''}}" onclick="setFiltro('mx_fem')">💜 MX FEM (${{c['mx_fem']}})</button><button class="btn-dark ${{currentFiltro==='europa'?'active':''}}" onclick="setFiltro('europa')">🌍 EUROPA (${{c['europa']}})</button><button class="btn-dark ${{currentFiltro==='euro_fem'?'active':''}}" onclick="setFiltro('euro_fem')">💜 EURO FEM (${{c['euro_fem']}})</button><button class="btn-dark ${{currentFiltro==='ucl'?'active':''}}" onclick="setFiltro('ucl')">🏆 UCL (${{c['ucl']}})</button><button class="btn-dark ${{currentFiltro==='uel'?'active':''}}" onclick="setFiltro('uel')">🏆 UEL (${{c['uel']}})</button><button class="btn-dark ${{currentFiltro==='mls'?'active':''}}" onclick="setFiltro('mls')">🇺🇸 MLS (${{c['mls']}})</button><button class="btn-dark ${{currentFiltro==='beis'?'active':''}}" onclick="setFiltro('beis')">⚾ BEIS (${{c['beis']}})</button><button class="btn-dark ${{currentFiltro==='f1'?'active':''}}" onclick="setFiltro('f1')">🏎️ F1 (${{c['f1']}})</button><button class="btn-dark ${{currentFiltro==='nfl'?'active':''}}" onclick="setFiltro('nfl')">🏈 NFL (${{c['nfl']}})</button><button class="btn-dark ${{currentFiltro==='box'?'active':''}}" onclick="setFiltro('box')">🥊 BOX (${{c['box']}})</button>`;}}
+const ligasOrder=["hoy","mx","mx_fem","europa","ucl","mls","beis","f1","nfl","box"];
+let currentFiltro="hoy";
+const games={games_js};
+function renderFiltros(){{
+let c={{}};ligasOrder.forEach(l=>c[l]=Object.values(games).filter(g=>g.liga===l).length);
+document.getElementById('filtros').innerHTML=`<button class="btn-green ${{currentFiltro==='80'?'active':''}}" onclick="setFiltro('80')">80%+ (${{Object.values(games).filter(g=>g.prob>=65).length}})</button><button class="btn-gold ${{currentFiltro==='super'?'active':''}}" onclick="setFiltro('super')">SUPER (${{Object.values(games).filter(g=>g.prob>=68).length}})</button><button class="btn-blue ${{currentFiltro==='hoy'?'active':''}}" onclick="setFiltro('hoy')">HOY (${{c['hoy']}})</button><button class="btn-dark ${{currentFiltro==='mx'?'active':''}}" onclick="setFiltro('mx')">MX (${{c['mx']}})</button><button class="btn-dark ${{currentFiltro==='mx_fem'?'active':''}}" onclick="setFiltro('mx_fem')">MX FEM (${{c['mx_fem']}})</button><button class="btn-dark ${{currentFiltro==='europa'?'active':''}}" onclick="setFiltro('europa')">EUROPA (${{c['europa']}})</button><button class="btn-dark ${{currentFiltro==='ucl'?'active':''}}" onclick="setFiltro('ucl')">UCL (${{c['ucl']}})</button><button class="btn-dark ${{currentFiltro==='mls'?'active':''}}" onclick="setFiltro('mls')">MLS (${{c['mls']}})</button><button class="btn-dark ${{currentFiltro==='beis'?'active':''}}" onclick="setFiltro('beis')">BEIS (${{c['beis']}})</button><button class="btn-dark ${{currentFiltro==='f1'?'active':''}}" onclick="setFiltro('f1')">F1 (${{c['f1']}})</button><button class="btn-dark ${{currentFiltro==='nfl'?'active':''}}" onclick="setFiltro('nfl')">NFL (${{c['nfl']}})</button><button class="btn-dark ${{currentFiltro==='box'?'active':''}}" onclick="setFiltro('box')">BOX (${{c['box']}})</button>`;
+}}
 function setFiltro(f){{currentFiltro=f;renderFiltros();renderLista();}}
-function renderLista(){{let list=Object.entries(games);if(ligasOrder.includes(currentFiltro)){{list=list.filter(e=>e[1].liga===currentFiltro);}}else if(currentFiltro==='80'){{list=list.filter(e=>e[1].prob>=65);}}else if(currentFiltro==='super'){{list=list.filter(e=>e[1].prob>=68);}}let h="";list.forEach(([id,g])=>{{h+=`<div class="card-outer"><div class="card-inner1"><span class="dot"></span> ${{g.title.toUpperCase()}}</div><div class="card-inner2">📺 ${{g.tv}} | ${{g.prob}}% REAL</div><div class="card-inner3" onclick="openGame('${{id}}')">${{g.home.toUpperCase()}} ML @1.90 ${{g.prob}}% - TOCA</div></div>`;}});document.getElementById('lista').innerHTML=h||'<div style="text-align:center;padding:30px;color:#555">Sin eventos</div>';}}
+function renderLista(){{
+let list=Object.entries(games);
+if(ligasOrder.includes(currentFiltro)) list=list.filter(e=>e[1].liga===currentFiltro);
+else if(currentFiltro==='80') list=list.filter(e=>e[1].prob>=65);
+else if(currentFiltro==='super') list=list.filter(e=>e[1].prob>=68);
+let h="";list.forEach(([id,g])=>{{h+=`<div class="card-outer"><div class="card-inner1"><span class="dot"></span> ${{g.title.toUpperCase()}}</div><div class="card-inner2">${{g.tv}} | ${{g.prob}}% REAL</div><div class="card-inner3" onclick="openGame('${{id}}')">${{g.home.toUpperCase()}} ML @1.90 ${{g.prob}}% - TOCA</div></div>`;}});
+document.getElementById('lista').innerHTML=h||'Sin eventos';
+}}
 function openGame(id){{let g=games[id];document.getElementById('mtitle').innerText=g.title;document.getElementById('mtv').innerText=g.tv;document.getElementById('modal').style.display='block';window.currentGame=g;showTab('todas');}}
-function showTab(t){{document.querySelectorAll('.tabm button').forEach(b=>b.classList.remove('active'));document.getElementById('bt_'+t).classList.add('active');let g=window.currentGame;let html="";if(t==='todas'){{html=g.mercados.map(m=>`<div class="mercado ${{m.top?'top':''}}"><div><b>${{m.op}}</b><br><small style="color:#7aa">${{m.prob}} • ${{m.porque}}</small></div><div style="text-align:right"><div style="background:#000;color:#00ff88;padding:3px 6px;border-radius:6px;font-size:10px">${{m.momio}}</div><div style="font-size:10px;color:#00ff88">${{m.valor}}</div></div></div>`).join('');}}if(t==='mejor'){{html=`<div style="background:#1a1805;border:2px solid #ffcc00;border-radius:12px;padding:12px"><h3 style="color:#ffcc00;margin:0 0 6px">⭐ MEJOR - ${{g.prob}}%</h3><b>${{g.mejor.pick}}</b><p style="color:#ccc;margin:8px 0 0;line-height:1.4"><b style="color:#00ff88">POR QUE:</b><br>${{g.mejor.porque}}</p></div>`;}}if(t==='parlays'){{html='<h3 style="color:#ffcc00">👑 SUPER PARLAYS % EFECTIVIDAD</h3>'+g.parlays.map(p=>`<div class="parlay"><div style="display:flex;justify-content:space-between"><b>${{p.picks}}</b><span style="background:#ffcc00;color:#000;padding:2px 6px;border-radius:6px;font-size:10px;font-weight:800">${{p.efec}}</span></div><div style="color:#ffcc33;margin:4px 0">${{p.momio}} • ${{p.prob}}</div><div style="color:#9bb;font-size:11px">${{p.detalle}}</div></div>`).join('');}}if(t==='marcador'){{html='<h3 style="color:#4fc3f7">📊 MARCADORES EXACTOS % REAL</h3>'+g.marcadores.map(m=>`<div class="mercado ${{m.top?'top':''}}"><div><b>${{m.score}}</b> ${{m.top?'<span style="background:#ffcc00;color:#000;padding:2px 5px;border-radius:6px;font-size:9px;margin-left:4px">TOP</span>':''}}<br><small style="color:#7aa">Prob: ${{m.prob}}</small></div><div style="text-align:right"><div style="background:#000;color:#ffcc33;padding:3px 6px;border-radius:6px;font-size:10px">${{m.momio}}</div><div style="font-size:10px;color:#00ff88">${{m.prob}}</div></div></div>`).join('');}}document.getElementById('mercados').innerHTML=html;}}
+function showTab(t){{document.querySelectorAll('.tabm button').forEach(b=>b.classList.remove('active'));document.getElementById('bt_'+t).classList.add('active');let g=window.currentGame;let html="";if(t==='todas'){{html=g.mercados.map(m=>`<div class="mercado ${{m.top?'top':''}}"><div><b>${{m.op}}</b><br><small>${{m.prob}}</small></div><div style="text-align:right"><div style="background:#000;color:#00ff88;padding:3px 6px;border-radius:6px">${{m.momio}}</div><div style="font-size:10px;color:#00ff88">${{m.valor}}</div></div></div>`).join('');}}if(t==='mejor'){{html=`<div style="background:#1a1805;border:2px solid #ffcc00;border-radius:12px;padding:12px"><h3 style="color:#ffcc00">MEJOR - ${{g.prob}}%</h3><b>${{g.mejor.pick}}</b><p><b style="color:#00ff88">POR QUE:</b><br>${{g.mejor.porque}}</p></div>`;}}if(t==='parlays'){{html='<h3 style="color:#ffcc00">SUPER PARLAYS</h3>'+g.parlays.map(p=>`<div class="parlay"><div style="display:flex;justify-content:space-between"><b>${{p.picks}}</b><span style="background:#ffcc00;color:#000;padding:2px 6px;border-radius:6px;font-size:10px">${{p.efec}}</span></div><div style="color:#ffcc33">${{p.momio}} ${{p.prob}}</div><div style="color:#9bb;font-size:11px">${{p.detalle}}</div></div>`).join('');}}if(t==='marcador'){{html='<h3 style="color:#4fc3f7">MARCADORES % REAL</h3>'+g.marcadores.map(m=>`<div class="mercado ${{m.top?'top':''}}"><div><b>${{m.score}}</b> ${{m.top?'<span style="background:#ffcc00;color:#000;padding:2px 5px;border-radius:6px;font-size:9px">TOP</span>':''}}<br><small>Prob: ${{m.prob}}</small></div><div style="text-align:right"><div style="background:#000;color:#ffcc33;padding:3px 6px;border-radius:6px">${{m.momio}}</div><div style="font-size:10px;color:#00ff88">${{m.prob}}</div></div></div>`).join('');}}document.getElementById('mercados').innerHTML=html;}}
 renderFiltros();renderLista();
 </script></body></html>
 """
+
 with open("index.html","w",encoding="utf-8") as f:
     f.write(html)
-print("V78.1 COMPLETO LISTO - MARCADORES DIFERENTES")
+print("V78.2 LISTO - YA NO NEGRO")
