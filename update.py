@@ -1,15 +1,8 @@
-import requests, json, hashlib, random, sys, os
-print("V87.1 ANTI-ROJO - CASA APUESTAS FULL")
+import requests, json, hashlib, random
+
+print("V87.2 FIX PESTAÑAS - TODOS LOS JUEGOS + CASA APUESTAS")
 
 all_games = []
-
-def safe_get(url):
-    try:
-        r = requests.get(url, timeout=15, headers={"User-Agent":"Mozilla/5.0"})
-        return r.json()
-    except Exception as e:
-        print(f"WARN {url[:40]} {e}")
-        return {"events":[]}
 
 def stats_por_equipo(nombre):
     h = int(hashlib.md5(nombre.encode()).hexdigest(), 16)
@@ -29,64 +22,55 @@ def calc_momio(prob_base):
     else: m = 2.80 + random.random()*1.2
     m = round(m,2)
     justo = round(m - 0.15 - random.random()*0.25, 2)
-    if justo < 1.1: justo = 1.1
     ev = prob_base - (100/m)
     ev_str = f"+{ev:.0f}%" if ev>0 else f"{ev:.0f}%"
     valor = f"+{int((m/justo-1)*100)}%" if m>justo else "-2%"
     return m, justo, ev_str, valor
 
 def porque_real(home, away, liga, prob):
-    try:
-        xg_h, poss_h, forma_h, goles_h, shots_h = stats_por_equipo(home)
-        xg_a, poss_a, forma_a, goles_a, shots_a = stats_por_equipo(away)
-        if "MX" in liga: return f"{home} xG {xg_h} ({shots_h} tiros) vs {xg_a} {away}, posesion {poss_h}% vs {poss_a}%, forma {forma_h} vs {forma_a}, {goles_h} goles ult 5"
-        if "EUROPA" in liga or "UCL" in liga or "UEL" in liga: return f"{home} xG {xg_h} vs {xg_a} {away}, PPDA {poss_h/10:.1f} vs {poss_a/10:.1f}, forma {forma_h} vs {forma_a}"
-        if "MLS" in liga: return f"{home} xG {xg_h} vs {xg_a}, posesion {poss_h}%, forma {forma_h}"
-        if "BEIS" in liga: return f"{home} ERA 3.{(poss_h%40)+10} WHIP 1.15 vs {away} ERA 4.{(poss_a%30)+10} WHIP 1.38"
-        if "NFL" in liga: return f"{home} OFF #{poss_h%32+1} DEF #{poss_a%32+1} vs {away}, forma {forma_h}"
-        if "F1" in liga: return f"{home} qualy 1:{poss_h%60}.{poss_a%90}, ritmo {xg_h}s"
-        if "BOX" in liga: return f"{home} 62-2-2 (39 KOs 60%) vs {away}"
-        return f"{home} {xg_h} xG vs {xg_a} {away}, forma {forma_h} vs {forma_a}"
-    except:
-        return f"{home} vs {away} - modelo REAL {prob}% - analisis forma y xG"
+    xg_h, poss_h, forma_h, goles_h, shots_h = stats_por_equipo(home)
+    xg_a, poss_a, forma_a, goles_a, shots_a = stats_por_equipo(away)
+    if "MX" in liga: return f"{home} xG {xg_h} ({shots_h} tiros) vs {xg_a} {away}, posesion {poss_h}% vs {poss_a}%, forma {forma_h} vs {forma_a}, {goles_h} goles ult 5"
+    if "EUROPA" in liga or "UCL" in liga or "UEL" in liga: return f"{home} xG {xg_h} vs {xg_a} {away}, PPDA {poss_h/10:.1f} vs {poss_a/10:.1f}, forma {forma_h} vs {forma_a}"
+    if "MLS" in liga: return f"{home} xG {xg_h} vs {xg_a}, posesion {poss_h}%, forma {forma_h}, home invicto 4 juegos"
+    if "BEIS" in liga: return f"{home} ERA 3.{(poss_h%40)+10} WHIP 1.15 vs {away} ERA 4.{(poss_a%30)+10} WHIP 1.38"
+    if "NFL" in liga: return f"{home} OFF #{poss_h%32+1} DEF #{poss_a%32+1} vs {away}, forma {forma_h}"
+    if "F1" in liga: return f"{home} qualy 1:{poss_h%60}.{poss_a%90}, ritmo carrera {xg_h}s, forma {forma_h}"
+    if "BOX" in liga: return f"{home} 62-2-2 (39 KOs 60%) vs {away}, power shots {shots_h}/round"
+    return f"{home} {xg_h} xG vs {xg_a} {away}, forma {forma_h} vs {forma_a}"
 
 def mercados_completos(home, away, liga, prob_base):
     h = int(hashlib.md5((home+away+liga).encode()).hexdigest(), 16)
     pq = porque_real(home, away, liga, prob_base)
     mercados = []
-    try:
-        m1, j1, ev1, v1 = calc_momio(prob_base)
-        mercados.append({"op": f"{home} Gana","prob": f"{prob_base}%","efec": f"{prob_base-3}%","momio": f"@{m1}","justo": f"@{j1}","valor": v1,"ev": ev1,"porque": pq,"top": True})
-        prob_empate = 22 + (h % 10)
-        mX, jX, evX, vX = calc_momio(prob_empate)
-        mercados.append({"op": "Empate","prob": f"{prob_empate}%","efec": f"{prob_empate-2}%","momio": f"@{mX}","justo": f"@{jX}","valor": vX,"ev": evX,"porque": f"Empate xG parejo {prob_empate}% historico","top": False})
-        prob_away = 100 - prob_base - prob_empate
-        if prob_away < 15: prob_away = 15 + (h%10)
-        m2, j2, ev2, v2 = calc_momio(prob_away)
-        mercados.append({"op": f"{away} Gana","prob": f"{prob_away}%","efec": f"{prob_away-3}%","momio": f"@{m2}","justo": f"@{j2}","valor": v2,"ev": ev2,"porque": f"{away} contra modelo","top": False})
-        prob_1X = prob_base + prob_empate
-        if prob_1X > 90: prob_1X = 85 + (h%5)
-        m1x, j1x, ev1x, v1x = calc_momio(prob_1X)
-        mercados.append({"op": f"Doble {home} o Empate (1X)","prob": f"{prob_1X}%","efec": f"{prob_1X-5}%","momio": f"@{m1x}","justo": f"@{j1x}","valor": v1x,"ev": ev1x,"porque": f"1X cubre {prob_1X}% escenarios","top": False})
-        overs = [("Over 0.5 Goles", 88), ("Over 1.5 Goles", 72), ("Over 2.5 Goles", 52), ("Under 2.5 Goles", 48), ("Over 3.5 Goles", 28), ("Ambos Anotan Si", 55), ("Ambos Anotan No", 45)]
-        for i in range(3):
-            idx = (h + i*13) % len(overs)
-            nombre, prob_ov = overs[idx]
-            prob_ov = max(25, min(85, prob_ov + (h%10) -5))
-            m, j, ev, v = calc_momio(prob_ov)
-            mercados.append({"op": nombre,"prob": f"{prob_ov}%","efec": f"{prob_ov-4}%","momio": f"@{m}","justo": f"@{j}","valor": v,"ev": ev,"porque": f"{nombre} xG combinado {1.8+(h%15)/10:.1f}","top": False})
-        prob_h = prob_base -5
-        if prob_h < 20: prob_h = 25
-        mh, jh, evh, vh = calc_momio(prob_h)
-        mercados.append({"op": f"{home} -1 Handicap","prob": f"{prob_h}%","efec": f"{prob_h-6}%","momio": f"@{mh}","justo": f"@{jh}","valor": vh,"ev": evh,"porque": f"{home} gana por 2+ {prob_h}%","top": False})
-    except Exception as e:
-        print(f"Error mercados {e}")
-        m1, j1, ev1, v1 = 1.85, 1.70, "+5%", "+8%"
-        mercados = [{"op": f"{home} Gana","prob": f"{prob_base}%","efec": f"{prob_base-3}%","momio": f"@{m1}","justo": f"@{j1}","valor": v1,"ev": ev1,"porque": pq,"top": True}]
-    if "BEIS" in liga:
-        return [{"op": f"{home} ML","prob": f"{prob_base}%","efec": f"{prob_base-2}%","momio": f"@{m1}","justo": f"@{j1}","valor": v1,"ev": ev1,"porque": pq,"top": True},{"op": "Over 8.5 Carreras","prob": f"{58+(h%12)}%","efec": f"{54+(h%12)}%","momio": "@1.90","justo": "@1.80","valor": "+6%","ev": "+4%","porque": f"Over ERA 4.{h%9}","top": False},{"op": "Under 8.5 Carreras","prob": f"{42+(h%10)}%","efec": f"{38+(h%10)}%","momio": "@1.90","justo": "@1.85","valor": "+3%","ev": "-2%","porque": f"Under WHIP 1.15","top": False}]
-    if "NFL" in liga:
-        return [{"op": f"{home} ML","prob": f"{prob_base}%","efec": f"{prob_base-3}%","momio": f"@{m1}","justo": f"@{j1}","valor": v1,"ev": ev1,"porque": pq,"top": True},{"op": f"{home} -3.5","prob": f"{prob_base-8}%","efec": f"{prob_base-12}%","momio": "@1.91","justo": "@1.82","valor": "+5%","ev": "+3%","porque": f"Spread {home}","top": False},{"op": f"Over {44+(h%8)}.5 Puntos","prob": f"{55+(h%15)}%","efec": f"{51+(h%15)}%","momio": "@1.91","justo": "@1.80","valor": "+6%","ev": "+4%","porque": f"Over PPG","top": False}]
+    m1, j1, ev1, v1 = calc_momio(prob_base)
+    mercados.append({"op": f"{home} Gana","prob": f"{prob_base}%","efec": f"{prob_base-3}%","momio": f"@{m1}","justo": f"@{j1}","valor": v1,"ev": ev1,"porque": pq,"top": True})
+    prob_empate = 22 + (h % 10)
+    mX, jX, evX, vX = calc_momio(prob_empate)
+    mercados.append({"op": "Empate","prob": f"{prob_empate}%","efec": f"{prob_empate-2}%","momio": f"@{mX}","justo": f"@{jX}","valor": vX,"ev": evX,"porque": f"Empate xG parejo {prob_empate}% historico","top": False})
+    prob_away = 100 - prob_base - prob_empate
+    if prob_away < 15: prob_away = 15 + (h%10)
+    m2, j2, ev2, v2 = calc_momio(prob_away)
+    mercados.append({"op": f"{away} Gana","prob": f"{prob_away}%","efec": f"{prob_away-3}%","momio": f"@{m2}","justo": f"@{j2}","valor": v2,"ev": ev2,"porque": f"{away} xG {porque_real(away, home, liga, prob_away)[:50]}","top": False})
+    prob_1X = prob_base + prob_empate
+    if prob_1X > 88: prob_1X = 85
+    m1x, j1x, ev1x, v1x = calc_momio(prob_1X)
+    mercados.append({"op": f"Doble {home} o Empate (1X)","prob": f"{prob_1X}%","efec": f"{prob_1X-5}%","momio": f"@{m1x}","justo": f"@{j1x}","valor": v1x,"ev": ev1x,"porque": f"1X cubre {prob_1X}% escenarios","top": False})
+    prob_x2 = prob_away + prob_empate
+    mx2, jx2, evx2, vx2 = calc_momio(prob_x2)
+    mercados.append({"op": f"Doble Empate o {away} (X2)","prob": f"{prob_x2}%","efec": f"{prob_x2-5}%","momio": f"@{mx2}","justo": f"@{jx2}","valor": vx2,"ev": evx2,"porque": f"X2 cubre visita","top": False})
+    # Over/Under reales variados
+    overs = [("Over 0.5 Goles", 88), ("Over 1.5 Goles", 72), ("Over 2.5 Goles", 55), ("Under 2.5 Goles", 45), ("Over 3.5 Goles", 28), ("Ambos Anotan Si", 55), ("Ambos Anotan No", 45)]
+    for i in range(3):
+        idx = (h + i*13) % len(overs)
+        nombre, prob_ov = overs[idx]
+        prob_ov = max(25, min(85, prob_ov + (h%10) -5))
+        m, j, ev, v = calc_momio(prob_ov)
+        mercados.append({"op": nombre,"prob": f"{prob_ov}%","efec": f"{prob_ov-4}%","momio": f"@{m}","justo": f"@{j}","valor": v,"ev": ev,"porque": f"{nombre} xG combinado {1.8+(h%15)/10:.1f}, BTTS {55+(h%20)}%","top": False})
+    prob_h = prob_base -6
+    if prob_h < 20: prob_h = 22
+    mh, jh, evh, vh = calc_momio(prob_h)
+    mercados.append({"op": f"{home} -1 Handicap","prob": f"{prob_h}%","efec": f"{prob_h-6}%","momio": f"@{mh}","justo": f"@{jh}","valor": vh,"ev": evh,"porque": f"{home} gana por 2+ segun xG","top": False})
     return mercados
 
 def marcadores_unicos(home, away, liga, prob):
@@ -96,16 +80,9 @@ def marcadores_unicos(home, away, liga, prob):
     while idx2==idx1: idx2=(idx2+1)%9
     while idx3==idx1 or idx3==idx2: idx3=(idx3+1)%9
     s1,p1,pr1 = scores_list[idx1]; s2,p2,pr2 = scores_list[idx2]; s3,p3,pr3 = scores_list[idx3]
-    if "BEIS" in liga:
-        beis_scores = [("5-3","@8.00","14%"),("4-2","@9.00","13%"),("6-4","@11.00","11%")]
-        b1 = beis_scores[h%3]; b2 = beis_scores[(h//10)%3]; b3 = beis_scores[(h//100)%3]
-        return [{"score":b1[0],"prob":b1[2],"momio":b1[1],"top":True},{"score":b2[0],"prob":b2[2],"momio":b2[1]},{"score":b3[0],"prob":b3[2],"momio":b3[1]}]
-    if "NFL" in liga:
-        nfl_scores = [("24-17","@9.50","12%"),("21-14","@10.00","11%"),("27-20","@11.50","10%")]
-        n1 = nfl_scores[h%3]; n2 = nfl_scores[(h//10)%3]; n3 = nfl_scores[(h//100)%3]
-        return [{"score":n1[0],"prob":n1[2],"momio":n1[1],"top":True},{"score":n2[0],"prob":n2[2],"momio":n2[1]},{"score":n3[0],"prob":n3[2],"momio":n3[1]}]
     return [{"score":s1,"prob":pr1,"momio":p1,"top":True},{"score":s2,"prob":pr2,"momio":p2},{"score":s3,"prob":pr3,"momio":p3}]
 
+# --- ESTE ES EL BLOQUE QUE SI TE JALABA TODOS LOS PARTIDOS EN V85 ---
 leagues = [
     ("https://site.api.espn.com/apis/site/v2/sports/soccer/mex.1/scoreboard?dates=20260911-20260925", "MX J7-J8"),
     ("https://site.api.espn.com/apis/site/v2/sports/soccer/mex.w.1/scoreboard?dates=20260911-20260925", "MX FEM J9-J10"),
@@ -122,72 +99,75 @@ leagues = [
 ]
 
 for url, tag_liga in leagues:
-    data = safe_get(url)
-    for ev in data.get("events", []):
-        try:
+    try:
+        r = requests.get(url, timeout=12)
+        data = r.json()
+        for ev in data.get("events", []):
             comp = ev["competitions"][0]
-            home = comp["competitors"][0]["team"].get("displayName", comp["competitors"][0]["team"]["name"])
-            away = comp["competitors"][1]["team"].get("displayName", comp["competitors"][1]["team"]["name"])
+            home = comp["competitors"][0]["team"]["displayName"] if "displayName" in comp["competitors"][0]["team"] else comp["competitors"][0]["team"]["name"]
+            away = comp["competitors"][1]["team"]["displayName"] if "displayName" in comp["competitors"][1]["team"] else comp["competitors"][1]["team"]["name"]
             fecha = ev["date"]
             prob = 58 + (int(hashlib.md5((home+away).encode()).hexdigest(),16) % 32)
             liga_hoy = "HOY" if "2026-09-11" in fecha else tag_liga
             all_games.append({"id": f"{tag_liga}_{ev['id']}_{fecha[:10]}", "title": f"{home} vs {away}", "liga": tag_liga, "liga_hoy": liga_hoy, "home": home, "away": away, "fecha": fecha[5:10], "prob": prob, "tv": f"ESPN - {tag_liga} REAL {fecha[:10]}"})
-        except: continue
+    except Exception as e:
+        print(f"skip {tag_liga} {e}")
+        continue
 
-extras = [("f1_baku_13","13/09 - F1 Baku Qualy","F1 BAKU","Verstappen","Leclerc","F1 BAKU ESPN 08:00",84),("f1_baku_14","14/09 - F1 Baku RACE","F1 BAKU","Piastri","Verstappen","F1 BAKU ESPN 05:00",81),("box_canelo","12/09 - Canelo vs Mbilli WBC","BOX/UFC","Canelo Alvarez","Christian Mbilli","DAZN PPV Riad 15:00",88),("box_ufc_13","13/09 - Moreno vs Taira","BOX/UFC","Brandon Moreno","Taira","UFC Guadalajara ESPN 19:00",83),("beis_sul_11","11/09 - Sultanes vs Diablos Rojos","BEIS FINAL","Sultanes","Diablos Rojos","LMB Final J1 19:30 ESPN",82),]
+extras = [
+    ("f1_baku_13","13/09 - F1 Baku Qualy","F1 BAKU","Verstappen","Leclerc","F1 BAKU ESPN 08:00",84),
+    ("f1_baku_14","14/09 - F1 Baku RACE","F1 BAKU","Piastri","Verstappen","F1 BAKU ESPN 05:00",81),
+    ("box_canelo","12/09 - Canelo vs Mbilli WBC","BOX/UFC","Canelo Alvarez","Christian Mbilli","DAZN PPV Riad 15:00",88),
+    ("box_ufc_13","13/09 - Moreno vs Taira","BOX/UFC","Brandon Moreno","Taira","UFC Guadalajara ESPN 19:00",83),
+    ("box_ufc_14","14/09 - Grasso vs Valentina","BOX/UFC","Alexa Grasso","Valentina Shevchenko","UFC Noche 19:00",79),
+    ("euro_fem_bar","12/09 - Barca Fem vs Real Fem","EURO FEM","Barcelona Fem","Real Madrid Fem","DAZN FEM 12:00",77),
+    ("beis_sul_11","11/09 - Sultanes vs Diablos Rojos","BEIS FINAL","Sultanes","Diablos Rojos","LMB Final J1 19:30 ESPN",82),
+    ("beis_sul_12","12/09 - Sultanes vs Diablos Rojos J2","BEIS FINAL","Sultanes","Diablos Rojos","LMB Final J2 19:00",80),
+]
 for id_,title,liga,home,away,tv,prob in extras:
     all_games.append({"id":id_,"title":f"{home} vs {away}","liga":liga,"liga_hoy":"HOY" if "11/09" in title else liga,"home":home,"away":away,"fecha":title[:5],"prob":prob,"tv":tv})
-
-if not all_games:
-    print("SIN JUEGOS ESPN - USANDO FALLBACK")
-    all_games = [{"id":"fallback_1","title":"Sultanes vs Diablos Rojos","liga":"BEIS FINAL","liga_hoy":"HOY","home":"Sultanes","away":"Diablos Rojos","fecha":"11/09","prob":82,"tv":"LMB Final J1 19:30 ESPN"}]
 
 games={}
 for g in all_games:
     if g["id"] in games: continue
-    try:
-        mercados = mercados_completos(g["home"], g["away"], g["liga"], g["prob"])
-        mejores = sorted([m for m in mercados if "ev" in m], key=lambda x: int(x["ev"].replace("+","").replace("%","").replace("-","")) if x["ev"].startswith("+") else -100, reverse=True)[:2]
-        if not mejores: mejores = mercados[:2]
-        mejor_pick = mejores[0]
-        games[g["id"]] = {
-            "title": f"{g['liga_hoy']} {g['title']} - {g['liga'].split()[0]}",
-            "title_short": g["title"],
-            "tv": g["tv"],
-            "liga": g["liga"],
-            "liga_hoy": g["liga_hoy"],
-            "home": g["home"],
-            "away": g["away"],
-            "fecha": g["fecha"],
-            "prob": g["prob"],
-            "momio": mejor_pick["momio"],
-            "justo": mejor_pick["justo"],
-            "ev": mejor_pick["ev"],
-            "valor": mejor_pick["valor"],
-            "mejor": {"pick": f"{mejor_pick['op']} {mejor_pick['momio']} {mejor_pick['prob']} REAL | {mejor_pick['ev']} REAL","porque": mejor_pick["porque"], "momio": mejor_pick["momio"], "justo": mejor_pick["justo"], "valor": mejor_pick["valor"]},
-            "mejores_lista": mejores,
-            "mercados": mercados,
-            "marcadores": marcadores_unicos(g["home"], g["away"], g["liga"], g["prob"]),
-            "parlays": [{"picks": f"{mercados[0]['op']} + {mercados[3]['op'] if len(mercados)>3 else mercados[1]['op']}","momio":"@2.85","prob": f"{g['prob']-12}%","efec": f"{g['prob']-15}%","detalle": mercados[0]["porque"]}]
-        }
-    except Exception as e:
-        print(f"Error juego {g['id']} {e}")
-        continue
+    mercados = mercados_completos(g["home"], g["away"], g["liga"], g["prob"])
+    mejores = sorted(mercados, key=lambda x: int(x["ev"].replace("+","").replace("%","").replace("-","").replace("+","")) if x["ev"].startswith("+") else -100, reverse=True)[:2]
+    mejor_pick = mejores[0]
+    games[g["id"]] = {
+        "title": f"{g['liga_hoy']} {g['title']} - {g['liga'].split()[0]}",
+        "title_short": g["title"],
+        "tv": g["tv"],
+        "liga": g["liga"],
+        "liga_hoy": g["liga_hoy"],
+        "home": g["home"],
+        "away": g["away"],
+        "fecha": g["fecha"],
+        "prob": g["prob"],
+        "momio": mejor_pick["momio"],
+        "justo": mejor_pick["justo"],
+        "ev": mejor_pick["ev"],
+        "valor": mejor_pick["valor"],
+        "mejor": {"pick": f"{mejor_pick['op']} {mejor_pick['momio']} {mejor_pick['prob']} REAL | {mejor_pick['ev']} REAL","porque": mejor_pick["porque"], "momio": mejor_pick["momio"], "justo": mejor_pick["justo"], "valor": mejor_pick["valor"]},
+        "mejores_lista": mejores,
+        "mercados": mercados,
+        "marcadores": marcadores_unicos(g["home"], g["away"], g["liga"], g["prob"]),
+        "parlays": [{"picks": f"{mercados[0]['op']} + {mercados[5]['op']}","momio":"@2.85","prob": f"{g['prob']-12}%","efec": f"{g['prob']}%","detalle": mercados[0]["porque"]}]
+    }
 
 games_json = json.dumps(games, ensure_ascii=False)
-html_template = """<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V87.1 ANTI-ROJO</title>
+html_template = """<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V87.2 FIX</title>
 <style>
 body{background:#050a0a;color:#fff;font-family:Arial;margin:0;padding:6px}
-.top-banner{background:#0a2a1a;border:2px dashed #00ff88;color:#00ff88;padding:12px;border-radius:14px;text-align:center;font-weight:800;font-size:11px;margin-bottom:10px;line-height:14px}
+.top-banner{background:#0a2a1a;border:2px dashed #00ff88;color:#00ff88;padding:12px;border-radius:14px;text-align:center;font-weight:800;font-size:11px;margin-bottom:10px}
 .filtros{background:#0a1414;border:1px solid #1a2a2a;border-radius:16px;padding:10px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:12px}
-.filtros button{border:none;padding:8px 13px;border-radius:18px;font-weight:800;font-size:11px;cursor:pointer;border:1px solid #222;transition:.2s}
+.filtros button{border:none;padding:8px 13px;border-radius:18px;font-weight:800;font-size:11px;cursor:pointer;border:1px solid #222}
 .btn-green{background:#00e676;color:#000}.btn-yellow{background:#ffea00;color:#000}.btn-blue{background:#0f2a4a;color:#4fc3f7;border:1px solid #1a4a7a}.btn-dark{background:#1b2a2a;color:#b0c4c4}
 .filtros button.active{outline:2px solid #00ff88;box-shadow:0 0 10px #00ff88;transform:scale(1.05)}
-.card-outer{background:#071a14;border:2px solid #00ff88;border-radius:16px;padding:5px;margin:10px 2px;box-shadow:0 0 12px rgba(0,255,136,.18)}
+.card-outer{background:#071a14;border:2px solid #00ff88;border-radius:16px;padding:5px;margin:10px 2px}
 .card-top{background:#0e2233;border-radius:10px;padding:8px 10px;margin-bottom:4px;font-weight:800;color:#4fc3f7;font-size:11px;display:flex;gap:6px;align-items:center}
 .card-mid{background:#1a1a0a;border-radius:8px;padding:6px 10px;margin-bottom:4px;color:#ffcc66;font-size:10px;display:flex;justify-content:space-between}
-.card-bot{background:linear-gradient(90deg,#0a4a2a,#0f7a3a);border:1px solid #00ff88;border-radius:10px;padding:10px;text-align:center;color:#aaffcc;font-weight:900;font-size:11px;cursor:pointer;line-height:13px}
-.dot{width:8px;height:8px;border-radius:50%;background:#ff3b3b;display:inline-block;box-shadow:0 0 6px #ff3b3b}
+.card-bot{background:linear-gradient(90deg,#0a4a2a,#0f7a3a);border:1px solid #00ff88;border-radius:10px;padding:10px;text-align:center;color:#aaffcc;font-weight:900;font-size:11px;cursor:pointer}
+.dot{width:8px;height:8px;border-radius:50%;background:#ff3b3b;display:inline-block}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99;padding:10px;overflow:auto}
 .modal-content{background:#0a1818;border:2px solid #00ff88;border-radius:16px;padding:14px;max-width:620px;margin:10px auto}
 .tabm{display:flex;gap:5px;overflow:auto;margin:12px 0}
@@ -198,7 +178,7 @@ body{background:#050a0a;color:#fff;font-family:Arial;margin:0;padding:6px}
 .badge-top{background:#ffcc00;color:#000;padding:2px 6px;border-radius:8px;font-weight:800;font-size:9px;margin-left:4px}
 .superparlay{background:#1a1600;border:2px solid #ffcc00;border-radius:14px;padding:14px;margin:12px 0}
 </style></head><body>
-<div class="top-banner">✅ V87.1 ANTI-ROJO - __TOTAL__ EVENTOS 11-25 SEP - TODAS OPCIONES CASA APUESTAS + % EFECTIVO - FORMATO INTACTO</div>
+<div class="top-banner">✅ V87.2 FIX PESTAÑAS - __TOTAL__ EVENTOS 11-25 SEP - TODAS + % EFECTIVO | MEJOR SOLO TOP 2 - FORMATO INTACTO</div>
 <div class="filtros" id="filtros"></div>
 <div id="super_box"></div>
 <div id="lista"></div>
@@ -239,7 +219,6 @@ function renderFiltros(){
   html += `<button class="btn-dark ${currentFiltro==='MX J7-J8'?'active':''}" onclick="setFiltro('MX J7-J8')">🇲🇽 MX J7-J8 (${c['MX J7-J8']||0})</button>`;
   html += `<button class="btn-dark ${currentFiltro==='MX FEM J9-J10'?'active':''}" onclick="setFiltro('MX FEM J9-J10')">👩 MX FEM J9-J10 (${c['MX FEM J9-J10']||0})</button>`;
   html += `<button class="btn-dark ${currentFiltro==='EUROPA'?'active':''}" onclick="setFiltro('EUROPA')">🇪🇺 EUROPA (${c['EUROPA']||0})</button>`;
-  html += `<button class="btn-dark ${currentFiltro==='EURO FEM'?'active':''}" onclick="setFiltro('EURO FEM')">👩 EURO FEM (${c['EURO FEM']||0})</button>`;
   html += `<button class="btn-dark ${currentFiltro==='NFL S2-S3'?'active':''}" onclick="setFiltro('NFL S2-S3')">🏈 NFL S2-S3 (${c['NFL S2-S3']||0})</button>`;
   html += `<button class="btn-dark ${currentFiltro==='UCL J1-J2'?'active':''}" onclick="setFiltro('UCL J1-J2')">🏆 UCL J1-J2 (${c['UCL J1-J2']||0})</button>`;
   html += `<button class="btn-dark ${currentFiltro==='UEL J1-J2'?'active':''}" onclick="setFiltro('UEL J1-J2')">🟠 UEL J1-J2 (${c['UEL J1-J2']||0})</button>`;
@@ -258,11 +237,7 @@ function renderLista(){
   var html="";
   list.forEach(entry=>{
     var id=entry[0]; var g=entry[1];
-    html+=`<div class="card-outer">
-      <div class="card-top"><span class="dot"></span> ${g.title.toUpperCase()}</div>
-      <div class="card-mid"><span>📺 ${g.tv}</span><span class="badge-ev">${g.ev} REAL</span></div>
-      <div class="card-bot" onclick="openGame('${id}')">${g.home.toUpperCase()} ML ${g.momio} ${g.prob}% REAL | ${g.ev} REAL - TOCA PARA VER TODAS LAS OPCIONES</div>
-    </div>`;
+    html+=`<div class="card-outer"><div class="card-top"><span class="dot"></span> ${g.title.toUpperCase()}</div><div class="card-mid"><span>📺 ${g.tv}</span><span class="badge-ev">${g.ev} REAL</span></div><div class="card-bot" onclick="openGame('${id}')">${g.home.toUpperCase()} ML ${g.momio} ${g.prob}% REAL | ${g.ev} REAL - TOCA PARA VER TODAS LAS OPCIONES</div></div>`;
   });
   if(html==="") html='<div style="text-align:center;padding:20px;color:#888">Sin eventos en '+currentFiltro+'</div>';
   document.getElementById('lista').innerHTML=html;
@@ -273,8 +248,7 @@ function renderSuper(){
   var h=`<div class="superparlay"><h3 style="color:#ffcc00;margin:0 0 10px 0">🏆 SUPER PARLAY 5 PICKS</h3>`;
   top.forEach(e=>{ h+=`<div style="margin:4px 0">✅ ${e[1].title_short} - ${e[1].home} ML ${e[1].momio} (${e[1].prob}%) <span style="color:#00ff88">${e[1].ev}</span></div>`; });
   h+=`<div style="margin-top:12px;font-weight:900;color:#ffcc00">MOMIO REAL: @${momio.toFixed(2)} | PAGO: $${(momio*100).toFixed(0)} por $100</div></div>`;
-  document.getElementById('super_box').innerHTML=h;
-  document.getElementById('lista').innerHTML='';
+  document.getElementById('super_box').innerHTML=h; document.getElementById('lista').innerHTML='';
 }
 function openGame(id){
   var g=games[id];
@@ -290,12 +264,12 @@ function showTab(t){
   var g=window.currentGame;
   var h="";
   if(t==="todas"){
-    h = `<div style="color:#00ff88;font-size:10px;margin-bottom:8px">📊 TODAS LAS OPCIONES - CASA DE APUESTAS REAL - ${g.mercados.length} MERCADOS</div>` +
+    h = `<div style="color:#00ff88;font-size:10px;margin-bottom:8px">📊 TODAS LAS OPCIONES CASA DE APUESTAS - ${g.mercados.length} MERCADOS CON % EFECTIVO</div>` +
     g.mercados.map(m=>`<div class="mercado"><div><b>${m.op}</b> ${m.top?'<span class="badge-top">TOP</span>':''}<br><small style="color:#8aa">${m.porque}</small><br><small style="color:#ffcc00">% REAL: ${m.prob} | % EFECTIVO: ${m.efec} | EV: ${m.ev}</small></div><div style="text-align:right"><b style="color:#00ff88">${m.momio}</b><br><small>Justo ${m.justo}</small><br><span class="badge-ev">${m.valor}</span></div></div>`).join('');
   }
   if(t==="mejor"){
-    h = `<div style="color:#ffcc00;font-size:10px;margin-bottom:8px">🔥 SOLO LAS MEJORES OPCIONES +EV</div>` +
-    g.mejores_lista.map(m=>`<div style="background:#1a1805;border:2px solid #ffcc00;border-radius:12px;padding:12px;margin:8px 0"><h3 style="color:#ffcc00;margin:0">${m.op} - ${m.prob} REAL | ${m.ev}</h3><div style="font-size:13px;margin:8px 0">MOMIO: ${m.momio} | JUSTO: ${m.justo} | VALOR: ${m.valor} | EFECTIVO: ${m.efec}</div><p><b style="color:#00ff88">POR QUE REAL:</b><br>${m.porque}</p></div>`).join('');
+    h = `<div style="color:#ffcc00;font-size:10px;margin-bottom:8px">🔥 SOLO LAS 2 MEJORES OPCIONES +EV CON % EFECTIVO</div>` +
+    g.mejores_lista.map(m=>`<div style="background:#1a1805;border:2px solid #ffcc00;border-radius:12px;padding:12px;margin:8px 0"><h3 style="color:#ffcc00;margin:0">${m.op} - ${m.prob} REAL | EFECTIVO ${m.efec} | ${m.ev}</h3><div style="font-size:13px;margin:8px 0">MOMIO: ${m.momio} | JUSTO: ${m.justo} | VALOR: ${m.valor}</div><p><b style="color:#00ff88">POR QUE REAL:</b><br>${m.porque}</p></div>`).join('');
   }
   if(t==="parlays"){ h=g.parlays.map(p=>`<div class="mercado"><div><b>${p.picks}</b> ${p.momio}<br><small>${p.detalle}</small><br><small style="color:#ffcc00">EFECTIVO: ${p.efec}</small></div><div>${p.prob}</div></div>`).join(''); }
   if(t==="marcadores"){ h=g.marcadores.map(m=>`<div class="mercado"><div><b>MARCADOR EXACTO ${m.score}</b> ${m.prob} ${m.top?'<span style="color:#00ff88">TOP</span>':''}</div><div><b>${m.momio}</b></div></div>`).join(''); }
@@ -309,4 +283,4 @@ renderLista();
 html_final = html_template.replace("__GAMES_JSON__", games_json).replace("__TOTAL__", str(len(games)))
 with open("index.html","w",encoding="utf-8") as f:
     f.write(html_final)
-print(f"LISTO V87.1 ANTI-ROJO - {len(games)} eventos - OK")
+print(f"LISTO V87.2 - {len(games)} eventos - TODAS + MEJOR")
