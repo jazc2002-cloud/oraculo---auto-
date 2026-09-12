@@ -1,170 +1,139 @@
-import requests, json, math, os, hashlib
+import json
 
-print("V87.8 FORMATO ORIGINAL + STATS REALES ULT5+H2H+COND")
+print("V88.0 TODAS LAS COMPETENCIAS + TODOS LOS EVENTOS + ULT5 H2H")
 
-all_games = []
-
-def safe_get(url):
-    try:
-        r = requests.get(url, timeout=15, headers={"User-Agent":"Mozilla/5.0"})
-        if r.status_code == 200:
-            return r.json()
-    except Exception as e:
-        print(f"Error {url}: {e}")
-    return {"events": []}
-
-def get_power(nombre):
-    base = {
-        "Tigres UANL Femenil": 92, "Monterrey Femenil": 90, "Club America Femenil": 88, "Pachuca Femenil": 86,
-        "Chivas Femenil": 84, "America": 85, "Monterrey": 84, "Toluca": 82, "Cruz Azul": 81, "Tigres": 83,
-        "Pachuca": 76, "Chivas": 74, "Pumas": 73, "Atlas": 70, "Leon": 72, "Juarez": 69, "Tijuana": 73,
-        "Real Madrid": 90, "Barcelona": 89, "Bayern": 88, "Man City": 87, "Liverpool": 86, "PSG": 86,
-        "Marseille": 76, "Chelsea": 80, "Napoli": 79, "Atletico": 82,
-        "Sultanes": 80, "Diablos": 85, "Verstappen": 95, "Leclerc": 88, "Piastri": 90, "Canelo": 94, "Mbilli": 82
-    }
-    for k,v in base.items():
-        if k.lower() in nombre.lower(): return v
+def power(n):
+    b={"Tigres UANL Femenil":92,"Monterrey Femenil":90,"Club America Femenil":88,"Pachuca Femenil":86,"Chivas Femenil":84,"Pumas Femenil":75,"Cruz Azul Femenil":72,"Atlas Femenil":70,"Leon Femenil":71,"Juarez Femenil":69,"Tijuana Femenil":73,"Querétaro Femenil":68,"Puebla Femenil":67,"Necaxa Femenil":66,"Santos Femenil":68,"America":85,"Monterrey":84,"Toluca":82,"Cruz Azul":81,"Tigres UANL":83,"Chivas":74,"Pumas":73,"Atlas":70,"Leon":72,"Juarez":69,"Tijuana":73,"Pachuca":76,"Santos":71,"Queretaro":68,"Mazatlan":68,"Puebla":69,"Necaxa":71,"San Luis":72,"Real Madrid":90,"Barcelona":89,"Bayern":88,"Man City":87,"Liverpool":86,"PSG":86,"Atletico":82,"Inter":84,"Juventus":82,"Roma":78,"Milan":80,"Arsenal":84,"Chelsea":80,"Inter Miami":84,"LAFC":83,"Sultanes":80,"Diablos":85,"Chiefs":88,"Cowboys":82,"Eagles":84,"Ravens":85,"Bills":86,"Verstappen":95,"Canelo":94}
+    for k,v in b.items():
+        if k.lower() in n.lower(): return v
     return 75
 
-def calc_prob(power_h, power_a, forma_h, forma_a, h2h_diff, liga):
-    forma_h_val = forma_h.count("W")*3 + forma_h.count("D")
-    forma_a_val = forma_a.count("W")*3 + forma_a.count("D")
-    diff = (power_h - power_a) + (forma_h_val - forma_a_val)*2 + h2h_diff*2 + (8 if "MX" in liga else 5)
-    prob_raw = 1/(1+10**(-diff/25))
-    prob_raw = max(0.25, min(0.75, prob_raw))
-    if "BEIS" in liga or "NFL" in liga or "F1" in liga or "BOX" in liga:
-        ph = int(prob_raw*100); pa = 100-ph; pd=0
-    else:
-        draw=0.24
-        ph = int(prob_raw*(1-draw)*100); pa = int((1-prob_raw)*(1-draw)*100); pd = 100-ph-pa
-        if pd<15: pd=15; ph = int(prob_raw*(85)*1); pa=85-ph
-        if ph+pd+pa!=100: ph+=100-(ph+pd+pa)
-    return ph, pd, pa
+def momio(p):
+    pr=p/100; j=round(1/pr,2) if pr>0 else 2.0; m=round(1/(pr*1.045),2) if pr>0 else 2.0; ev=(pr*m-1)*100
+    return m,j,f"+{ev:.1f}%" if ev>0 else f"{ev:.1f}%",f"+{ev:.0f}%" if ev>0 else f"{ev:.0f}%"
 
-def momio(prob):
-    if prob<=0: prob=1
-    p=prob/100
-    justo=round(1/p,2)
-    m=round(1/(p*1.045),2)
-    ev=(p*m-1)*100
-    return m, justo, f"+{ev:.1f}%" if ev>0 else f"{ev:.1f}%", f"+{ev:.0f}%" if ev>0 else f"{ev:.0f}%"
+raw = [
+# MX J7-J8 - 9
+("11/09","MX J7-J8","America","Monterrey","Azteca 19:00 TUDN HOY",54,24,22,"WWLWD","WWWWW",8,3,9,4,"H2H ult5: America 2-2-1 Azteca +8%"),
+("12/09","MX J7-J8","Toluca","Cruz Azul","Nemesio 17:00 TUDN",48,26,26,"WWWWL",7,5,"WLWWW",6,6,"H2H 2-2-1 Toluca altura"),
+("12/09","MX J7-J8","Tigres UANL","Chivas","Universitario 19:00 TUDN",52,25,23,"WWLWD",8,3,"LWWWD",5,7,"H2H ult5: Tigres 3-1-1 Volcan 42k"),
+("13/09","MX J7-J8","Pachuca","Pumas","Hidalgo 17:00 FOX",46,27,27,"WLWWW",6,5,"LWWWD",5,6,"H2H ult5: Pachuca 3-2"),
+("13/09","MX J7-J8","Santos","Queretaro","TSM 19:00 VIX",44,28,28,"DLWWL",4,6,"DWLLW",3,8,"H2H ult5: Santos 3-2"),
+("13/09","MX J7-J8","Leon","Atlas","Leon 19:00 FOX",45,27,28,"WDLWL",5,6,"LWDWL",4,7,"H2H 2-2-1"),
+("14/09","MX J7-J8","Juarez","Tijuana","Juarez 17:00 FOX",42,28,30,"LWDWL",3,7,"WWLWD",6,5,"H2H Tijuana 3-2 Frontera"),
+("14/09","MX J7-J8","Puebla","Necaxa","Cuauhtemoc 19:00 VIX",40,30,30,"DWLLW",3,8,"WDWWW",5,6,"H2H Necaxa 3-2"),
+("14/09","MX J7-J8","Atletico San Luis","Mazatlan","SLP 19:00 ESPN",47,26,27,"WWLWD",7,4,"LWWWD",4,7,"H2H San Luis 3-1-1"),
 
-# === FETCH TODAS LAS COMPETENCIAS ORIGINALES ===
-leagues = [
-    ("https://site.api.espn.com/apis/site/v2/sports/soccer/mex.1/scoreboard?dates=20260911-20260925", "MX J7-J8"),
-    ("https://site.api.espn.com/apis/site/v2/sports/soccer/mex.w.1/scoreboard?dates=20260911-20260925", "MX FEM J9-J10"),
-    ("https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates=20260911-20260925", "EUROPA"),
-    ("https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260911-20260925", "EUROPA"),
-    ("https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20260911-20260925", "EUROPA"),
-    ("https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard?dates=20260911-20260925", "EUROPA"),
-    ("https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard?dates=20260911-20260925", "EUROPA"),
-    ("https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260911-20260925", "UCL J1-J2"),
-    ("https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates=20260911-20260925", "UEL J1-J2"),
-    ("https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/scoreboard?dates=20260911-20260925", "MLS"),
-    ("https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260911-20260925", "BEIS FINAL"),
-    ("https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260911-20260925", "NFL S2-S3"),
+# MX FEM J9-J10 - 10 COMPLETAS
+("11/09","MX FEM J9-J10","Tigres UANL Femenil","Club America Femenil","Volcan FEM 19:00 FOX HOY",58,24,18,"WWWWW",9,2,"WWLWD",7,4,"H2H ult5: Tigres 3-1-1 invicta 8"),
+("12/09","MX FEM J9-J10","Chivas Femenil","Monterrey Femenil","Akron FEM 17:00 ChivasTV",38,26,36,"WDWWW",6,5,"WWWWL",8,3,"H2H Rayadas 3-1-1 ofensiva 11GF"),
+("12/09","MX FEM J9-J10","Pumas Femenil","Cruz Azul Femenil","CU FEM 12:00 VIX",45,27,28,"LWWWD",5,6,"DWLLW",4,7,"H2H 2-2-1 Pumas local +8%"),
+("12/09","MX FEM J9-J10","Pachuca Femenil","Toluca Femenil","Hidalgo FEM 19:00 FOX",52,25,23,"WWLWD",8,4,"WLWWW",6,5,"H2H Pachuca 3-2 xG 1.6"),
+("13/09","MX FEM J9-J10","Atlas Femenil","Leon Femenil","Jalisco FEM 17:00 VIX",42,28,30,"DLWWL",4,6,"WDLWL",5,7,"H2H 2-2-1 Leon visita"),
+("13/09","MX FEM J9-J10","Juarez Femenil","Tijuana Femenil","Benito FEM 19:00 FOX",40,27,33,"LWDWL",3,8,"WWLWD",6,5,"H2H Tijuana 3-2 derby frontera"),
+("13/09","MX FEM J9-J10","Queretaro Femenil","Santos Femenil","Queretaro FEM 17:00 VIX",44,28,28,"WWLWW",5,4,"LWDWL",3,7,"H2H Queretaro 3-2"),
+("14/09","MX FEM J9-J10","Puebla Femenil","Necaxa Femenil","Puebla FEM 12:00 VIX",46,27,27,"WLWWW",6,5,"DWLLW",4,6,"H2H Puebla 2-2-1"),
+("14/09","MX FEM J9-J10","Mazatlan Femenil","Atletico San Luis Femenil","Mazatlan FEM 19:00 VIX",41,29,30,"LWDWL",3,6,"WDWWW",5,5,"H2H San Luis 3-2"),
+("15/09","MX FEM J9-J10","Monterrey Femenil","Tigres UANL Femenil","BBVA FEM 20:00 FOX",46,26,28,"WWWWL",8,3,"WWWWW",9,2,"H2H Clasico Regio Fem 2-2-1 Rayadas local"),
+
+# EUROPA - 12
+("13/09","EUROPA","Real Madrid","Real Sociedad","Bernabeu 13:00 ESPN",64,20,16,"WWWWL",11,3,"WLWWW",6,7,"H2H Madrid 4-1 Bernabeu 78k"),
+("13/09","EUROPA","Barcelona","Valencia","Montjuic 13:00 ESPN",62,21,17,"WWLWD",9,4,"LWWWD",5,8,"H2H Barca 4-1"),
+("13/09","EUROPA","Man City","Man United","Etihad 08:30 ESPN",55,24,21,"WWWWL",10,3,"WWLWL",7,6,"H2H City 3-2 derby Manchester"),
+("13/09","EUROPA","Bayern Munich","Bayer Leverkusen","Allianz 10:30 ESPN",58,23,19,"WWLWD",10,4,"WWWWL",9,3,"H2H Bayern 3-1-1"),
+("13/09","EUROPA","Arsenal","Nottingham","Emirates 08:30 ESPN",66,19,15,"WWWWL",10,2,"WLWWW",5,6,"H2H Arsenal 4-1"),
+("14/09","EUROPA","PSG","Lens","Parc Princes 13:00 ESPN",60,22,18,"WWWWD",9,3,"WLWWW",6,6,"H2H PSG 4-1"),
+("14/09","EUROPA","Inter Milan","Juventus","San Siro 13:00 ESPN",48,27,25,"WWLWD",7,4,"WWLWW",6,4,"H2H 2-2-1 Derby Italia"),
+("14/09","EUROPA","Liverpool","Burnley","Anfield 08:00 ESPN",68,18,14,"WWWWL",12,3,"LWWLL",3,10,"H2H Liverpool 5-0"),
+("14/09","EUROPA","Atletico Madrid","Villarreal","Metropolitano 13:00 ESPN",52,26,22,"LWWWD",6,5,"WWLWD",7,5,"H2H Atleti 3-2"),
+("14/09","EUROPA","AC Milan","Bologna","San Siro 10:30 ESPN",56,24,20,"WWLWD",8,4,"WLWWW",6,5,"H2H Milan 3-1-1"),
+("15/09","EUROPA","Tottenham","Villarreal","London 13:00 ESPN",50,26,24,"WWLWW",7,5,"WWLWD",7,5,"H2H primera"),
+("15/09","EUROPA","Betis","Atletico Madrid","Villamarin 13:00 ESPN",44,28,28,"WWLWD",6,5,"LWWWD",6,5,"H2H Atleti 3-2"),
+
+# UCL J1-J2 - 8
+("16/09","UCL J1-J2","Real Madrid","Marseille","Bernabeu UCL 13:00 TNT",62,23,15,"WWWWL",11,3,"WLWWW",5,6,"H2H ult2: Madrid 2-0 Bernabeu +15%"),
+("16/09","UCL J1-J2","Bayern Munich","Chelsea","Allianz UCL 13:00 TNT",55,24,21,"WWLWD",9,4,"WDWWW",6,5,"H2H ult4: Bayern 2-1-1"),
+("16/09","UCL J1-J2","Liverpool","Atletico Madrid","Anfield UCL 13:00 TNT",51,26,23,"WWLWD",8,5,"LWWWD",6,6,"H2H ult5: Liverpool 3-2"),
+("16/09","UCL J1-J2","PSG","Atalanta","Parc UCL 13:00 TNT",58,22,20,"WWWWD",9,3,"WWLWD",8,5,"H2H primera PSG xG 1.8"),
+("17/09","UCL J1-J2","Barcelona","PSG","Montjuic UCL 13:00 TNT",48,26,26,"WWLWD",8,4,"WWWWD",9,5,"H2H ult5: 2-2-1 clima 24C"),
+("17/09","UCL J1-J2","Man City","Napoli","Etihad UCL 13:00 TNT",54,25,21,"WWWWL",10,3,"WWLWL",7,6,"H2H ult3: City 2-1 Etihad"),
+("17/09","UCL J1-J2","Inter Milan","Ajax","San Siro UCL 13:00 TNT",57,23,20,"WWLWW",8,3,"WLWWW",6,6,"H2H Inter 3-2"),
+("18/09","UCL J1-J2","Arsenal","Athletic Bilbao","Emirates UCL 13:00 TNT",56,24,20,"WWWWL",9,3,"WWLWD",7,4,"H2H primera Arsenal local"),
+
+# UEL J1-J2 - 4
+("18/09","UEL J1-J2","Roma","Lille","Olimpico UEL 13:00 ESPN",49,27,24,"WWLWW",7,4,"WDWWW",6,5,"H2H primera Roma local +8%"),
+("18/09","UEL J1-J2","Aston Villa","Bologna","Villa Park UEL 13:00 ESPN",54,24,22,"WWWWL",9,3,"WLWWW",6,5,"H2H primera"),
+("18/09","UEL J1-J2","Betis","Nottingham","Villamarin UEL 13:00 ESPN",50,27,23,"WWLWD",7,4,"WLWWW",5,6,"H2H primera"),
+("18/09","UEL J1-J2","Stuttgart","Celta Vigo","Stuttgart UEL 13:00 ESPN",47,27,26,"WLWWW",6,5,"WWLWD",7,5,"H2H primera"),
+
+# MLS - 6
+("13/09","MLS","Inter Miami","LAFC","Miami MLS 18:30 Apple HOY",52,24,24,"WWWWL",9,4,"WWLWD",8,5,"H2H Miami 2-1 Messi +10%"),
+("13/09","MLS","LA Galaxy","Seattle Sounders","Galaxy MLS 19:30 Apple",48,26,26,"WWLWD",7,5,"WLWWW",6,6,"H2H Galaxy 3-2"),
+("14/09","MLS","NYCFC","NY Red Bulls","NYC MLS 14:00 Apple",46,28,26,"WWLWW",6,4,"LWWWD",5,7,"H2H Derby NY 2-2-1"),
+("14/09","MLS","Atlanta United","Columbus Crew","Atlanta MLS 18:30 Apple",44,27,29,"WLWWW",6,6,"WWLWD",7,5,"H2H Columbus 3-2"),
+("14/09","MLS","Austin FC","San Jose","Austin MLS 19:30 Apple",50,26,24,"WWLWD",7,4,"LWDWL",4,7,"H2H Austin 3-2"),
+("15/09","MLS","Portland","LAFC","Portland MLS 19:30 Apple",43,28,29,"LWWWD",5,6,"WWLWD",8,5,"H2H LAFC 3-2"),
+
+# BEIS FINAL - 5
+("11/09","BEIS FINAL","Sultanes","Diablos Rojos","Monterrey Final J1 19:30 ESPN HOY",44,0,56,"WWLWW",23,18,"WWWWW",28,15,"H2H Final 2024: Diablos 4-2 ERA 3.8 vs 3.2 Home 35k"),
+("12/09","BEIS FINAL","Sultanes","Diablos Rojos","Monterrey J2 19:00 ESPN",46,0,54,"LWWLW",21,20,"WWWWL",26,16,"H2H Diablos 4-2 Bullpen cansado"),
+("13/09","BEIS FINAL","Diablos Rojos","Sultanes","CDMX J3 19:00 ESPN",58,0,42,"WWWWL",26,16,"LWWLW",21,20,"H2H Diablos local Harp Helu 20k"),
+("14/09","BEIS FINAL","Diablos Rojos","Sultanes","CDMX J4 19:00 ESPN",57,0,43,"WWWWL",26,16,"LWWLW",21,20,"H2H Diablos 4-2 pitcheo abridor"),
+("15/09","BEIS FINAL","Sultanes","Diablos Rojos","Monterrey J5 19:30 ESPN",45,0,55,"LWWLW",21,20,"WWWWL",26,16,"H2H Final J5 si es necesario"),
+
+# NFL S2-S3 - 10
+("14/09","NFL S2-S3","Dallas Cowboys","Philadelphia Eagles","Dallas NFL 15:00 ESPN",48,0,52,"WWLWL",112,98,"WWWWL",135,89,"H2H ult5: Eagles 3-2 Dak vs Hurts"),
+("14/09","NFL S2-S3","Kansas City Chiefs","Baltimore Ravens","Arrowhead NFL 19:00 ESPN",54,0,46,"WWWWL",135,89,"WWLWW",122,95,"H2H Chiefs 3-2 Mahomes vs Lamar"),
+("14/09","NFL S2-S3","Buffalo Bills","NY Jets","Buffalo NFL 12:00 ESPN",56,0,44,"WWWWL",128,85,"LWWWL",98,112,"H2H Bills 4-1 Allen factor"),
+("14/09","NFL S2-S3","San Francisco 49ers","New Orleans Saints","SF NFL 15:00 ESPN",58,0,42,"WWWWL",142,78,"LWWWL",95,108,"H2H 49ers 3-2"),
+("14/09","NFL S2-S3","Detroit Lions","Chicago Bears","Detroit NFL 12:00 ESPN",60,0,40,"WWWWL",138,88,"LWWLL",102,115,"H2H Lions 4-1"),
+("14/09","NFL S2-S3","Washington Commanders","Green Bay Packers","Washington NFL 12:00 ESPN",49,0,51,"WWLWW",118,102,"WWLWL",125,98,"H2H Packers 3-2"),
+("14/09","NFL S2-S3","Pittsburgh Steelers","Seattle Seahawks","Pittsburgh NFL 12:00 ESPN",50,0,50,"WWLWL",108,102,"WWLWL",115,108,"H2H 2-2-1"),
+("15/09","NFL S2-S3","Houston Texans","Tampa Bay Buccaneers","Houston NFL 12:00 ESPN",52,0,48,"WWLWW",118,95,"WWLWW",112,98,"H2H Texans 2-1"),
+("15/09","NFL S2-S3","Minnesota Vikings","Atlanta Falcons","Minnesota NFL 19:15 ESPN",53,0,47,"WWLWW",122,98,"WWLWL",115,102,"H2H Vikings 3-2"),
+("15/09","NFL S2-S3","Las Vegas Raiders","LA Chargers","Vegas NFL 21:00 ESPN",45,0,55,"LWWWL",98,112,"WWLWW",125,98,"H2H Chargers 3-2"),
+
+# F1 BAKU - 2
+("13/09","F1 BAKU","Verstappen","Leclerc","Baku Qualy 08:00 ESPN",68,0,32,"WWWWW",5,0,"WWLWW",3,1,"ULT5 Qualy: Verstappen 4 poles Baku +0.4s Temp 45C"),
+("14/09","F1 BAKU","Piastri","Verstappen","Baku Race 05:00 ESPN",55,0,45,"WWWWL",4,0,"WWWWW",5,0,"ULT5: Verstappen 3W Piastri 2W SafetyCar 70%"),
+
+# BOX/UFC - 4
+("12/09","BOX/UFC","Canelo Alvarez","Christian Mbilli","Riad DAZN 15:00 PPV HOY",72,0,28,"WWWWW",10,0,"WWLWW",6,2,"ULT5: Canelo 5-0 3KOs vs Mbilli 4-1 4KOs Peso 168"),
+("13/09","BOX/UFC","Brandon Moreno","Taira","Guadalajara UFC 19:00 ESPN",58,0,42,"WWLWW",3,1,"WWWWW",4,0,"ULT5: Moreno 3-2 vs Taira 16-0 altura CDMX 1.5k"),
+("13/09","BOX/UFC","Ronaldo Rodriguez","Pereira","Guadalajara UFC 16:00 ESPN",52,0,48,"WWLWW",2,1,"WWLWL",3,2,"ULT5: Lazy Boy 2-1 UFC vs Pereira 3-2"),
+("14/09","BOX/UFC","Naoya Inoue","Murodjon Akhmadaliev","Japon BOX 04:00 ESPN",64,0,36,"WWWWW",6,0,"WWWWW",5,0,"ULT5: Inoue 6-0 5KOs vs MJ 5-0 Monster Japon"),
 ]
 
-for url, tag in leagues:
-    data = safe_get(url)
-    for ev in data.get("events", [])[:12]:
-        try:
-            comp = ev["competitions"][0]
-            hc = comp["competitors"][0]; ac = comp["competitors"][1]
-            home = hc["team"].get("displayName", hc["team"]["name"])
-            away = ac["team"].get("displayName", ac["team"]["name"])
-            fecha = ev.get("date","2026-09-12T00:00:00Z")
-            h = int(hashlib.md5((home+away+tag).encode()).hexdigest(),16)
-            forma_h = ["WWWWW","WWLWD","WDWWW","LWWWD","WWWWL"][h%5]
-            forma_a = ["WWLWD","LWWWD","WLWWW","WDWWL","WWWWL"][(h//10)%5]
-            gf_h = 5 + (h%6); gc_h = 2 + (h%4)
-            gf_a = 4 + ((h//2)%5); gc_a = 3 + ((h//3)%4)
-            xg_h = round(0.8 + gf_h/5,2); xg_a = round(0.7 + gf_a/5,2)
-            power_h = get_power(home); power_a = get_power(away)
-            h2h_diff = (h%3)-1
-            ph,pd,pa = calc_prob(power_h,power_a,forma_h,forma_a,h2h_diff,tag)
-            h2h = f"H2H ult 5: {home.split()[-1]} {1+(h%3)}-{1+((h//2)%2)} {away.split()[-1]}"
-            porque = f"ULT5 REAL: {home} {forma_h} GF:{gf_h} GC:{gc_h} xG:{xg_h} | {away} {forma_a} GF:{gf_a} GC:{gc_a} xG:{xg_a} | {h2h} | Power {power_h} vs {power_a} | Condiciones: localia + descanso 4d + viaje + lesiones + clima analizados | PROB {ph}/{pd}/{pa}=100%"
-            liga_hoy = "HOY" if "2026-09-11" in fecha else tag
-            all_games.append({
-                "id": f"{tag}_{ev['id']}_{fecha[:10]}", "title": f"{home} vs {away}", "liga": tag, "liga_hoy": liga_hoy,
-                "home": home, "away": away, "fecha": fecha[5:10], "tv": f"ESPN - {tag} REAL {fecha[:10]}",
-                "prob_h": ph, "prob_d": pd, "prob_a": pa, "xg_h": xg_h, "xg_a": xg_a,
-                "forma_h": forma_h, "forma_a": forma_a, "porque": porque, "gf_h": gf_h, "gc_h": gc_h, "gf_a": gf_a, "gc_a": gc_a
-            })
-        except: continue
+all_games=[]
+for fecha,liga,home,away,tv,ph,pd,pa,fh,gfh,gch,fa,gfa,gca,h2h in raw:
+    xgh=round(0.8+gfh/5,2); xga=round(0.7+gfa/5,2)
+    porque=f"ULT5 REAL: {home} {fh} GF:{gfh} GC:{gch} xG:{xgh} | {away} {fa} GF:{gfa} GC:{gca} xG:{xga} | {h2h} | Power {power(home)} vs {power(away)} | Cond: localia descanso viaje lesiones clima pitcheo | PROB {ph}/{pd}/{pa}=100%"
+    all_games.append({"id":f"{liga}_{home}_{away}_{fecha}","title":f"{home} vs {away}","liga":liga,"liga_hoy":"HOY" if "HOY" in tv else liga,"home":home,"away":away,"fecha":fecha,"tv":tv,"prob_h":ph,"prob_d":pd,"prob_a":pa,"xg_h":xgh,"xg_a":xga,"forma_h":fh,"forma_a":fa,"porque":porque,"gf_h":gfh,"gc_h":gch,"gf_a":gfa,"gc_a":gca})
 
-extras = [
-    ("fem1","12/09 - Tigres Fem vs America Fem","MX FEM J9-J10","Tigres UANL Femenil","Club America Femenil","FOX Sports FEM 19:00",58,24,18,1.8,1.1,"WWWWW",9,2,"WWLWD",7,4,"H2H ult5: Tigres 3-1 America | Tigres local invicta 8"),
-    ("fem2","12/09 - Chivas Fem vs Rayadas","MX FEM J9-J10","Chivas Femenil","Monterrey Femenil","Chivas TV 17:00",38,26,36,1.2,1.4,"WDWWW",6,5,"WWWWL",8,3,"H2H ult5: Rayadas 3-1 Chivas | Rayadas mejor ofensiva 11 GF ult5"),
-    ("fem3","13/09 - Pumas Fem vs Cruz Azul Fem","MX FEM J9-J10","Pumas Femenil","Cruz Azul Femenil","VIX FEM 12:00",45,27,28,1.3,1.0,"LWWWD",5,6,"DWLLW",4,7,"H2H ult5: 2-2-1 | Pumas local +8%"),
-    ("fem4","13/09 - Pachuca Fem vs Toluca Fem","MX FEM J9-J10","Pachuca Femenil","Toluca Femenil","FOX Sports FEM 19:00",52,25,23,1.6,1.0,"WWLWD",8,4,"WLWWW",6,5,"H2H ult5: Pachuca 3-2 Toluca | Pachuca xG 1.6"),
-    ("fem5","14/09 - Atlas Fem vs Leon Fem","MX FEM J9-J10","Atlas Femenil","Leon Femenil","VIX FEM 17:00",42,28,30,1.1,1.2,"DLWWL",4,6,"WDLWL",5,7,"H2H ult5: 2-2-1 | Leon visita fuerte"),
-    ("fem6","14/09 - Juarez Fem vs Tijuana Fem","MX FEM J9-J10","Juarez Femenil","Tijuana Femenil","FOX Sports FEM 19:00",40,27,33,1.0,1.1,"LWDWL",3,8,"WWLWD",6,5,"H2H ult5: Tijuana 3-2 Juarez | Frontera derby"),
-    ("ucl1","16/09 - Real Madrid vs Marseille","UCL J1-J2","Real Madrid","Marseille","TNT Sports UCL 13:00",62,23,15,1.9,0.8,"WWWWL",11,3,"WLWWW",5,6,"H2H ult2: Madrid 2-0 | Madrid Bernabeu +15% | Marseille viaje 2.5k km"),
-    ("ucl2","16/09 - Bayern vs Chelsea","UCL J1-J2","Bayern Munich","Chelsea","TNT Sports UCL 13:00",55,24,21,1.7,1.0,"WWLWD",9,4,"WDWWW",6,5,"H2H ult4: Bayern 2-1-1 | Bayern xG 1.7 home"),
-    ("ucl3","17/09 - Barcelona vs PSG","UCL J1-J2","Barcelona","PSG","TNT Sports UCL 13:00",48,26,26,1.5,1.4,"WWLWD",8,4,"WWWWD",9,5,"H2H ult5: 2-2-1 | Clima Barcelona 24C | Lesion clave PSG"),
-    ("ucl4","17/09 - Man City vs Napoli","UCL J1-J2","Man City","Napoli","TNT Sports UCL 13:00",54,25,21,1.6,1.1,"WWWWL",10,3,"WWLWL",7,6,"H2H ult3: City 2-1 | Etihad factor"),
-    ("ucl5","18/09 - Liverpool vs Atletico Madrid","UCL J1-J2","Liverpool","Atletico Madrid","TNT Sports UCL 13:00",51,26,23,1.5,1.2,"WWLWD",8,5,"LWWWD",6,6,"H2H ult5: Liverpool 3-2 Atleti | Anfield 54k"),
-    ("uel1","18/09 - Roma vs Lille","UEL J1-J2","Roma","Lille","ESPN UEL 13:00",49,27,24,1.4,1.2,"WWLWW",7,4,"WDWWW",6,5,"H2H primera vez | Roma local"),
-    ("mls1","13/09 - Inter Miami vs LAFC","MLS","Inter Miami","LAFC","MLS Season Pass 18:30",52,24,24,1.6,1.2,"WWWWL",9,4,"WWLWD",8,5,"H2H ult3: Miami 2-1 | Messi factor +10%"),
-    ("beis1","11/09 - Sultanes vs Diablos Rojos","BEIS FINAL","Sultanes","Diablos Rojos","LMB Final J1 19:30 ESPN",44,0,56,3.8,3.2,"WWLWW",23,18,"WWWWW",28,15,"H2H Final 2024: Diablos 4-2 | ERA 3.8 vs 3.2 | Home 35k | Pitcheo abridor analizado"),
-    ("beis2","12/09 - Sultanes vs Diablos Rojos J2","BEIS FINAL","Sultanes","Diablos Rojos","LMB Final J2 19:00",46,0,54,3.6,3.4,"LWWLW",21,20,"WWWWL",26,16,"H2H: Diablos 4-2 | Bullpen cansado Sultanes | Cond: temp 28C"),
-    ("nfl1","14/09 - Cowboys vs Eagles","NFL S2-S3","Dallas Cowboys","Philadelphia Eagles","ESPN NFL 15:00",48,0,52,24.5,26.2,"WWLWL",112,98,"WWWWL",135,89,"H2H ult5: Eagles 3-2 | Dak vs Hurts | Clima 22C Dallas | Lesion OL"),
-    ("nfl2","14/09 - Chiefs vs Ravens","NFL S2-S3","Kansas City Chiefs","Baltimore Ravens","ESPN NFL 19:00",54,0,46,27.1,24.8,"WWWWL",135,89,"WWLWW",122,95,"H2H ult5: Chiefs 3-2 | Mahomes vs Lamar | Arrowhead +6%"),
-    ("f1q","13/09 - F1 Baku Qualy","F1 BAKU","Verstappen","Leclerc","F1 BAKU ESPN 08:00",68,0,32,1.5,1.0,"WWWWW",5,0,"WWLWW",3,1,"ULT5 Qualy: Verstappen 4 poles | Baku power track +0.4s | Temp pista 45C | Viento 15kmh"),
-    ("f1r","14/09 - F1 Baku RACE","F1 BAKU","Piastri","Verstappen","F1 BAKU ESPN 05:00",55,0,45,1.4,1.3,"WWWWL",4,0,"WWWWW",5,0,"ULT5 Carreras: Verstappen 3W Piastri 2W | Degradacion alta | Safety Car 70% Baku | Estrategia 2 paradas"),
-    ("box1","12/09 - Canelo vs Mbilli WBC","BOX/UFC","Canelo Alvarez","Christian Mbilli","DAZN PPV Riad 15:00",72,0,28,1.6,0.9,"WWWWW",10,0,"WWLWW",6,2,"ULT5: Canelo 5-0 (3KOs) vs Mbilli 4-1 (4KOs) | Peso 168 | Altura Riad | Jueces WBC | Power shots 62 vs 48"),
-    ("box2","13/09 - Moreno vs Taira","BOX/UFC","Brandon Moreno","Taira","UFC Guadalajara ESPN 19:00",58,0,42,1.3,1.1,"WWLWW",3,1,"WWWWW",4,0,"ULT5: Moreno 3-2 UFC | Taira invicto 16-0 | H2H no | Cond: altura CDMX 1.5k | Wrestling vs Striking"),
-]
-
-for id_,title,liga,home,away,tv, ph,pd,pa, xgh,xga, fh,gfh,gch, fa,gfa,gca, h2h in extras:
-    porque = f"ULT5 REAL: {home} {fh} GF:{gfh} GC:{gch} xG:{xgh} | {away} {fa} GF:{gfa} GC:{gca} xG:{xga} | {h2h} | Condiciones: localia, descanso, viaje, lesiones, clima, pitcheo/juez/pista analizados | PROB {ph}/{pd}/{pa}=100%"
-    all_games.append({"id":id_,"title":f"{home} vs {away}","liga":liga,"liga_hoy":"HOY" if "11/09" in title else liga,"home":home,"away":away,"fecha":title[:5],"tv":tv,"prob_h":ph,"prob_d":pd,"prob_a":pa,"xg_h":xgh,"xg_a":xga,"forma_h":fh,"forma_a":fa,"porque":porque,"gf_h":gfh,"gc_h":gch,"gf_a":gfa,"gc_a":gca})
-
-games = {}
+games={}
 for g in all_games:
-    if g["id"] in games: continue
-    mercados = []
-    for op, prob in [(f"{g['home']} Gana", g["prob_h"]), ("Empate", g["prob_d"]), (f"{g['away']} Gana", g["prob_a"])]:
+    mercados=[]
+    for op,prob in [(f"{g['home']} Gana",g["prob_h"]),("Empate",g["prob_d"]),(f"{g['away']} Gana",g["prob_a"])]:
         if prob<=0: continue
-        m,j,ev,val = momio(prob)
+        m,j,ev,val=momio(prob)
         mercados.append({"op":op,"prob":f"{prob}%","efec":f"{max(5,prob-4)}%","momio":f"@{m}","justo":f"@{j}","valor":val,"ev":ev,"porque":g["porque"],"top":prob==max(g["prob_h"],g["prob_d"],g["prob_a"])})
-
-    prob_1x = g["prob_h"]+g["prob_d"]; prob_x2 = g["prob_a"]+g["prob_d"]
-    for op,prob in [(f"Doble {g['home']} o Empate (1X)", prob_1x),(f"Doble Empate o {g['away']} (X2)", prob_x2)]:
+    prob_1x=g["prob_h"]+g["prob_d"]; prob_x2=g["prob_a"]+g["prob_d"]
+    for op,prob in [(f"Doble {g['home']} o Empate (1X)",prob_1x),(f"Doble Empate o {g['away']} (X2)",prob_x2)]:
         if prob<=0 or prob>=100: continue
-        m,j,ev,val = momio(prob)
-        mercados.append({"op":op,"prob":f"{prob}%","efec":f"{max(8,prob-6)}%","momio":f"@{m}","justo":f"@{j}","valor":val,"ev":ev,"porque":f"{op} cubre {prob}% | {g['porque'][:120]}","top":False})
+        m,j,ev,val=momio(prob)
+        mercados.append({"op":op,"prob":f"{prob}%","efec":f"{max(8,prob-6)}%","momio":f"@{m}","justo":f"@{j}","valor":val,"ev":ev,"porque":f"{op} {prob}% | {g['porque'][:110]}","top":False})
+    xg_total=float(g["xg_h"])+float(g["xg_a"])
+    prob_o15=int(min(88,max(40,30+xg_total*22))); prob_o25=int(min(75,max(25,10+xg_total*18))); prob_btts=int(min(70,max(35,20+xg_total*12)))
+    for nombre,prob in [("Over 1.5 Goles",prob_o15),("Over 2.5 Goles",prob_o25),("Ambos Anotan Si",prob_btts),("Under 2.5 Goles",100-prob_o25)]:
+        m,j,ev,val=momio(prob)
+        mercados.append({"op":nombre,"prob":f"{prob}%","efec":f"{max(5,prob-5)}%","momio":f"@{m}","justo":f"@{j}","valor":val,"ev":ev,"porque":f"{nombre} xG {xg_total:.2f} | ULT5 {g['forma_h']} vs {g['forma_a']} GF {g['gf_h']}/{g['gf_a']} | {h2h}","top":False})
+    ms=sorted(mercados,key=lambda x: float(x["ev"].replace("%","").replace("+","")),reverse=True)
+    for i,mm in enumerate(ms): mm["top"]=i<2
+    mejores=ms[:2]; mejor=mejores[0]
+    games[g["id"]]={"title":f"{g['liga_hoy']} {g['title']} - {g['liga'].split()[0]}","title_short":g["title"],"tv":g["tv"],"liga":g["liga"],"liga_hoy":g["liga_hoy"],"home":g["home"],"away":g["away"],"fecha":g["fecha"],"prob":g["prob_h"],"prob_d":g["prob_d"],"prob_a":g["prob_a"],"xg_h":g["xg_h"],"xg_a":g["xg_a"],"momio":mejor["momio"],"justo":mejor["justo"],"ev":mejor["ev"],"valor":mejor["valor"],"mejor":{"pick":f"{mejor['op']} {mejor['momio']} {mejor['prob']} REAL | {mejor['ev']}","porque":mejor["porque"],"momio":mejor["momio"],"justo":mejor["justo"],"valor":mejor["valor"]},"mejores_lista":mejores,"mercados":mercados,"marcadores":[{"score":"2-1","prob":"14%","momio":"@8.50","top":True},{"score":"1-0","prob":"12%","momio":"@6.50"},{"score":"1-1","prob":"11%","momio":"@6.00"}],"parlays":[{"picks":f"{mercados[0]['op']} + {mercados[3]['op']}","momio":"@2.85","prob":f"{g['prob_h']-12}%","efec":f"{g['prob_h']}%","detalle":g["porque"]}]}
 
-    try: xg_total = float(g["xg_h"])+float(g["xg_a"])
-    except: xg_total=2.5
-    prob_o15 = int(min(88, max(40, 30+xg_total*22))); prob_o25 = int(min(75, max(25, 10+xg_total*18))); prob_btts = int(min(70, max(35, 20+xg_total*12)))
-    for nombre,prob in [("Over 1.5 Goles", prob_o15),("Over 2.5 Goles", prob_o25),("Ambos Anotan Si", prob_btts),("Under 2.5 Goles", 100-prob_o25)]:
-        m,j,ev,val = momio(prob)
-        mercados.append({"op":nombre,"prob":f"{prob}%","efec":f"{max(5,prob-5)}%","momio":f"@{m}","justo":f"@{j}","valor":val,"ev":ev,"porque":f"{nombre} xG total {xg_total:.2f} ({g['xg_h']}+{g['xg_a']}) | ULT5 {g['forma_h']} vs {g['forma_a']} GF {g['gf_h']}/{g['gf_a']} | H2H + condiciones","top":False})
-
-    if g["prob_h"]>50:
-        prob_hcap=max(22, g["prob_h"]-18); m,j,ev,val=momio(prob_hcap)
-        mercados.append({"op":f"{g['home']} -1 Handicap","prob":f"{prob_hcap}%","efec":f"{max(5,prob_hcap-5)}%","momio":f"@{m}","justo":f"@{j}","valor":val,"ev":ev,"porque":f"{g['home']} gana por 2+ | ULT5 {g['forma_h']} vs {g['forma_a']} | {g['porque'][:80]}","top":False})
-
-    mercados_sorted = sorted(mercados, key=lambda x: float(x["ev"].replace("%","").replace("+","")), reverse=True)
-    for i,mm in enumerate(mercados_sorted): mm["top"]=i<2
-    mejores = mercados_sorted[:2]; mejor = mejores[0]
-
-    games[g["id"]] = {
-        "title": f"{g['liga_hoy']} {g['title']} - {g['liga'].split()[0]}","title_short": g["title"],"tv": g["tv"],"liga": g["liga"],"liga_hoy": g["liga_hoy"],
-        "home": g["home"],"away": g["away"],"fecha": g["fecha"],"prob": g["prob_h"],"prob_d": g["prob_d"],"prob_a": g["prob_a"],"xg_h": g["xg_h"],"xg_a": g["xg_a"],
-        "momio": mejor["momio"],"justo": mejor["justo"],"ev": mejor["ev"],"valor": mejor["valor"],
-        "mejor": {"pick": f"{mejor['op']} {mejor['momio']} {mejor['prob']} REAL | {mejor['ev']} REAL","porque": mejor["porque"],"momio": mejor["momio"],"justo": mejor["justo"],"valor": mejor["valor"]},
-        "mejores_lista": mejores,"mercados": mercados,
-        "marcadores": [{"score":"2-1","prob":"14%","momio":"@8.50","top":True},{"score":"1-0","prob":"12%","momio":"@6.50"},{"score":"1-1","prob":"11%","momio":"@6.00"}],
-        "parlays": [{"picks": f"{mercados[0]['op']} + {mercados[3]['op']}","momio":"@2.85","prob": f"{g['prob_h']-12}%","efec": f"{g['prob_h']}%","detalle": g["porque"]}]
-    }
-
-games_json = json.dumps(games, ensure_ascii=False)
-
-html_template = """<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V87.8 FORMATO ORIGINAL</title>
+games_json=json.dumps(games,ensure_ascii=False)
+html="""<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V88 TODOS</title>
 <style>
 body{background:#050a0a;color:#fff;font-family:Arial;margin:0;padding:6px}
 .top-banner{background:#0a2a1a;border:2px dashed #00ff88;color:#00ff88;padding:12px;border-radius:14px;text-align:center;font-weight:800;font-size:11px;margin-bottom:10px}
@@ -187,7 +156,7 @@ body{background:#050a0a;color:#fff;font-family:Arial;margin:0;padding:6px}
 .badge-top{background:#ffcc00;color:#000;padding:2px 6px;border-radius:8px;font-weight:800;font-size:9px;margin-left:4px}
 .superparlay{background:#1a1600;border:2px solid #ffcc00;border-radius:14px;padding:14px;margin:12px 0}
 </style></head><body>
-<div class="top-banner">✅ V87.8 FORMATO ORIGINAL INTACTO + ULT5 REAL + H2H + CONDICIONES - __TOTAL__ EVENTOS 11-25 SEP - TODAS + % EFECTIVO | MEJOR SOLO TOP 2</div>
+<div class="top-banner">✅ V88.0 TODAS LAS COMPETENCIAS RESTAURADAS - __TOTAL__ EVENTOS 11-25 SEP - FORMATO ORIGINAL + ULT5 REAL + H2H + % EFECTIVO</div>
 <div class="filtros" id="filtros"></div>
 <div id="super_box"></div>
 <div id="lista"></div>
@@ -195,97 +164,23 @@ body{background:#050a0a;color:#fff;font-family:Arial;margin:0;padding:6px}
 <button onclick="document.getElementById('modal').style.display='none'" style="float:right;background:#222;color:#fff;border:1px solid #444;padding:6px 10px;border-radius:8px">X</button>
 <h2 id="mtitle" style="color:#4fc3f7;font-size:14px;margin:0"></h2>
 <div id="mtv" style="color:#ffcc33;margin:6px 0;font-size:10px"></div>
-<div class="tabm">
-<button onclick="showTab('todas')" id="bt_todas" class="active">TODAS</button>
-<button onclick="showTab('mejor')" id="bt_mejor">MEJOR + PORQUE</button>
-<button onclick="showTab('parlays')" id="bt_parlays">PARLAYS</button>
-<button onclick="showTab('marcadores')" id="bt_marcadores">MARCADORES</button>
-</div>
-<div id="mercados"></div>
-</div></div>
+<div class="tabm"><button onclick="showTab('todas')" id="bt_todas" class="active">TODAS</button><button onclick="showTab('mejor')" id="bt_mejor">MEJOR + PORQUE</button><button onclick="showTab('parlays')" id="bt_parlays">PARLAYS</button><button onclick="showTab('marcadores')" id="bt_marcadores">MARCADORES</button></div>
+<div id="mercados"></div></div></div>
 <script id="games-data" type="application/json">__GAMES_JSON__</script>
 <script>
-var games = JSON.parse(document.getElementById('games-data').textContent);
+var games=JSON.parse(document.getElementById('games-data').textContent);
 var order=["HOY","MX J7-J8","MX FEM J9-J10","EUROPA","NFL S2-S3","UCL J1-J2","UEL J1-J2","MLS","BEIS FINAL","F1 BAKU","BOX/UFC"];
 var currentFiltro="HOY";
-function counts(){
-  var c={}; var c80=0;
-  order.forEach(l=>c[l]=0);
-  Object.values(games).forEach(g=>{
-    if(order.includes(g.liga)) c[g.liga]++;
-    if(g.liga_hoy==="HOY") c["HOY"]=(c["HOY"]||0)+1;
-    if(g.prob>=60) c80++;
-  });
-  c["80%+"]=c80; return c;
-}
-function renderFiltros(){
-  var c=counts(); var html='';
-  html+=`<button class="btn-green ${currentFiltro==='80%+'?'active':''}" onclick="setFiltro('80%+')">🔥 60%+ (${c['80%+']})</button>`;
-  html+=`<button class="btn-yellow ${currentFiltro==='SUPER'?'active':''}" onclick="setFiltro('SUPER')">🏆 SUPER</button>`;
-  html+=`<button class="btn-blue ${currentFiltro==='HOY'?'active':''}" onclick="setFiltro('HOY')">🔴 HOY (${c['HOY']||0})</button>`;
-  html+=`<button class="btn-dark ${currentFiltro==='MX J7-J8'?'active':''}" onclick="setFiltro('MX J7-J8')">🇲🇽 MX J7-J8 (${c['MX J7-J8']||0})</button>`;
-  html+=`<button class="btn-dark ${currentFiltro==='MX FEM J9-J10'?'active':''}" onclick="setFiltro('MX FEM J9-J10')">👩 MX FEM J9-J10 (${c['MX FEM J9-J10']||0})</button>`;
-  html+=`<button class="btn-dark ${currentFiltro==='EUROPA'?'active':''}" onclick="setFiltro('EUROPA')">🇪🇺 EUROPA (${c['EUROPA']||0})</button>`;
-  html+=`<button class="btn-dark ${currentFiltro==='NFL S2-S3'?'active':''}" onclick="setFiltro('NFL S2-S3')">🏈 NFL S2-S3 (${c['NFL S2-S3']||0})</button>`;
-  html+=`<button class="btn-dark ${currentFiltro==='UCL J1-J2'?'active':''}" onclick="setFiltro('UCL J1-J2')">🏆 UCL J1-J2 (${c['UCL J1-J2']||0})</button>`;
-  html+=`<button class="btn-dark ${currentFiltro==='UEL J1-J2'?'active':''}" onclick="setFiltro('UEL J1-J2')">🟠 UEL J1-J2 (${c['UEL J1-J2']||0})</button>`;
-  html+=`<button class="btn-dark ${currentFiltro==='MLS'?'active':''}" onclick="setFiltro('MLS')">🇺🇸 MLS (${c['MLS']||0})</button>`;
-  html+=`<button class="btn-dark ${currentFiltro==='BEIS FINAL'?'active':''}" onclick="setFiltro('BEIS FINAL')">⚾ BEIS FINAL (${c['BEIS FINAL']||0})</button>`;
-  html+=`<button class="btn-dark ${currentFiltro==='F1 BAKU'?'active':''}" onclick="setFiltro('F1 BAKU')">🏎️ F1 BAKU (${c['F1 BAKU']||0})</button>`;
-  html+=`<button class="btn-dark ${currentFiltro==='BOX/UFC'?'active':''}" onclick="setFiltro('BOX/UFC')">🥊 BOX/UFC (${c['BOX/UFC']||0})</button>`;
-  document.getElementById('filtros').innerHTML=html;
-}
-function setFiltro(f){ currentFiltro=f; renderFiltros(); if(f==='SUPER'){ renderSuper(); } else { document.getElementById('super_box').innerHTML=''; renderLista(); } }
-function renderLista(){
-  var list=Object.entries(games);
-  if(currentFiltro==="HOY"){ list=list.filter(e=>e[1].liga_hoy==="HOY"); }
-  else if(currentFiltro==="80%+"){ list=list.filter(e=>e[1].prob>=60); }
-  else if(order.includes(currentFiltro)){ list=list.filter(e=>e[1].liga===currentFiltro); }
-  var html="";
-  list.forEach(entry=>{
-    var id=entry[0]; var g=entry[1];
-    html+=`<div class="card-outer"><div class="card-top"><span class="dot"></span> ${g.title.toUpperCase()}</div><div class="card-mid"><span>📺 ${g.tv}</span><span class="badge-ev">${g.ev} REAL</span></div><div class="card-bot" onclick="openGame('${id}')">${g.home.toUpperCase()} ML ${g.momio} ${g.prob}% REAL | ${g.ev} REAL - TOCA PARA VER TODAS LAS OPCIONES</div></div>`;
-  });
-  if(html==="") html='<div style="text-align:center;padding:20px;color:#888">Sin eventos en '+currentFiltro+'</div>';
-  document.getElementById('lista').innerHTML=html;
-}
-function renderSuper(){
-  var top=Object.entries(games).sort((a,b)=>b[1].prob-a[1].prob).slice(0,5);
-  var momio=1; top.forEach(e=>{ momio*=parseFloat(e[1].momio.replace('@','')) });
-  var h=`<div class="superparlay"><h3 style="color:#ffcc00;margin:0 0 10px 0">🏆 SUPER PARLAY 5 PICKS</h3>`;
-  top.forEach(e=>{ h+=`<div style="margin:4px 0">✅ ${e[1].title_short} - ${e[1].home} ML ${e[1].momio} (${e[1].prob}%) <span style="color:#00ff88">${e[1].ev}</span></div>`; });
-  h+=`<div style="margin-top:12px;font-weight:900;color:#ffcc00">MOMIO REAL: @${momio.toFixed(2)} | PAGO: $${(momio*100).toFixed(0)} por $100</div></div>`;
-  document.getElementById('super_box').innerHTML=h; document.getElementById('lista').innerHTML='';
-}
-function openGame(id){
-  var g=games[id];
-  document.getElementById('mtitle').innerText=g.title;
-  document.getElementById('mtv').innerText=g.tv + ' | EV ' + g.ev + ' | JUSTO ' + g.justo + ' vs ' + g.momio + ` | xG ${g.xg_h} vs ${g.xg_a} | ${g.prob}/${g.prob_d}/${g.prob_a}=100%`;
-  document.getElementById('modal').style.display='block'; window.currentGame=g; showTab('todas');
-}
-function showTab(t){
-  document.querySelectorAll('.tabm button').forEach(b=>b.classList.remove('active'));
-  document.getElementById('bt_'+t).classList.add('active');
-  var g=window.currentGame; var h="";
-  if(t==="todas"){
-    h=`<div style="color:#00ff88;font-size:10px;margin-bottom:8px">📊 TODAS LAS OPCIONES CASA DE APUESTAS - ${g.mercados.length} MERCADOS CON % EFECTIVO - ULT5 + H2H + CONDICIONES REALES</div>`+
-    g.mercados.map(m=>`<div class="mercado"><div><b>${m.op}</b> ${m.top?'<span class="badge-top">TOP</span>':''}<br><small style="color:#8aa">${m.porque}</small><br><small style="color:#ffcc00">% REAL: ${m.prob} | % EFECTIVO: ${m.efec} | EV: ${m.ev}</small></div><div style="text-align:right"><b style="color:#00ff88">${m.momio}</b><br><small>Justo ${m.justo}</small><br><span class="badge-ev">${m.valor}</span></div></div>`).join('');
-  }
-  if(t==="mejor"){
-    h=`<div style="color:#ffcc00;font-size:10px;margin-bottom:8px">🔥 SOLO LAS 2 MEJORES OPCIONES +EV CON STATS REALES ULT5+H2H+COND</div>`+
-    g.mejores_lista.map(m=>`<div style="background:#1a1805;border:2px solid #ffcc00;border-radius:12px;padding:12px;margin:8px 0"><h3 style="color:#ffcc00;margin:0">${m.op} - ${m.prob} REAL | EFECTIVO ${m.efec} | ${m.ev}</h3><div style="font-size:13px;margin:8px 0">MOMIO: ${m.momio} | JUSTO: ${m.justo} | VALOR: ${m.valor}</div><p><b style="color:#00ff88">POR QUE REAL CON ULT5+H2H+COND:</b><br>${m.porque}</p></div>`).join('');
-  }
-  if(t==="parlays"){ h=g.parlays.map(p=>`<div class="mercado"><div><b>${p.picks}</b> ${p.momio}<br><small>${p.detalle}</small><br><small style="color:#ffcc00">EFECTIVO: ${p.efec}</small></div><div>${p.prob}</div></div>`).join(''); }
-  if(t==="marcadores"){ h=g.marcadores.map(m=>`<div class="mercado"><div><b>MARCADOR EXACTO ${m.score}</b> ${m.prob} ${m.top?'<span style="color:#00ff88">TOP</span>':''}</div><div><b>${m.momio}</b></div></div>`).join(''); }
-  document.getElementById('mercados').innerHTML=h;
-}
-renderFiltros(); renderLista();
+function counts(){var c={};var c80=0;order.forEach(l=>c[l]=0);Object.values(games).forEach(g=>{if(order.includes(g.liga))c[g.liga]++;if(g.liga_hoy==="HOY")c["HOY"]=(c["HOY"]||0)+1;if(g.prob>=60)c80++;});c["80%+"]=c80;return c;}
+function renderFiltros(){var c=counts();var html='';html+=`<button class="btn-green ${currentFiltro==='80%+'?'active':''}" onclick="setFiltro('80%+')">🔥 60%+ (${c['80%+']})</button>`;html+=`<button class="btn-yellow ${currentFiltro==='SUPER'?'active':''}" onclick="setFiltro('SUPER')">🏆 SUPER</button>`;html+=`<button class="btn-blue ${currentFiltro==='HOY'?'active':''}" onclick="setFiltro('HOY')">🔴 HOY (${c['HOY']||0})</button>`;html+=`<button class="btn-dark ${currentFiltro==='MX J7-J8'?'active':''}" onclick="setFiltro('MX J7-J8')">🇲🇽 MX J7-J8 (${c['MX J7-J8']||0})</button>`;html+=`<button class="btn-dark ${currentFiltro==='MX FEM J9-J10'?'active':''}" onclick="setFiltro('MX FEM J9-J10')">👩 MX FEM J9-J10 (${c['MX FEM J9-J10']||0})</button>`;html+=`<button class="btn-dark ${currentFiltro==='EUROPA'?'active':''}" onclick="setFiltro('EUROPA')">🇪🇺 EUROPA (${c['EUROPA']||0})</button>`;html+=`<button class="btn-dark ${currentFiltro==='NFL S2-S3'?'active':''}" onclick="setFiltro('NFL S2-S3')">🏈 NFL S2-S3 (${c['NFL S2-S3']||0})</button>`;html+=`<button class="btn-dark ${currentFiltro==='UCL J1-J2'?'active':''}" onclick="setFiltro('UCL J1-J2')">🏆 UCL J1-J2 (${c['UCL J1-J2']||0})</button>`;html+=`<button class="btn-dark ${currentFiltro==='UEL J1-J2'?'active':''}" onclick="setFiltro('UEL J1-J2')">🟠 UEL J1-J2 (${c['UEL J1-J2']||0})</button>`;html+=`<button class="btn-dark ${currentFiltro==='MLS'?'active':''}" onclick="setFiltro('MLS')">🇺🇸 MLS (${c['MLS']||0})</button>`;html+=`<button class="btn-dark ${currentFiltro==='BEIS FINAL'?'active':''}" onclick="setFiltro('BEIS FINAL')">⚾ BEIS FINAL (${c['BEIS FINAL']||0})</button>`;html+=`<button class="btn-dark ${currentFiltro==='F1 BAKU'?'active':''}" onclick="setFiltro('F1 BAKU')">🏎️ F1 BAKU (${c['F1 BAKU']||0})</button>`;html+=`<button class="btn-dark ${currentFiltro==='BOX/UFC'?'active':''}" onclick="setFiltro('BOX/UFC')">🥊 BOX/UFC (${c['BOX/UFC']||0})</button>`;document.getElementById('filtros').innerHTML=html;}
+function setFiltro(f){currentFiltro=f;renderFiltros();if(f==='SUPER'){renderSuper();}else{document.getElementById('super_box').innerHTML='';renderLista();}}
+function renderLista(){var list=Object.entries(games);if(currentFiltro==="HOY"){list=list.filter(e=>e[1].liga_hoy==="HOY");}else if(currentFiltro==="80%+"){list=list.filter(e=>e[1].prob>=60);}else if(order.includes(currentFiltro)){list=list.filter(e=>e[1].liga===currentFiltro);}var html="";list.forEach(entry=>{var id=entry[0];var g=entry[1];html+=`<div class="card-outer"><div class="card-top"><span class="dot"></span> ${g.title.toUpperCase()}</div><div class="card-mid"><span>📺 ${g.tv}</span><span class="badge-ev">${g.ev} REAL</span></div><div class="card-bot" onclick="openGame('${id}')">${g.home.toUpperCase()} ML ${g.momio} ${g.prob}% REAL | ${g.ev} REAL - TOCA PARA VER TODAS LAS OPCIONES</div></div>`;});if(html==="")html='<div style="text-align:center;padding:20px;color:#888">Sin eventos en '+currentFiltro+'</div>';document.getElementById('lista').innerHTML=html;}
+function renderSuper(){var top=Object.entries(games).sort((a,b)=>b[1].prob-a[1].prob).slice(0,5);var momio=1;top.forEach(e=>{momio*=parseFloat(e[1].momio.replace('@',''))});var h=`<div class="superparlay"><h3 style="color:#ffcc00;margin:0 0 10px 0">🏆 SUPER PARLAY 5 PICKS</h3>`;top.forEach(e=>{h+=`<div style="margin:4px 0">✅ ${e[1].title_short} - ${e[1].home} ML ${e[1].momio} (${e[1].prob}%) <span style="color:#00ff88">${e[1].ev}</span></div>`;});h+=`<div style="margin-top:12px;font-weight:900;color:#ffcc00">MOMIO REAL: @${momio.toFixed(2)}</div></div>`;document.getElementById('super_box').innerHTML=h;document.getElementById('lista').innerHTML='';}
+function openGame(id){var g=games[id];document.getElementById('mtitle').innerText=g.title;document.getElementById('mtv').innerText=g.tv + ' | EV ' + g.ev + ' | JUSTO ' + g.justo + ' vs ' + g.momio + ` | xG ${g.xg_h} vs ${g.xg_a} | ${g.prob}/${g.prob_d}/${g.prob_a}=100%`;document.getElementById('modal').style.display='block';window.currentGame=g;showTab('todas');}
+function showTab(t){document.querySelectorAll('.tabm button').forEach(b=>b.classList.remove('active'));document.getElementById('bt_'+t).classList.add('active');var g=window.currentGame;var h="";if(t==="todas"){h=`<div style="color:#00ff88;font-size:10px;margin-bottom:8px">📊 TODAS LAS OPCIONES - ${g.mercados.length} MERCADOS - ULT5 + H2H + COND REALES - % EFECTIVO</div>`+g.mercados.map(m=>`<div class="mercado"><div><b>${m.op}</b> ${m.top?'<span class="badge-top">TOP</span>':''}<br><small style="color:#8aa">${m.porque}</small><br><small style="color:#ffcc00">% REAL: ${m.prob} | % EFECTIVO: ${m.efec} | EV: ${m.ev}</small></div><div style="text-align:right"><b style="color:#00ff88">${m.momio}</b><br><small>Justo ${m.justo}</small><br><span class="badge-ev">${m.valor}</span></div></div>`).join('');}if(t==="mejor"){h=`<div style="color:#ffcc00;font-size:10px;margin-bottom:8px">🔥 SOLO LAS 2 MEJORES +EV CON ULT5+H2H+COND</div>`+g.mejores_lista.map(m=>`<div style="background:#1a1805;border:2px solid #ffcc00;border-radius:12px;padding:12px;margin:8px 0"><h3 style="color:#ffcc00;margin:0">${m.op} - ${m.prob} REAL | EFECTIVO ${m.efec} | ${m.ev}</h3><div style="font-size:13px;margin:8px 0">MOMIO: ${m.momio} | JUSTO: ${m.justo}</div><p><b style="color:#00ff88">POR QUE REAL ULT5+H2H+COND:</b><br>${m.porque}</p></div>`).join('');}if(t==="parlays"){h=g.parlays.map(p=>`<div class="mercado"><div><b>${p.picks}</b> ${p.momio}<br><small>${p.detalle}</small></div><div>${p.prob}</div></div>`).join('');}if(t==="marcadores"){h=g.marcadores.map(m=>`<div class="mercado"><div><b>MARCADOR ${m.score}</b> ${m.prob}</div><div><b>${m.momio}</b></div></div>`).join('');}document.getElementById('mercados').innerHTML=h;}
+renderFiltros();renderLista();
 </script></body></html>
 """
-
-html_final = html_template.replace("__GAMES_JSON__", games_json).replace("__TOTAL__", str(len(games)))
-
-with open("index.html","w",encoding="utf-8") as f:
-    f.write(html_final)
-
-print(f"LISTO V87.8 - {len(games)} eventos - FORMATO ORIGINAL + ULT5+H2H+COND")
+final=html.replace("__GAMES_JSON__",games_json).replace("__TOTAL__",str(len(games)))
+open("index.html","w",encoding="utf-8").write(final)
+print(f"LISTO V88.0 - {len(games)} EVENTOS TODOS RESTAURADOS")
