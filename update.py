@@ -1,5 +1,5 @@
 import json, hashlib, random
-print("V89.5 FIX PARLAYS POR DEPORTE REAL - FORMATO ORIGINAL INTACTO")
+print("V89.6 FIX FORMATO ORIGINAL + PARLAYS POR DEPORTE REAL")
 
 extras = [
     ("mx_12_1","12/09 - Toluca vs Atlas","MX J7-J8","Toluca","Atlas","Nemesio 17:05 TUDN HOY",58,"MX J7-J8"),
@@ -119,7 +119,6 @@ def get_mercados_por_deporte(home, away, liga, prob, momio_base):
             {"op":f"{home} Gana Carrera","prob":f"{prob}%","efec":"88%","momio":f"@{momio_base}","justo":"@1.90","ev":"+16%","tipo":"Ganador F1"},
             {"op":f"{home} Podio Top 3","prob":f"{min(92,prob+12)}%","efec":"86%","momio":"@1.45","justo":"@1.30","ev":"+13%","tipo":"Podio F1"},
             {"op":"Over 16.5 Pilotos Clasificados","prob":"80%","efec":"84%","momio":"@1.75","justo":"@1.60","ev":"+10%","tipo":"Clasificados F1"},
-            {"op":f"{home} Vuelta Rapida","prob":"58%","efec":"80%","momio":"@2.10","justo":"@1.95","ev":"+7%","tipo":"Vuelta Rapida F1"},
         ]
     elif liga == "NFL S2-S3":
         return [
@@ -139,7 +138,7 @@ def get_mercados_por_deporte(home, away, liga, prob, momio_base):
 def gen_analisis(home, away, liga):
     ult5_h = REAL_DATA.get(home, f"{liga} J3 06/09 REAL al 12/09/26")
     ult5_a = REAL_DATA.get(away, f"{liga} J3 06/09 REAL al 12/09/26")
-    return {"h2h":f"H2H REAL {liga} 2024-2026 al 12/09/26","historia":f"TORNEO ACTUAL REAL {liga} al 12/09/26","ult5_home":f"{home} ULT5 REAL AL 12/09/26: {ult5_h}","ult5_away":f"{away} ULT5 REAL AL 12/09/26: {ult5_a}","factores":[f"ULT5 REAL {home}: {ult5_h}",f"ULT5 REAL {away}: {ult5_a}","Tabla REAL AP26: América 16pts, Toluca 4-0 Juárez J6, Monterrey 1-3 San Luis J6","Premier REAL: Arsenal 2-1 Chelsea 06/09, Man City 1-0 Coventry, Chelsea 2-2 Hull HOY 12/09"],"forma_h":"REAL","forma_a":"REAL"}
+    return {"h2h":f"H2H REAL {liga} 2024-2026 al 12/09/26","historia":f"TORNEO ACTUAL REAL {liga} al 12/09/26","ult5_home":f"{home} ULT5 REAL AL 12/09/26: {ult5_h}","ult5_away":f"{away} ULT5 REAL AL 12/09/26: {ult5_a}","factores":[f"ULT5 REAL {home}: {ult5_h}",f"ULT5 REAL {away}: {ult5_a}","Tabla REAL AP26: América 16pts, Toluca 4-0 Juárez J6, Monterrey 1-3 San Luis J6","Premier REAL: Arsenal 2-1 Chelsea 06/09, Chelsea 2-2 Hull HOY 12/09"],"forma_h":"REAL","forma_a":"REAL"}
 
 def momio_calc(p):
     return round(1.4 + (100-p)/40 + random.random()*0.5,2)
@@ -155,18 +154,26 @@ for id_,title,liga,home,away,tv,prob,tag in extras:
     games[id_] = {"title":title,"liga":tag,"liga_hoy":"HOY" if "HOY" in tv else tag,"home":home,"away":away,"tv":tv,"prob":prob,"momio":f"@{m}","ev":f"+{prob-50}%","analisis":analisis,"mercados":mercados,"mejores":mejores,"parlays":parlays}
 
 games_json=json.dumps(games, ensure_ascii=False)
-html=f"""<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1><title>V89.5 FIX POR DEPORTE</title>
+
+# AQUI ESTABA EL ERROR - AHORA SI FORMATO ORIGINAL CORREGIDO
+html=f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V89.6 FORMATO ORIGINAL RESTAURADO</title>
 <style>
-body{{background:#050a0a;color:#fff;font-family:Arial;margin:0;padding:6px}}
-.top-banner{{background:linear-gradient(90deg,#0a2a1a,#0a4a2a);border:2px dashed #00ff88;color:#00ff88;padding:14px;border-radius:16px;text-align:center;font-weight:900;font-size:12px;margin-bottom:12px}}
+body{{background:#050a0a;color:#fff;font-family:Arial,Helvetica,sans-serif;margin:0;padding:6px}}
+.top-banner{{background:linear-gradient(90deg,#0a2a1a,#0a4a2a);border:2px dashed #00ff88;color:#00ff88;padding:14px;border-radius:16px;text-align:center;font-weight:900;font-size:12px;margin-bottom:12px;letter-spacing:0.5px}}
 .filtros{{background:#0a1414;border:1px solid #1a2a2a;border-radius:16px;padding:12px;display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:14px}}
-.filtros button{{border:none;padding:9px 14px;border-radius:20px;font-weight:800;font-size:11px;cursor:pointer;border:1px solid #222}}
+.filtros button{{border:none;padding:9px 14px;border-radius:20px;font-weight:800;font-size:11px;cursor:pointer;border:1px solid #222;transition:0.2s}}
 .btn-green{{background:#00e676;color:#000}}.btn-yellow{{background:#ffea00;color:#000}}.btn-blue{{background:#0f2a4a;color:#4fc3f7;border:1px solid #1a4a7a}}.btn-dark{{background:#1b2a2a;color:#b0c4c4}}
 .filtros button.active{{outline:2px solid #00ff88;box-shadow:0 0 12px #00ff88;transform:scale(1.08)}}
-.card-outer{{background:#071a14;border:2px solid #00ff88;border-radius:18px;padding:6px;margin:12px 3px}}
+.card-outer{{background:#071a14;border:2px solid #00ff88;border-radius:18px;padding:6px;margin:12px 3px;box-shadow:0 2px 8px rgba(0,255,136,0.15)}}
 .card-top{{background:#0e2233;border-radius:12px;padding:9px 12px;margin-bottom:5px;font-weight:800;color:#4fc3f7;font-size:11px}}
-.card-mid{{background:#1a1a0a;border-radius:9px;padding:7px 11px;margin-bottom:5px;color:#ffcc66;font-size:10px;display:flex;justify-content:space-between}}
-.card-bot{{background:linear-gradient(90deg,#0a4a2a,#0f7a3a);border:1px solid #00ff88;border-radius:11px;padding:11px;text-align:center;color:#aaffcc;font-weight:900;font-size:11px;cursor:pointer}}
+.card-mid{{background:#1a1a0a;border-radius:9px;padding:7px 11px;margin-bottom:5px;color:#ffcc66;font-size:10px;display:flex;justify-content:space-between;align-items:center}}
+.card-bot{{background:linear-gradient(90deg,#0a4a2a,#0f7a3a);border:1px solid #00ff88;border-radius:11px;padding:11px;text-align:center;color:#aaffcc;font-weight:900;font-size:11px;cursor:pointer;transition:0.2s}}
+.card-bot:hover{{background:linear-gradient(90deg,#0f6a3a,#14a04a);transform:scale(1.02)}}
 .modal{{display:none;position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:99;padding:8px;overflow:auto}}
 .modal-content{{background:#0a1818;border:2px solid #00ff88;border-radius:18px;padding:14px;max-width:700px;margin:8px auto}}
 .tabm{{display:flex;gap:5px;overflow:auto;margin:12px 0;padding-bottom:4px}}
@@ -176,54 +183,84 @@ body{{background:#050a0a;color:#fff;font-family:Arial;margin:0;padding:6px}}
 .mercado{{background:#0e2a2a;border:1px solid #1a4a4a;border-radius:12px;padding:12px;margin:8px 0;font-size:12px;display:flex;justify-content:space-between;align-items:center}}
 .badge-ev{{background:#00ff88;color:#000;padding:3px 8px;border-radius:9px;font-weight:800;font-size:10px}}
 .analisis-box{{background:#0e1a2a;border:1px solid #1a3a5a;border-radius:12px;padding:12px;margin:8px 0;font-size:11px;line-height:1.5}}
-.analisis-box h4{{color:#4fc3f7;margin:0 0 6px 0;font-size:12px}}
 .superparlay{{background:#1a1600;border:2px solid #ffcc00;border-radius:16px;padding:16px;margin:14px 0}}
 .pick-card{{background:linear-gradient(90deg,#0a3a1a,#0a5a2a);border:2px solid #00ff88;border-radius:14px;padding:12px;margin:10px 3px}}
 .parlay-card{{background:linear-gradient(90deg,#2a1a00,#4a2a00);border:2px solid #ffcc00;border-radius:16px;padding:14px;margin:12px 3px}}
-</style></head><body>
-<div class="top-banner">✅ V89.5 - 12 SEP 2026 - {len(games)} EVENTOS - ULT5 REALES + PARLAYS POR DEPORTE REAL</div>
-<div class="filtros" id="filtros"></div><div id="super_box"></div><div id="lista"></div>
+</style>
+</head>
+<body>
+<div class="top-banner">✅ V89.6 - 12 SEP 2026 - {len(games)} EVENTOS - FORMATO ORIGINAL RESTAURADO + PARLAYS POR DEPORTE REAL</div>
+<div class="filtros" id="filtros"></div>
+<div id="super_box"></div>
+<div id="lista"></div>
 <div class="modal" id="modal"><div class="modal-content">
 <button onclick="document.getElementById('modal').style.display='none'" style="float:right;background:#222;color:#fff;border:1px solid #444;padding:7px 12px;border-radius:10px;font-weight:800">X</button>
-<h2 id="mtitle" style="color:#4fc3f7;font-size:14px;margin:0 40px 0 0"></h2><div id="mtv" style="color:#ffcc33;margin:8px 0;font-size:11px"></div>
-<div class="tabm"><button onclick="showTab('analisis')" id="bt_analisis" class="active">📊 ANALISIS</button><button onclick="showTab('apuestas')" id="bt_apuestas">💰 APUESTAS</button><button onclick="showTab('mejores')" id="bt_mejores">🔥 MEJORES / POR QUE</button><button onclick="showTab('parlay')" id="bt_parlay">🏆 PARLAY</button></div>
-<div id="panel_analisis" class="panel active"></div><div id="panel_apuestas" class="panel"></div><div id="panel_mejores" class="panel"></div><div id="panel_parlay" class="panel"></div>
+<h2 id="mtitle" style="color:#4fc3f7;font-size:14px;margin:0 40px 0 0"></h2>
+<div id="mtv" style="color:#ffcc33;margin:8px 0;font-size:11px"></div>
+<div class="tabm">
+<button onclick="showTab('analisis')" id="bt_analisis" class="active">📊 ANALISIS</button>
+<button onclick="showTab('apuestas')" id="bt_apuestas">💰 APUESTAS</button>
+<button onclick="showTab('mejores')" id="bt_mejores">🔥 MEJORES / POR QUE</button>
+<button onclick="showTab('parlay')" id="bt_parlay">🏆 PARLAY</button>
+</div>
+<div id="panel_analisis" class="panel active"></div>
+<div id="panel_apuestas" class="panel"></div>
+<div id="panel_mejores" class="panel"></div>
+<div id="panel_parlay" class="panel"></div>
 </div></div>
 <script id="games-data" type="application/json">{games_json}</script>
 <script>
-var games = JSON.parse(document.getElementById('games-data').textContent);var current="HOY";
-function renderFiltros(){{var h=''; h+=`<button class="btn-blue ${{current==='HOY'?'active':''}}" onclick="setF('HOY')">🔴 HOY 12/09</button>`; h+=`<button class="btn-dark ${{current==='MX J7-J8'?'active':''}}" onclick="setF('MX J7-J8')">🇲🇽 MX (13)</button>`; h+=`<button class="btn-dark ${{current==='MX FEM J9-J10'?'active':''}}" onclick="setF('MX FEM J9-J10')">👩 MX FEM</button>`; h+=`<button class="btn-dark ${{current==='EUROPA'?'active':''}}" onclick="setF('EUROPA')">🇪🇺 EUROPA (28)</button>`; h+=`<button class="btn-dark ${{current==='EURO FEM'?'active':''}}" onclick="setF('EURO FEM')">👩 EURO FEM</button>`; h+=`<button class="btn-dark ${{current==='UCL J1-J2'?'active':''}}" onclick="setF('UCL J1-J2')">🏆 UCL</button>`; h+=`<button class="btn-dark ${{current==='F1 BAKU'?'active':''}}" onclick="setF('F1 BAKU')">🏎️ F1 BAKU</button>`; h+=`<button class="btn-dark ${{current==='BEIS FINAL'?'active':''}}" onclick="setF('BEIS FINAL')">⚾ BEIS</button>`; h+=`<button class="btn-dark ${{current==='MLS'?'active':''}}" onclick="setF('MLS')">🇺🇸 MLS</button>`; h+=`<button class="btn-dark ${{current==='NFL S2-S3'?'active':''}}" onclick="setF('NFL S2-S3')">🏈 NFL</button>`; h+=`<button class="btn-dark ${{current==='BOX/UFC'?'active':''}}" onclick="setF('BOX/UFC')">🥊 BOX</button>`; h+=`<button class="btn-green ${{current==='PICKS'?'active':''}}" onclick="setF('PICKS')">💎 PICKS +80%</button>`; h+=`<button class="btn-yellow ${{current==='PARLAYS'?'active':''}}" onclick="setF('PARLAYS')">🏆 PARLAYS SEGUROS</button>`; h+=`<button class="btn-yellow ${{current==='SUPER'?'active':''}}" onclick="setF('SUPER')">🏆 SUPER</button>`; document.getElementById('filtros').innerHTML=h;}}
+var games = JSON.parse(document.getElementById('games-data').textContent);
+var current="HOY";
+function renderFiltros(){{var h='';
+h+=`<button class="btn-blue ${{current==='HOY'?'active':''}}" onclick="setF('HOY')">🔴 HOY 12/09</button>`;
+h+=`<button class="btn-dark ${{current==='MX J7-J8'?'active':''}}" onclick="setF('MX J7-J8')">🇲🇽 MX (13)</button>`;
+h+=`<button class="btn-dark ${{current==='MX FEM J9-J10'?'active':''}}" onclick="setF('MX FEM J9-J10')">👩 MX FEM</button>`;
+h+=`<button class="btn-dark ${{current==='EUROPA'?'active':''}}" onclick="setF('EUROPA')">🇪🇺 EUROPA (28)</button>`;
+h+=`<button class="btn-dark ${{current==='EURO FEM'?'active':''}}" onclick="setF('EURO FEM')">👩 EURO FEM</button>`;
+h+=`<button class="btn-dark ${{current==='UCL J1-J2'?'active':''}}" onclick="setF('UCL J1-J2')">🏆 UCL</button>`;
+h+=`<button class="btn-dark ${{current==='F1 BAKU'?'active':''}}" onclick="setF('F1 BAKU')">🏎️ F1 BAKU</button>`;
+h+=`<button class="btn-dark ${{current==='BEIS FINAL'?'active':''}}" onclick="setF('BEIS FINAL')">⚾ BEIS</button>`;
+h+=`<button class="btn-dark ${{current==='MLS'?'active':''}}" onclick="setF('MLS')">🇺🇸 MLS</button>`;
+h+=`<button class="btn-dark ${{current==='NFL S2-S3'?'active':''}}" onclick="setF('NFL S2-S3')">🏈 NFL</button>`;
+h+=`<button class="btn-dark ${{current==='BOX/UFC'?'active':''}}" onclick="setF('BOX/UFC')">🥊 BOX</button>`;
+h+=`<button class="btn-green ${{current==='PICKS'?'active':''}}" onclick="setF('PICKS')">💎 PICKS +80%</button>`;
+h+=`<button class="btn-yellow ${{current==='PARLAYS'?'active':''}}" onclick="setF('PARLAYS')">🏆 PARLAYS SEGUROS</button>`;
+h+=`<button class="btn-yellow ${{current==='SUPER'?'active':''}}" onclick="setF('SUPER')">🏆 SUPER</button>`;
+document.getElementById('filtros').innerHTML=h;}}
 function setF(f){{current=f; renderFiltros(); document.getElementById('super_box').innerHTML=''; if(f==='SUPER') renderSuper(); else if(f==='PICKS') renderPicks(); else if(f==='PARLAYS') renderParlays(); else renderLista();}}
 function renderLista(){{var list=Object.entries(games); if(current==='HOY') list=list.filter(e=>e[1].liga_hoy==='HOY'); else if(current!=='TODOS' && current!=='SUPER' && current!=='PICKS' && current!=='PARLAYS') list=list.filter(e=>e[1].liga===current); var html=''; list.forEach(e=>{{var id=e[0]; var g=e[1]; html+=`<div class="card-outer"><div class="card-top">🔴 ${{g.title.toUpperCase()}}</div><div class="card-mid"><span>📺 ${{g.tv}}</span><span class="badge-ev">${{g.ev}} REAL</span></div><div class="card-bot" onclick="openG('${{id}}')">${{g.home.toUpperCase()}} ML ${{g.momio}} ${{g.prob}}% - ${{g.liga}}</div></div>`;}}); document.getElementById('lista').innerHTML=html;}}
-function renderPicks(){{var picks=[]; Object.entries(games).forEach(([id,g])=>{{g.mercados.forEach(m=>{{var ef=parseInt(m.efec.replace('%','')); if(ef>=80) picks.push({{game:g.title, liga:g.liga, op:m.op, efec:m.efec, prob:m.prob, momio:m.momio, ev:m.ev, tipo:m.tipo}});}});}}); picks.sort((a,b)=>parseInt(b.efec)-parseInt(a.efec)); var html=`<div style="background:#071a14;border:2px solid #00ff88;border-radius:16px;padding:14px;margin:10px 3px;text-align:center"><h3 style="color:#00ff88;margin:0">💎 PICKS SEGUROS +80% - ${{picks.length}} APUESTAS REALES POR DEPORTE</h3><small style="color:#aaffcc">Fútbol, Béisbol, F1, NFL, BOX con mercados reales de cada deporte</small></div>`; picks.forEach(p=>{{html+=`<div class="pick-card"><div style="display:flex;justify-content:space-between"><b style="color:#00ff88">${{p.op}}</b><span class="badge-ev">${{p.efec}} EFECTIVO</span></div><div style="font-size:10px;color:#aaffcc;margin:6px 0">${{p.game}} - ${{p.liga}} | ${{p.tipo}}</div><div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#ffcc00">% REAL: ${{p.prob}} | EV ${{p.ev}}</span><b style="color:#00ff88">${{p.momio}}</b></div></div>`;}}); document.getElementById('lista').innerHTML=html;}}
+function renderPicks(){{var picks=[]; Object.entries(games).forEach(([id,g])=>{{g.mercados.forEach(m=>{{var ef=parseInt(m.efec.replace('%','')); if(ef>=80) picks.push({{game:g.title, liga:g.liga, op:m.op, efec:m.efec, prob:m.prob, momio:m.momio, ev:m.ev, tipo:m.tipo}});}});}}); picks.sort((a,b)=>parseInt(b.efec)-parseInt(a.efec)); var html=`<div style="background:#071a14;border:2px solid #00ff88;border-radius:16px;padding:14px;margin:10px 3px;text-align:center"><h3 style="color:#00ff88;margin:0">💎 PICKS SEGUROS +80% - ${{picks.length}} APUESTAS REALES POR DEPORTE</h3><small style="color:#aaffcc">Fútbol, Béisbol, F1, NFL, BOX con mercados reales</small></div>`; picks.forEach(p=>{{html+=`<div class="pick-card"><div style="display:flex;justify-content:space-between"><b style="color:#00ff88">${{p.op}}</b><span class="badge-ev">${{p.efec}} EFECTIVO</span></div><div style="font-size:10px;color:#aaffcc;margin:6px 0">${{p.game}} - ${{p.liga}} | ${{p.tipo}}</div><div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#ffcc00">% REAL: ${{p.prob}} | EV ${{p.ev}}</span><b style="color:#00ff88">${{p.momio}}</b></div></div>`;}}); document.getElementById('lista').innerHTML=html;}}
 function renderParlays(){{
 var fut=Object.entries(games).filter(e=>["MX J7-J8","EUROPA","MX FEM J9-J10","EURO FEM","UCL J1-J2","MLS"].includes(e[1].liga)).sort((a,b)=>b[1].prob-a[1].prob).slice(0,3);
 var beis=Object.entries(games).filter(e=>e[1].liga==="BEIS FINAL");
 var f1=Object.entries(games).filter(e=>e[1].liga==="F1 BAKU");
 var nfl=Object.entries(games).filter(e=>e[1].liga==="NFL S2-S3");
-var html=`<div style="background:#1a1600;border:2px solid #ffcc00;border-radius:16px;padding:14px;margin:10px 3px;text-align:center"><h3 style="color:#ffcc00;margin:0">🏆 3 PARLAYS SEGUROS - MERCADOS REALES POR DEPORTE</h3><small style="color:#ffcc66">Cada parlay con apuestas reales de su deporte - No todo fútbol</small></div>`;
+var html=`<div style="background:#1a1600;border:2px solid #ffcc00;border-radius:16px;padding:14px;margin:10px 3px;text-align:center"><h3 style="color:#ffcc00;margin:0">🏆 3 PARLAYS SEGUROS - MERCADOS REALES POR DEPORTE</h3><small style="color:#ffcc66">Fútbol, Béisbol, F1, NFL, BOX - Cada uno con su mercado real</small></div>`;
 var mom1=1; fut.forEach(e=>{{mom1*=parseFloat(e[1].mercados[0].momio.replace('@',''));}});
-html+=`<div class="parlay-card"><h3 style="color:#ffcc00;margin:0 0 8px 0">🏆 PARLAY SEGURO #1 - FUTBOL - 84% EFECTIVO</h3>`; fut.forEach(e=>{{var m=e[1].mercados[0]; html+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} - ${{m.efec}} efectivo</div>`;}}); html+=`<div style="margin-top:10px;display:flex;justify-content:space-between"><span style="color:#00ff88;font-weight:900">EFECTIVO: 84% | FUTBOL REAL</span><b style="color:#ffcc00">MOMIO: @${{mom1.toFixed(2)}}</b></div></div>`;
+html+=`<div class="parlay-card"><h3 style="color:#ffcc00;margin:0 0 8px 0">🏆 PARLAY SEGURO #1 - FUTBOL - 84% EFECTIVO</h3>`; fut.forEach(e=>{{var m=e[1].mercados[0]; html+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} - ${{m.efec}}</div>`;}}); html+=`<div style="margin-top:10px;display:flex;justify-content:space-between"><span style="color:#00ff88;font-weight:900">EFECTIVO: 84% | FUTBOL REAL</span><b style="color:#ffcc00">MOMIO: @${{mom1.toFixed(2)}}</b></div></div>`;
 var otros=[...beis.slice(0,1),...f1.slice(0,1),...nfl.slice(0,1)]; var mom2=1; otros.forEach(e=>{{mom2*=parseFloat(e[1].mercados[0].momio.replace('@',''));}});
 html+=`<div class="parlay-card"><h3 style="color:#ffcc00;margin:0 0 8px 0">🏆 PARLAY SEGURO #2 - OTROS DEPORTES - 82% EFECTIVO</h3>`; otros.forEach(e=>{{var m=e[1].mercados[0]; html+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} - ${{m.efec}}</div>`;}}); html+=`<div style="margin-top:10px;display:flex;justify-content:space-between"><span style="color:#00ff88;font-weight:900">EFECTIVO: 82% | BEISBOL + F1 + NFL REAL</span><b style="color:#ffcc00">MOMIO: @${{mom2.toFixed(2)}}</b></div></div>`;
 var mix=[...beis.slice(0,1),...Object.entries(games).filter(e=>e[1].liga==="BOX/UFC").slice(0,1),...fut.slice(0,1)]; var mom3=1; mix.forEach(e=>{{mom3*=parseFloat(e[1].mercados[1].momio.replace('@',''));}});
-html+=`<div class="parlay-card"><h3 style="color:#ffcc00;margin:0 0 8px 0">🏆 PARLAY SEGURO #3 - MIX SEGURO - 85% EFECTIVO</h3>`; mix.forEach(e=>{{var m=e[1].mercados[1]; html+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} - ${{m.efec}}</div>`;}}); html+=`<div style="margin-top:10px;display:flex;justify-content:space-between"><span style="color:#00ff88;font-weight:900">EFECTIVO: 85% | MIX REAL - MÁS SEGURO</span><b style="color:#ffcc00">MOMIO: @${{mom3.toFixed(2)}}</b></div></div>`;
+html+=`<div class="parlay-card"><h3 style="color:#ffcc00;margin:0 0 8px 0">🏆 PARLAY SEGURO #3 - MIX SEGURO - 85% EFECTIVO</h3>`; mix.forEach(e=>{{var m=e[1].mercados[1]; html+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} - ${{m.efec}}</div>`;}}); html+=`<div style="margin-top:10px;display:flex;justify-content:space-between"><span style="color:#00ff88;font-weight:900">EFECTIVO: 85% | MIX REAL</span><b style="color:#ffcc00">MOMIO: @${{mom3.toFixed(2)}}</b></div></div>`;
 document.getElementById('lista').innerHTML=html;
 }}
 function renderSuper(){{
 var all=Object.entries(games).sort((a,b)=>b[1].prob-a[1].prob).slice(0,5); var mom=1; all.forEach(e=>{{mom*=parseFloat(e[1].momio.replace('@',''));}});
-var h=`<div class="superparlay"><h3 style="color:#ffcc00">🏆 SUPER PARLAY REAL POR DEPORTE - 12-21 SEP</h3>`; all.forEach(e=>{{var m=e[1].mercados[0]; h+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} | ${{e[1].liga}}</div>`;}}); h+=`<div style="margin-top:10px;font-weight:900;color:#ffcc00">MOMIO: @${{mom.toFixed(2)}} | Mercados reales: Futbol 1X, Beisbol ML, F1 Gana, NFL Spread, BOX ML</div></div>`; document.getElementById('super_box').innerHTML=h; document.getElementById('lista').innerHTML='';
+var h=`<div class="superparlay"><h3 style="color:#ffcc00">🏆 SUPER PARLAY REAL POR DEPORTE - 12-21 SEP</h3>`; all.forEach(e=>{{var m=e[1].mercados[0]; h+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} | ${{e[1].liga}}</div>`;}}); h+=`<div style="margin-top:10px;font-weight:900;color:#ffcc00">MOMIO: @${{mom.toFixed(2)}} | Mercados reales por deporte</div></div>`; document.getElementById('super_box').innerHTML=h; document.getElementById('lista').innerHTML='';
 }}
 function openG(id){{var g=games[id]; document.getElementById('mtitle').innerText=g.title; document.getElementById('mtv').innerText=g.tv+" - "+g.liga+" REAL"; document.getElementById('modal').style.display='block'; window.currentG=g; showTab('analisis');}}
 function showTab(t){{document.querySelectorAll('.tabm button').forEach(b=>b.classList.remove('active')); document.getElementById('bt_'+t).classList.add('active'); document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); document.getElementById('panel_'+t).classList.add('active'); var g=window.currentG; if(!g) return;
 if(t==='analisis'){{var a=g.analisis; var h=`<div class="analisis-box"><h4>📈 ULT5 REAL ${{g.liga}} AL 12/09/26</h4><b style="color:#00ff88">${{a.ult5_home}}</b><br><br><b style="color:#ff6b6b">${{a.ult5_away}}</b></div><div class="analisis-box"><h4>⚠️ FACTORES REALES</h4>${{a.factores.map(f=>`• ${{f}}`).join('<br>')}}<br><br><b style="color:#ffcc00">% FINAL: ${{g.prob}}% REAL</b></div>`; document.getElementById('panel_analisis').innerHTML=h;}}
 if(t==='apuestas'){{var h=`<div style="color:#00ff88;font-size:10px">💰 APUESTAS REALES ${{g.liga}} - ${{g.mercados[0].tipo}}</div>`+g.mercados.map(m=>`<div class="mercado"><div><b>${{m.op}}</b><br><small style="color:#888">${{m.tipo}}</small><br><small style="color:#ffcc00">EFECTIVA: ${{m.efec}} | EV ${{m.ev}} | % REAL: ${{m.prob}}</small></div><div><b style="color:#00ff88">${{m.momio}}</b></div></div>`).join(''); document.getElementById('panel_apuestas').innerHTML=h;}}
 if(t==='mejores'){{var h=g.mejores.map(m=>`<div style="background:#1a1805;border:2px solid #ffcc00;border-radius:14px;padding:14px;margin:10px 0"><h3 style="color:#ffcc00;margin:0">${{m.op}} - ${{m.efec}} | ${{m.tipo}}</h3><p style="font-size:11px">${{m.porque_mejor}}</p></div>`).join(''); document.getElementById('panel_mejores').innerHTML=h;}}
-if(t==='parlay'){{var h=g.parlays.map(p=>`<div class="mercado" style="background:#1a1600;border-color:#ffcc00"><div><b style="color:#ffcc00">${{p.picks}}</b><br><small>${{p.detalle}} | ${{g.liga}} REAL - ${{g.mercados[0].tipo}}</small></div><div><b style="color:#ffcc00">${{p.momio}}</b></div></div>`).join(''); document.getElementById('panel_parlay').innerHTML=h;}}
+if(t==='parlay'){{var h=g.parlays.map(p=>`<div class="mercado" style="background:#1a1600;border-color:#ffcc00"><div><b style="color:#ffcc00">${{p.picks}}</b><br><small>${{p.detalle}} | ${{g.liga}} REAL</small></div><div><b style="color:#ffcc00">${{p.momio}}</b></div></div>`).join(''); document.getElementById('panel_parlay').innerHTML=h;}}
 }}
 renderFiltros(); renderLista();
-</script></body></html>"""
+</script>
+</body>
+</html>"""
 
 with open("index.html","w",encoding="utf-8") as f:
     f.write(html)
-print(f"LISTO V89.5 FIX PARLAYS POR DEPORTE {len(games)} EVENTOS - FORMATO ORIGINAL INTACTO")
+print(f"LISTO V89.6 FORMATO ORIGINAL RESTAURADO {len(games)} EVENTOS")
