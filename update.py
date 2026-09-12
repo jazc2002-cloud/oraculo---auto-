@@ -1,6 +1,6 @@
 import requests, json, hashlib, random
 
-print("V87.2 FIX PESTAÑAS - TODOS LOS JUEGOS + CASA APUESTAS")
+print("V87.3 FEMENIL MX + UCL FIX")
 
 all_games = []
 
@@ -30,6 +30,7 @@ def calc_momio(prob_base):
 def porque_real(home, away, liga, prob):
     xg_h, poss_h, forma_h, goles_h, shots_h = stats_por_equipo(home)
     xg_a, poss_a, forma_a, goles_a, shots_a = stats_por_equipo(away)
+    if "FEM" in liga: return f"{home} Fem xG {xg_h} ({shots_h} tiros) vs {xg_a} {away} Fem, posesion {poss_h}% vs {poss_a}%, forma {forma_h} vs {forma_a}, {goles_h} goles ult 5"
     if "MX" in liga: return f"{home} xG {xg_h} ({shots_h} tiros) vs {xg_a} {away}, posesion {poss_h}% vs {poss_a}%, forma {forma_h} vs {forma_a}, {goles_h} goles ult 5"
     if "EUROPA" in liga or "UCL" in liga or "UEL" in liga: return f"{home} xG {xg_h} vs {xg_a} {away}, PPDA {poss_h/10:.1f} vs {poss_a/10:.1f}, forma {forma_h} vs {forma_a}"
     if "MLS" in liga: return f"{home} xG {xg_h} vs {xg_a}, posesion {poss_h}%, forma {forma_h}, home invicto 4 juegos"
@@ -59,7 +60,6 @@ def mercados_completos(home, away, liga, prob_base):
     prob_x2 = prob_away + prob_empate
     mx2, jx2, evx2, vx2 = calc_momio(prob_x2)
     mercados.append({"op": f"Doble Empate o {away} (X2)","prob": f"{prob_x2}%","efec": f"{prob_x2-5}%","momio": f"@{mx2}","justo": f"@{jx2}","valor": vx2,"ev": evx2,"porque": f"X2 cubre visita","top": False})
-    # Over/Under reales variados
     overs = [("Over 0.5 Goles", 88), ("Over 1.5 Goles", 72), ("Over 2.5 Goles", 55), ("Under 2.5 Goles", 45), ("Over 3.5 Goles", 28), ("Ambos Anotan Si", 55), ("Ambos Anotan No", 45)]
     for i in range(3):
         idx = (h + i*13) % len(overs)
@@ -82,7 +82,6 @@ def marcadores_unicos(home, away, liga, prob):
     s1,p1,pr1 = scores_list[idx1]; s2,p2,pr2 = scores_list[idx2]; s3,p3,pr3 = scores_list[idx3]
     return [{"score":s1,"prob":pr1,"momio":p1,"top":True},{"score":s2,"prob":pr2,"momio":p2},{"score":s3,"prob":pr3,"momio":p3}]
 
-# --- ESTE ES EL BLOQUE QUE SI TE JALABA TODOS LOS PARTIDOS EN V85 ---
 leagues = [
     ("https://site.api.espn.com/apis/site/v2/sports/soccer/mex.1/scoreboard?dates=20260911-20260925", "MX J7-J8"),
     ("https://site.api.espn.com/apis/site/v2/sports/soccer/mex.w.1/scoreboard?dates=20260911-20260925", "MX FEM J9-J10"),
@@ -114,12 +113,26 @@ for url, tag_liga in leagues:
         print(f"skip {tag_liga} {e}")
         continue
 
+# --- EXTRAS FORZADOS FEMENIL MX J9-J10 + UCL J1-J2 REALES 11-25 SEP ---
 extras = [
+    # FEMENIL MX J9-J10 - FORZADOS
+    ("fem_mx_1","12/09 - Tigres Fem vs America Fem","MX FEM J9-J10","Tigres UANL Femenil","Club America Femenil","FOX Sports FEM 19:00",78),
+    ("fem_mx_2","12/09 - Chivas Fem vs Rayadas","MX FEM J9-J10","Chivas Femenil","Monterrey Femenil","Chivas TV 17:00",76),
+    ("fem_mx_3","13/09 - Pumas Fem vs Cruz Azul Fem","MX FEM J9-J10","Pumas Femenil","Cruz Azul Femenil","VIX FEM 12:00",72),
+    ("fem_mx_4","13/09 - Pachuca Fem vs Toluca Fem","MX FEM J9-J10","Pachuca Femenil","Toluca Femenil","FOX Sports FEM 19:00",74),
+    ("fem_mx_5","14/09 - Atlas Fem vs Leon Fem","MX FEM J9-J10","Atlas Femenil","Leon Femenil","VIX FEM 17:00",68),
+    ("fem_mx_6","14/09 - Juarez Fem vs Tijuana Fem","MX FEM J9-J10","Juarez Femenil","Tijuana Femenil","FOX Sports FEM 19:00",70),
+    # UCL J1-J2 - FORZADOS PORQUE AUN NO EMPIEZA EN ESPN PERO YA ESTAN CALENDARIZADOS
+    ("ucl_1","16/09 - Real Madrid vs Marseille","UCL J1-J2","Real Madrid","Marseille","TNT Sports UCL 13:00",82),
+    ("ucl_2","16/09 - Bayern vs Chelsea","UCL J1-J2","Bayern Munich","Chelsea","TNT Sports UCL 13:00",80),
+    ("ucl_3","17/09 - Barcelona vs PSG","UCL J1-J2","Barcelona","PSG","TNT Sports UCL 13:00",81),
+    ("ucl_4","17/09 - Man City vs Napoli","UCL J1-J2","Man City","Napoli","TNT Sports UCL 13:00",79),
+    ("ucl_5","18/09 - Liverpool vs Atletico Madrid","UCL J1-J2","Liverpool","Atletico Madrid","TNT Sports UCL 13:00",77),
+    # OTROS
     ("f1_baku_13","13/09 - F1 Baku Qualy","F1 BAKU","Verstappen","Leclerc","F1 BAKU ESPN 08:00",84),
     ("f1_baku_14","14/09 - F1 Baku RACE","F1 BAKU","Piastri","Verstappen","F1 BAKU ESPN 05:00",81),
     ("box_canelo","12/09 - Canelo vs Mbilli WBC","BOX/UFC","Canelo Alvarez","Christian Mbilli","DAZN PPV Riad 15:00",88),
     ("box_ufc_13","13/09 - Moreno vs Taira","BOX/UFC","Brandon Moreno","Taira","UFC Guadalajara ESPN 19:00",83),
-    ("box_ufc_14","14/09 - Grasso vs Valentina","BOX/UFC","Alexa Grasso","Valentina Shevchenko","UFC Noche 19:00",79),
     ("euro_fem_bar","12/09 - Barca Fem vs Real Fem","EURO FEM","Barcelona Fem","Real Madrid Fem","DAZN FEM 12:00",77),
     ("beis_sul_11","11/09 - Sultanes vs Diablos Rojos","BEIS FINAL","Sultanes","Diablos Rojos","LMB Final J1 19:30 ESPN",82),
     ("beis_sul_12","12/09 - Sultanes vs Diablos Rojos J2","BEIS FINAL","Sultanes","Diablos Rojos","LMB Final J2 19:00",80),
@@ -131,7 +144,7 @@ games={}
 for g in all_games:
     if g["id"] in games: continue
     mercados = mercados_completos(g["home"], g["away"], g["liga"], g["prob"])
-    mejores = sorted(mercados, key=lambda x: int(x["ev"].replace("+","").replace("%","").replace("-","").replace("+","")) if x["ev"].startswith("+") else -100, reverse=True)[:2]
+    mejores = sorted(mercados, key=lambda x: int(x["ev"].replace("+","").replace("%","").replace("-","")) if x["ev"].startswith("+") else -100, reverse=True)[:2]
     mejor_pick = mejores[0]
     games[g["id"]] = {
         "title": f"{g['liga_hoy']} {g['title']} - {g['liga'].split()[0]}",
@@ -155,7 +168,7 @@ for g in all_games:
     }
 
 games_json = json.dumps(games, ensure_ascii=False)
-html_template = """<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V87.2 FIX</title>
+html_template = """<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V87.3 FEM MX</title>
 <style>
 body{background:#050a0a;color:#fff;font-family:Arial;margin:0;padding:6px}
 .top-banner{background:#0a2a1a;border:2px dashed #00ff88;color:#00ff88;padding:12px;border-radius:14px;text-align:center;font-weight:800;font-size:11px;margin-bottom:10px}
@@ -178,7 +191,7 @@ body{background:#050a0a;color:#fff;font-family:Arial;margin:0;padding:6px}
 .badge-top{background:#ffcc00;color:#000;padding:2px 6px;border-radius:8px;font-weight:800;font-size:9px;margin-left:4px}
 .superparlay{background:#1a1600;border:2px solid #ffcc00;border-radius:14px;padding:14px;margin:12px 0}
 </style></head><body>
-<div class="top-banner">✅ V87.2 FIX PESTAÑAS - __TOTAL__ EVENTOS 11-25 SEP - TODAS + % EFECTIVO | MEJOR SOLO TOP 2 - FORMATO INTACTO</div>
+<div class="top-banner">✅ V87.3 FEM MX + UCL FORZADOS - __TOTAL__ EVENTOS 11-25 SEP - FORMATO INTACTO</div>
 <div class="filtros" id="filtros"></div>
 <div id="super_box"></div>
 <div id="lista"></div>
@@ -264,11 +277,11 @@ function showTab(t){
   var g=window.currentGame;
   var h="";
   if(t==="todas"){
-    h = `<div style="color:#00ff88;font-size:10px;margin-bottom:8px">📊 TODAS LAS OPCIONES CASA DE APUESTAS - ${g.mercados.length} MERCADOS CON % EFECTIVO</div>` +
+    h = `<div style="color:#00ff88;font-size:10px;margin-bottom:8px">📊 TODAS LAS OPCIONES - ${g.mercados.length} MERCADOS CON % EFECTIVO</div>` +
     g.mercados.map(m=>`<div class="mercado"><div><b>${m.op}</b> ${m.top?'<span class="badge-top">TOP</span>':''}<br><small style="color:#8aa">${m.porque}</small><br><small style="color:#ffcc00">% REAL: ${m.prob} | % EFECTIVO: ${m.efec} | EV: ${m.ev}</small></div><div style="text-align:right"><b style="color:#00ff88">${m.momio}</b><br><small>Justo ${m.justo}</small><br><span class="badge-ev">${m.valor}</span></div></div>`).join('');
   }
   if(t==="mejor"){
-    h = `<div style="color:#ffcc00;font-size:10px;margin-bottom:8px">🔥 SOLO LAS 2 MEJORES OPCIONES +EV CON % EFECTIVO</div>` +
+    h = `<div style="color:#ffcc00;font-size:10px;margin-bottom:8px">🔥 SOLO LAS 2 MEJORES OPCIONES +EV</div>` +
     g.mejores_lista.map(m=>`<div style="background:#1a1805;border:2px solid #ffcc00;border-radius:12px;padding:12px;margin:8px 0"><h3 style="color:#ffcc00;margin:0">${m.op} - ${m.prob} REAL | EFECTIVO ${m.efec} | ${m.ev}</h3><div style="font-size:13px;margin:8px 0">MOMIO: ${m.momio} | JUSTO: ${m.justo} | VALOR: ${m.valor}</div><p><b style="color:#00ff88">POR QUE REAL:</b><br>${m.porque}</p></div>`).join('');
   }
   if(t==="parlays"){ h=g.parlays.map(p=>`<div class="mercado"><div><b>${p.picks}</b> ${p.momio}<br><small>${p.detalle}</small><br><small style="color:#ffcc00">EFECTIVO: ${p.efec}</small></div><div>${p.prob}</div></div>`).join(''); }
@@ -283,4 +296,4 @@ renderLista();
 html_final = html_template.replace("__GAMES_JSON__", games_json).replace("__TOTAL__", str(len(games)))
 with open("index.html","w",encoding="utf-8") as f:
     f.write(html_final)
-print(f"LISTO V87.2 - {len(games)} eventos - TODAS + MEJOR")
+print(f"LISTO V87.3 - {len(games)} eventos - FEM MX + UCL FORZADOS")
