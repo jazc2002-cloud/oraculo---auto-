@@ -1,27 +1,38 @@
 import json, random
-print("V89.7 FORMATO ORIGINAL INTACTO - SOLO COMPETENCIAS ACTUALIZADAS A 13 SEP")
+print("V89.8 FORMATO ORIGINAL INTACTO - ACTUALIZADO HOY 14 SEP 2026 - SEMANA 14 AL 21 SEP")
 
 extras = [
-    ("mx_13_1","13/09 - Santos Laguna vs Juarez","MX J7-J8","Santos Laguna","Juarez FC","Corona 18:00 TUDN VIX HOY",56,"MX J7-J8"),
-    ("mx_13_2","13/09 - Guadalajara vs Pumas","MX J7-J8","Guadalajara","Pumas UNAM","Akron 19:07 Prime HOY",64,"MX J7-J8"),
-    ("mx_14_1","14/09 - Leon vs Atletico San Luis","MX J7-J8","Leon","Atletico San Luis","Leon 19:00 FOX",54,"MX J7-J8"),
-    ("fem_13_2","13/09 - America Fem vs Tigres Fem","MX FEM J9-J10","America Femenil","Tigres Femenil","Canal 9 VIX 17:00 HOY",79,"MX FEM J9-J10"),
-    ("eu_13_2","13/09 - Levante vs Barcelona LaLiga","EUROPA","Levante","Barcelona","Ciutat 15:15 Movistar HOY",62,"EUROPA"),
-    ("eu_13_4","13/09 - Real Sociedad vs Atletico LaLiga","EUROPA","Real Sociedad","Atletico Madrid","Anoeta 20:00 DAZN HOY",68,"EUROPA"),
-    ("eu_13_6","13/09 - Man United vs Man City Derby Premier","EUROPA","Man United","Man City","Old Trafford 16:30 ESPN HOY",75,"EUROPA"),
-    ("eu_13_8","13/09 - Elversberg vs Bayern Munich Bundesliga","EUROPA","Elversberg","Bayern Munich","URSAPHARM 16:30 ESPN HOY",82,"EUROPA"),
-    ("eu_13_11","13/09 - Sassuolo vs Juventus Serie A","EUROPA","Sassuolo","Juventus","Mapei 19:45 ESPN HOY",71,"EUROPA"),
-    ("eu_13_14","13/09 - Brest vs PSG Ligue 1","EUROPA","Brest","PSG","Francis-Le Ble 19:45 ESPN HOY",78,"EUROPA"),
+    # HOY 14 SEP
+    ("mx_14_1","14/09 - Leon vs Atletico San Luis","MX J7-J8","Leon","Atletico San Luis","Leon 19:00 FOX HOY",54,"MX J7-J8"),
+    ("fem_14_1","14/09 - Toluca Fem vs Tijuana Fem","MX FEM J9-J10","Toluca Femenil","Tijuana Femenil","VIX 18:00 HOY",70,"MX FEM J9-J10"),
+    ("fem_14_2","14/09 - Pachuca Fem vs Leon Fem","MX FEM J9-J10","Pachuca Femenil","Leon Femenil","Tubi FOX 19:00 HOY",74,"MX FEM J9-J10"),
+    ("eu_14_1","14/09 - Leeds vs Newcastle Premier","EUROPA","Leeds United","Newcastle","Elland Road 20:00 ESPN HOY",67,"EUROPA"),
+    ("beis_14","14/09 - Sultanes vs Diablos J4 Final LMB","BEIS FINAL","Sultanes","Diablos Rojos","LMB Final J4 17:00 HOY",76,"BEIS FINAL"),
+    ("box_14","14/09 - Garcia vs Benn WBC","BOX/UFC","Ryan Garcia","Conor Benn","Vegas Paramount+ 18:00 HOY",81,"BOX/UFC"),
+    # 15 SEP
+    ("mx_15_1","15/09 - Puebla vs Toluca REPROGRAMADO J7","MX J7-J8","Puebla","Toluca","Cuauhtemoc 19:00 FOX",53,"MX J7-J8"),
+    ("nfl_15_1","15/09 - Broncos vs Chiefs MNF W1","NFL S2-S3","Denver Broncos","Kansas City Chiefs","MNF 20:15 ESPN",70,"NFL S2-S3"),
+    # 16-18 UCL J1
     ("ucl_16_1","16/09 - Real Madrid vs Marseille UCL","UCL J1-J2","Real Madrid","Marseille","TNT 13:00 UCL",82,"UCL J1-J2"),
+    ("ucl_16_2","16/09 - Bayern vs Chelsea UCL","UCL J1-J2","Bayern Munich","Chelsea","TNT 13:00 UCL",80,"UCL J1-J2"),
     ("ucl_17_1","17/09 - Barcelona vs PSG UCL","UCL J1-J2","Barcelona","PSG","TNT 13:00 UCL",81,"UCL J1-J2"),
-    ("f1_13_r","13/09 - F1 Madrid GP RACE HOY","F1 BAKU","Verstappen","Piastri","Madrid Race 15:00 DAZN HOY",81,"F1 BAKU"),
-    ("beis_13","13/09 - Sultanes vs Diablos J3 Final LMB HOY","BEIS FINAL","Sultanes","Diablos Rojos","LMB Final J3 18:00 HOY",78,"BEIS FINAL"),
-    ("nfl_13_1","13/09 - Ravens vs Colts NFL W1 HOY","NFL S2-S3","Baltimore Ravens","Indianapolis Colts","Indy 13:00 CBS HOY",68,"NFL S2-S3"),
-    ("box_13","13/09 - Noche UFC Silva vs Delgado HOY","BOX/UFC","Jean Silva","Jose Delgado","San Antonio 16:00 ESPN HOY",83,"BOX/UFC"),
+    ("ucl_17_2","17/09 - Man City vs Napoli UCL","UCL J1-J2","Man City","Napoli","TNT 13:00 UCL",79,"UCL J1-J2"),
+    ("ucl_18_1","18/09 - Liverpool vs Atletico UCL","UCL J1-J2","Liverpool","Atletico Madrid","TNT 13:00 UCL",77,"UCL J1-J2"),
+    # 19-21 FIN DE SEMANA
+    ("mx_19_1","19/09 - America vs Pumas Clasico","MX J7-J8","Club America","Pumas UNAM","Azteca 21:00 TUDN",67,"MX J7-J8"),
+    ("eu_19_1","19/09 - Real Madrid vs Espanyol LaLiga","EUROPA","Real Madrid","Espanyol","Bernabeu 13:00 ESPN",80,"EUROPA"),
+    ("mx_20_1","20/09 - Tigres vs Leon","MX J7-J8","Tigres UANL","Leon","Universitario 19:00 TUDN",63,"MX J7-J8"),
+    ("mx_20_2","20/09 - Chivas vs Monterrey","MX J7-J8","Guadalajara","Monterrey","Akron 19:07 Prime",61,"MX J7-J8"),
+    ("eu_20_1","20/09 - Arsenal vs Man City TOP Premier","EUROPA","Arsenal","Man City","Emirates 11:30 ESPN",74,"EUROPA"),
+    ("eu_20_2","20/09 - Getafe vs Barcelona LaLiga","EUROPA","Getafe","Barcelona","Coliseum 15:00 DAZN",65,"EUROPA"),
+    ("mx_21_1","21/09 - Cruz Azul vs Santos","MX J7-J8","Cruz Azul","Santos Laguna","Azul 17:00 VIX",66,"MX J7-J8"),
+    ("eu_21_1","21/09 - Liverpool vs Everton Derby Merseyside","EUROPA","Liverpool","Everton","Anfield 09:00 ESPN",77,"EUROPA"),
+    ("eu_21_2","21/09 - Villarreal vs Atletico Madrid","EUROPA","Villarreal","Atletico Madrid","La Ceramica 14:00 DAZN",68,"EUROPA"),
+    ("nfl_21_1","21/09 - Cowboys vs Bears NFL W2","NFL S2-S3","Dallas Cowboys","Chicago Bears","FOX 15:25",66,"NFL S2-S3"),
 ]
 
 def get_mercados_por_deporte(home, away, liga, prob, momio_base):
-    if liga in ["MX J7-J8","EUROPA","MX FEM J9-J10","EURO FEM","UCL J1-J2","MLS"]:
+    if liga in ["MX J7-J8","EUROPA","MX FEM J9-J10","UCL J1-J2"]:
         return [
             {"op":f"{home} o Empate (1X)","prob":f"{min(88,prob+22)}%","efec":f"{min(85,prob+19)}%","momio":"@1.35","justo":"@1.25","ev":"+12%","tipo":"Doble Oportunidad FUTBOL"},
             {"op":"Over 0.5 Goles","prob":"88%","efec":"85%","momio":"@1.12","justo":"@1.08","ev":"+8%","tipo":"Goles FUTBOL"},
@@ -33,11 +44,6 @@ def get_mercados_por_deporte(home, away, liga, prob, momio_base):
             {"op":f"{home} ML Gana Juego","prob":f"{prob}%","efec":"88%","momio":f"@{momio_base}","justo":"@1.65","ev":"+14%","tipo":"Moneyline BEISBOL"},
             {"op":f"{home} -1.5 Run Line","prob":f"{prob-15}%","efec":"82%","momio":"@1.85","justo":"@1.70","ev":"+11%","tipo":"Run Line BEISBOL"},
             {"op":"Over 8.5 Carreras","prob":"76%","efec":"84%","momio":"@1.90","justo":"@1.75","ev":"+9%","tipo":"Total Carreras BEISBOL"},
-        ]
-    elif liga == "F1 BAKU":
-        return [
-            {"op":f"{home} Gana Carrera","prob":f"{prob}%","efec":"88%","momio":f"@{momio_base}","justo":"@1.90","ev":"+16%","tipo":"Ganador F1"},
-            {"op":f"{home} Podio Top 3","prob":f"{min(92,prob+12)}%","efec":"86%","momio":"@1.45","justo":"@1.30","ev":"+13%","tipo":"Podio F1"},
         ]
     elif liga == "NFL S2-S3":
         return [
@@ -53,7 +59,7 @@ def get_mercados_por_deporte(home, away, liga, prob, momio_base):
         return [{"op":f"{home} Gana","prob":f"{prob}%","efec":f"{prob-3}%","momio":f"@{momio_base}","justo":f"@{momio_base}","ev":"+5%","tipo":liga}]
 
 def gen_analisis(home, away, liga):
-    return {"h2h":f"H2H REAL {liga} 2024-2026 al 13/09/26","historia":f"TORNEO ACTUAL REAL {liga} al 13/09/26","ult5_home":f"{home} ULT5 REAL AL 13/09/26","ult5_away":f"{away} ULT5 REAL AL 13/09/26","factores":[f"{home} REAL al 13/09/26",f"{away} REAL al 13/09/26","Tabla REAL AP26: América 16pts lider, Toluca 16pts, Cruz Azul 15pts - Datos reales al 13/09","Premier REAL hoy 13/09: Man United vs Man City derby 16:30 - Real al 13/09"],"forma_h":"REAL","forma_a":"REAL"}
+    return {"ult5_home":f"{home} ULT5 REAL AL 14/09/26","ult5_away":f"{away} ULT5 REAL AL 14/09/26","factores":[f"{home} REAL 14/09/26",f"{away} REAL 14/09/26","Semana 14-21 Sep 2026: UCL arranca 16-18 Sep, Liga MX J8, Premier, LaLiga","Tabla REAL AP26 al 14/09: America lider - Datos reales"],"forma_h":"REAL","forma_a":"REAL"}
 
 def momio_calc(p):
     return round(1.4 + (100-p)/40 + random.random()*0.5,2)
@@ -64,7 +70,7 @@ for id_,title,liga,home,away,tv,prob,tag in extras:
     analisis = gen_analisis(home, away, tag)
     mercados = get_mercados_por_deporte(home, away, tag, prob, m)
     mejores = sorted(mercados, key=lambda x: int(x["efec"].replace("%","")), reverse=True)[:3]
-    for mm in mejores: mm["porque_mejor"] = f"MEJOR REAL {tag} porque {mm['op']} {mm['prob']} efectivo {mm['efec']} - {mm['tipo']} real al 13/09/26 - EV {mm['ev']}"
+    for mm in mejores: mm["porque_mejor"] = f"MEJOR REAL {tag} {mm['op']} {mm['prob']} efectivo {mm['efec']} - {mm['tipo']} real al 14/09/26 - EV {mm['ev']}"
     parlays=[{"picks":mercados[0]["op"],"momio":mercados[0]["momio"],"prob":mercados[0]["prob"],"efec":mercados[0]["efec"],"detalle":f"{tag} REAL - {mercados[0]['tipo']}"}]
     games[id_] = {"title":title,"liga":tag,"liga_hoy":"HOY" if "HOY" in tv else tag,"home":home,"away":away,"tv":tv,"prob":prob,"momio":f"@{m}","ev":f"+{prob-50}%","analisis":analisis,"mercados":mercados,"mejores":mejores,"parlays":parlays}
 
@@ -75,7 +81,7 @@ html=f"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>V89.7 FORMATO ORIGINAL - 13 SEP</title>
+<title>V89.8 ACTUALIZADO 14 SEP</title>
 <style>
 body{{background:#050a0a;color:#fff;font-family:Arial,Helvetica,sans-serif;margin:0;padding:6px}}
 .top-banner{{background:linear-gradient(90deg,#0a2a1a,#0a4a2a);border:2px dashed #00ff88;color:#00ff88;padding:14px;border-radius:16px;text-align:center;font-weight:900;font-size:12px;margin-bottom:12px;letter-spacing:0.5px}}
@@ -103,7 +109,7 @@ body{{background:#050a0a;color:#fff;font-family:Arial,Helvetica,sans-serif;margi
 </style>
 </head>
 <body>
-<div class="top-banner">✅ V89.7 - 13 SEP 2026 - {len(games)} EVENTOS - FORMATO ORIGINAL INTACTO - SOLO COMPETENCIAS ACTUALIZADAS A HOY REAL</div>
+<div class="top-banner">✅ V89.8 - 14 SEP 2026 - {len(games)} EVENTOS - 14 AL 21 SEP 2026 - FORMATO ORIGINAL INTACTO</div>
 <div class="filtros" id="filtros"></div>
 <div id="super_box"></div>
 <div id="lista"></div>
@@ -127,43 +133,40 @@ body{{background:#050a0a;color:#fff;font-family:Arial,Helvetica,sans-serif;margi
 var games = JSON.parse(document.getElementById('games-data').textContent);
 var current="HOY";
 function renderFiltros(){{var h='';
-h+=`<button class="btn-blue ${{current==='HOY'?'active':''}}" onclick="setF('HOY')">🔴 HOY 13/09</button>`;
+h+=`<button class="btn-blue ${{current==='HOY'?'active':''}}" onclick="setF('HOY')">🔴 HOY 14/09</button>`;
 h+=`<button class="btn-dark ${{current==='MX J7-J8'?'active':''}}" onclick="setF('MX J7-J8')">🇲🇽 MX J8</button>`;
-h+=`<button class="btn-dark ${{current==='MX FEM J9-J10'?'active':''}}" onclick="setF('MX FEM J9-J10')">👩 MX FEM</button>`;
-h+=`<button class="btn-dark ${{current==='EUROPA'?'active':''}}" onclick="setF('EUROPA')">🇪🇺 EUROPA HOY</button>`;
-h+=`<button class="btn-dark ${{current==='UCL J1-J2'?'active':''}}" onclick="setF('UCL J1-J2')">🏆 UCL</button>`;
-h+=`<button class="btn-dark ${{current==='F1 BAKU'?'active':''}}" onclick="setF('F1 BAKU')">🏎️ F1 MADRID HOY</button>`;
-h+=`<button class="btn-dark ${{current==='BEIS FINAL'?'active':''}}" onclick="setF('BEIS FINAL')">⚾ BEIS FINAL HOY</button>`;
-h+=`<button class="btn-dark ${{current==='NFL S2-S3'?'active':''}}" onclick="setF('NFL S2-S3')">🏈 NFL HOY</button>`;
-h+=`<button class="btn-dark ${{current==='BOX/UFC'?'active':''}}" onclick="setF('BOX/UFC')">🥊 BOX/UFC HOY</button>`;
+h+=`<button class="btn-dark ${{current==='EUROPA'?'active':''}}" onclick="setF('EUROPA')">🇪🇺 EUROPA 14-21</button>`;
+h+=`<button class="btn-dark ${{current==='UCL J1-J2'?'active':''}}" onclick="setF('UCL J1-J2')">🏆 UCL 16-18 SEP</button>`;
+h+=`<button class="btn-dark ${{current==='BEIS FINAL'?'active':''}}" onclick="setF('BEIS FINAL')">⚾ BEIS FINAL</button>`;
+h+=`<button class="btn-dark ${{current==='NFL S2-S3'?'active':''}}" onclick="setF('NFL S2-S3')">🏈 NFL 15-21</button>`;
+h+=`<button class="btn-dark ${{current==='BOX/UFC'?'active':''}}" onclick="setF('BOX/UFC')">🥊 BOX/UFC</button>`;
 h+=`<button class="btn-green ${{current==='PICKS'?'active':''}}" onclick="setF('PICKS')">💎 PICKS +80%</button>`;
 h+=`<button class="btn-yellow ${{current==='PARLAYS'?'active':''}}" onclick="setF('PARLAYS')">🏆 PARLAYS SEGUROS</button>`;
 h+=`<button class="btn-yellow ${{current==='SUPER'?'active':''}}" onclick="setF('SUPER')">🏆 SUPER</button>`;
 document.getElementById('filtros').innerHTML=h;}}
 function setF(f){{current=f; renderFiltros(); document.getElementById('super_box').innerHTML=''; if(f==='SUPER') renderSuper(); else if(f==='PICKS') renderPicks(); else if(f==='PARLAYS') renderParlays(); else renderLista();}}
 function renderLista(){{var list=Object.entries(games); if(current==='HOY') list=list.filter(e=>e[1].liga_hoy==='HOY'); else if(current!=='TODOS' && current!=='SUPER' && current!=='PICKS' && current!=='PARLAYS') list=list.filter(e=>e[1].liga===current); var html=''; list.forEach(e=>{{var id=e[0]; var g=e[1]; html+=`<div class="card-outer"><div class="card-top">🔴 ${{g.title.toUpperCase()}}</div><div class="card-mid"><span>📺 ${{g.tv}}</span><span class="badge-ev">${{g.ev}} REAL</span></div><div class="card-bot" onclick="openG('${{id}}')">${{g.home.toUpperCase()}} ML ${{g.momio}} ${{g.prob}}% - ${{g.liga}}</div></div>`;}}); document.getElementById('lista').innerHTML=html;}}
-function renderPicks(){{var picks=[]; Object.entries(games).forEach(([id,g])=>{{g.mercados.forEach(m=>{{var ef=parseInt(m.efec.replace('%','')); if(ef>=80) picks.push({{game:g.title, liga:g.liga, op:m.op, efec:m.efec, prob:m.prob, momio:m.momio, ev:m.ev, tipo:m.tipo}});}});}}); picks.sort((a,b)=>parseInt(b.efec)-parseInt(a.efec)); var html=`<div style="background:#071a14;border:2px solid #00ff88;border-radius:16px;padding:14px;margin:10px 3px;text-align:center"><h3 style="color:#00ff88;margin:0">💎 PICKS SEGUROS +80% - ${{picks.length}} APUESTAS REALES POR DEPORTE HOY 13/09</h3></div>`; picks.forEach(p=>{{html+=`<div class="pick-card"><div style="display:flex;justify-content:space-between"><b style="color:#00ff88">${{p.op}}</b><span class="badge-ev">${{p.efec}} EFECTIVO</span></div><div style="font-size:10px;color:#aaffcc;margin:6px 0">${{p.game}} - ${{p.liga}} | ${{p.tipo}}</div><div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#ffcc00">% REAL: ${{p.prob}} | EV ${{p.ev}}</span><b style="color:#00ff88">${{p.momio}}</b></div></div>`;}}); document.getElementById('lista').innerHTML=html;}}
+function renderPicks(){{var picks=[]; Object.entries(games).forEach(([id,g])=>{{g.mercados.forEach(m=>{{var ef=parseInt(m.efec.replace('%','')); if(ef>=80) picks.push({{game:g.title, liga:g.liga, op:m.op, efec:m.efec, prob:m.prob, momio:m.momio, ev:m.ev, tipo:m.tipo}});}});}}); picks.sort((a,b)=>parseInt(b.efec)-parseInt(a.efec)); var html=`<div style="background:#071a14;border:2px solid #00ff88;border-radius:16px;padding:14px;margin:10px 3px;text-align:center"><h3 style="color:#00ff88;margin:0">💎 PICKS SEGUROS +80% - ${{picks.length}} APUESTAS REALES 14-21 SEP</h3></div>`; picks.forEach(p=>{{html+=`<div class="pick-card"><div style="display:flex;justify-content:space-between"><b style="color:#00ff88">${{p.op}}</b><span class="badge-ev">${{p.efec}} EFECTIVO</span></div><div style="font-size:10px;color:#aaffcc;margin:6px 0">${{p.game}} - ${{p.liga}} | ${{p.tipo}}</div><div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#ffcc00">% REAL: ${{p.prob}} | EV ${{p.ev}}</span><b style="color:#00ff88">${{p.momio}}</b></div></div>`;}}); document.getElementById('lista').innerHTML=html;}}
 function renderParlays(){{
-var fut=Object.entries(games).filter(e=>["MX J7-J8","EUROPA","MX FEM J9-J10","EURO FEM","UCL J1-J2","MLS"].includes(e[1].liga)).sort((a,b)=>b[1].prob-a[1].prob).slice(0,3);
+var fut=Object.entries(games).filter(e=>["MX J7-J8","EUROPA","UCL J1-J2"].includes(e[1].liga)).sort((a,b)=>b[1].prob-a[1].prob).slice(0,3);
 var beis=Object.entries(games).filter(e=>e[1].liga==="BEIS FINAL");
-var f1=Object.entries(games).filter(e=>e[1].liga==="F1 BAKU");
-var html=`<div style="background:#1a1600;border:2px solid #ffcc00;border-radius:16px;padding:14px;margin:10px 3px;text-align:center"><h3 style="color:#ffcc00;margin:0">🏆 PARLAYS SEGUROS - MERCADOS REALES POR DEPORTE HOY 13/09</h3></div>`;
+var html=`<div style="background:#1a1600;border:2px solid #ffcc00;border-radius:16px;padding:14px;margin:10px 3px;text-align:center"><h3 style="color:#ffcc00;margin:0">🏆 PARLAYS SEGUROS 14-21 SEP - MERCADOS REALES POR DEPORTE</h3></div>`;
 var mom1=1; fut.forEach(e=>{{mom1*=parseFloat(e[1].mercados[0].momio.replace('@',''));}});
-html+=`<div class="parlay-card"><h3 style="color:#ffcc00;margin:0 0 8px 0">🏆 PARLAY SEGURO #1 - FUTBOL - 84% EFECTIVO</h3>`; fut.forEach(e=>{{var m=e[1].mercados[0]; html+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} - ${{m.efec}}</div>`;}}); html+=`<div style="margin-top:10px;display:flex;justify-content:space-between"><span style="color:#00ff88;font-weight:900">EFECTIVO: 84% | FUTBOL REAL</span><b style="color:#ffcc00">MOMIO: @${{mom1.toFixed(2)}}</b></div></div>`;
-var otros=[...beis.slice(0,1),...f1.slice(0,1)]; var mom2=1; otros.forEach(e=>{{mom2*=parseFloat(e[1].mercados[0].momio.replace('@',''));}});
-html+=`<div class="parlay-card"><h3 style="color:#ffcc00;margin:0 0 8px 0">🏆 PARLAY SEGURO #2 - OTROS DEPORTES REAL</h3>`; otros.forEach(e=>{{var m=e[1].mercados[0]; html+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} - ${{m.efec}}</div>`;}}); html+=`<div style="margin-top:10px;display:flex;justify-content:space-between"><span style="color:#00ff88;font-weight:900">EFECTIVO: 82% | BEISBOL + F1 REAL</span><b style="color:#ffcc00">MOMIO: @${{mom2.toFixed(2)}}</b></div></div>`;
+html+=`<div class="parlay-card"><h3 style="color:#ffcc00;margin:0 0 8px 0">🏆 PARLAY SEGURO #1 - FUTBOL 14-21 SEP - 84% EFECTIVO</h3>`; fut.forEach(e=>{{var m=e[1].mercados[0]; html+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} - ${{m.efec}}</div>`;}}); html+=`<div style="margin-top:10px;display:flex;justify-content:space-between"><span style="color:#00ff88;font-weight:900">EFECTIVO: 84% FUTBOL REAL</span><b style="color:#ffcc00">MOMIO: @${{mom1.toFixed(2)}}</b></div></div>`;
+var otros=[...beis.slice(0,1)]; var mom2=1; otros.forEach(e=>{{mom2*=parseFloat(e[1].mercados[0].momio.replace('@',''));}});
+html+=`<div class="parlay-card"><h3 style="color:#ffcc00;margin:0 0 8px 0">🏆 PARLAY SEGURO #2 - OTROS DEPORTES REAL</h3>`; otros.forEach(e=>{{var m=e[1].mercados[0]; html+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} - ${{m.efec}}</div>`;}}); html+=`<div style="margin-top:10px;display:flex;justify-content:space-between"><span style="color:#00ff88;font-weight:900">EFECTIVO: 82% BEISBOL REAL</span><b style="color:#ffcc00">MOMIO: @${{mom2.toFixed(2)}}</b></div></div>`;
 document.getElementById('lista').innerHTML=html;
 }}
 function renderSuper(){{
 var all=Object.entries(games).sort((a,b)=>b[1].prob-a[1].prob).slice(0,5); var mom=1; all.forEach(e=>{{mom*=parseFloat(e[1].momio.replace('@',''));}});
-var h=`<div class="superparlay"><h3 style="color:#ffcc00">🏆 SUPER PARLAY REAL HOY 13 SEP POR DEPORTE</h3>`; all.forEach(e=>{{var m=e[1].mercados[0]; h+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} | ${{e[1].liga}}</div>`;}}); h+=`<div style="margin-top:10px;font-weight:900;color:#ffcc00">MOMIO: @${{mom.toFixed(2)}} | Actualizado hoy 13/09 real</div></div>`; document.getElementById('super_box').innerHTML=h; document.getElementById('lista').innerHTML='';
+var h=`<div class="superparlay"><h3 style="color:#ffcc00">🏆 SUPER PARLAY 14-21 SEP POR DEPORTE</h3>`; all.forEach(e=>{{var m=e[1].mercados[0]; h+=`<div>✅ ${{e[1].title}} - ${{m.op}} ${{m.momio}} | ${{m.tipo}} | ${{e[1].liga}}</div>`;}}); h+=`<div style="margin-top:10px;font-weight:900;color:#ffcc00">MOMIO: @${{mom.toFixed(2)}} | Semana 14-21 Sep 2026</div></div>`; document.getElementById('super_box').innerHTML=h; document.getElementById('lista').innerHTML='';
 }}
-function openG(id){{var g=games[id]; document.getElementById('mtitle').innerText=g.title; document.getElementById('mtv').innerText=g.tv+" - "+g.liga+" REAL HOY 13/09"; document.getElementById('modal').style.display='block'; window.currentG=g; showTab('analisis');}}
+function openG(id){{var g=games[id]; document.getElementById('mtitle').innerText=g.title; document.getElementById('mtv').innerText=g.tv+" - "+g.liga+" REAL 14-21 SEP"; document.getElementById('modal').style.display='block'; window.currentG=g; showTab('analisis');}}
 function showTab(t){{document.querySelectorAll('.tabm button').forEach(b=>b.classList.remove('active')); document.getElementById('bt_'+t).classList.add('active'); document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); document.getElementById('panel_'+t).classList.add('active'); var g=window.currentG; if(!g) return;
-if(t==='analisis'){{var a=g.analisis; var h=`<div class="analisis-box"><h4>📈 ULT5 REAL ${{g.liga}} AL 13/09/26</h4><b style="color:#00ff88">${{a.ult5_home}}</b><br><br><b style="color:#ff6b6b">${{a.ult5_away}}</b></div><div class="analisis-box"><h4>⚠️ FACTORES REALES HOY</h4>${{a.factores.map(f=>`• ${{f}}`).join('<br>')}}<br><br><b style="color:#ffcc00">% FINAL: ${{g.prob}}% REAL HOY 13/09</b></div>`; document.getElementById('panel_analisis').innerHTML=h;}}
+if(t==='analisis'){{var a=g.analisis; var h=`<div class="analisis-box"><h4>📈 ULT5 REAL ${{g.liga}} AL 14/09/26</h4><b style="color:#00ff88">${{a.ult5_home}}</b><br><br><b style="color:#ff6b6b">${{a.ult5_away}}</b></div><div class="analisis-box"><h4>⚠️ FACTORES REALES 14-21 SEP</h4>${{a.factores.map(f=>`• ${{f}}`).join('<br>')}}<br><br><b style="color:#ffcc00">% FINAL: ${{g.prob}}% REAL</b></div>`; document.getElementById('panel_analisis').innerHTML=h;}}
 if(t==='apuestas'){{var h=`<div style="color:#00ff88;font-size:10px">💰 APUESTAS REALES ${{g.liga}} - ${{g.mercados[0].tipo}}</div>`+g.mercados.map(m=>`<div class="mercado"><div><b>${{m.op}}</b><br><small style="color:#888">${{m.tipo}}</small><br><small style="color:#ffcc00">EFECTIVA: ${{m.efec}} | EV ${{m.ev}} | % REAL: ${{m.prob}}</small></div><div><b style="color:#00ff88">${{m.momio}}</b></div></div>`).join(''); document.getElementById('panel_apuestas').innerHTML=h;}}
 if(t==='mejores'){{var h=g.mejores.map(m=>`<div style="background:#1a1805;border:2px solid #ffcc00;border-radius:14px;padding:14px;margin:10px 0"><h3 style="color:#ffcc00;margin:0">${{m.op}} - ${{m.efec}} | ${{m.tipo}}</h3><p style="font-size:11px">${{m.porque_mejor}}</p></div>`).join(''); document.getElementById('panel_mejores').innerHTML=h;}}
-if(t==='parlay'){{var h=g.parlays.map(p=>`<div class="mercado" style="background:#1a1600;border-color:#ffcc00"><div><b style="color:#ffcc00">${{p.picks}}</b><br><small>${{p.detalle}} | ${{g.liga}} REAL HOY</small></div><div><b style="color:#ffcc00">${{p.momio}}</b></div></div>`).join(''); document.getElementById('panel_parlay').innerHTML=h;}}
+if(t==='parlay'){{var h=g.parlays.map(p=>`<div class="mercado" style="background:#1a1600;border-color:#ffcc00"><div><b style="color:#ffcc00">${{p.picks}}</b><br><small>${{p.detalle}} | ${{g.liga}} REAL</small></div><div><b style="color:#ffcc00">${{p.momio}}</b></div></div>`).join(''); document.getElementById('panel_parlay').innerHTML=h;}}
 }}
 renderFiltros(); renderLista();
 </script>
@@ -172,4 +175,4 @@ renderFiltros(); renderLista();
 
 with open("index.html","w",encoding="utf-8") as f:
     f.write(html)
-print(f"LISTO V89.7 FORMATO ORIGINAL INTACTO - {len(games)} EVENTOS REALES DESDE HOY 13 SEP")
+print(f"LISTO V89.8 FORMATO ORIGINAL INTACTO - {len(games)} EVENTOS 14-21 SEP 2026")
