@@ -1,4 +1,5 @@
-import requests, json, datetime
+import json, datetime
+# V100 COMPLETO 57 EVENTOS - TODAS + F1 + EUROPA FEM - AUTO GRATIS - FORMATO ORIGINAL
 respaldo = [
     ("mx_14_1","14/09 - Leon vs Atletico San Luis J8","MX J7-J8","Leon","Atletico San Luis","Leon 19:00 FOX One HOY",54),
     ("mx_18_1","18/09 - Puebla vs Atlante J9","MX J7-J8","Puebla","Atlante","Cuauhtemoc 19:00 Azteca 7",55),
@@ -58,8 +59,6 @@ respaldo = [
     ("fem_eu_19_1","19/09 - Wolfsburg Fem vs Bayern Munich Fem Bundesliga Fem","EUROPA FEM","Wolfsburg Femenil","Bayern Munich Femenil","AOK 18:00 DAZN",74),
     ("fem_eu_20_1","20/09 - Juventus Fem vs Roma Fem Serie A Fem","EUROPA FEM","Juventus Femenil","AS Roma Femenil","Allianz 15:00 DAZN",71),
 ]
-print(f"V100 COMPLETO - {len(respaldo)} eventos - TODAS + F1 + EUROPA FEM - AUTO GRATIS")
 open("last_update.txt","w").write(str(datetime.datetime.now()))
-open("data.json","w").write(json.dumps(respaldo))
-# Aquí generaría index.html igual pero ya lo tiene arriba
-print("✅ V100 LISTO - 57 EVENTOS")
+open("data.json","w",encoding="utf-8").write(json.dumps(respaldo,ensure_ascii=False))
+print(f"✅ PASO 2 LISTO - {len(respaldo)} eventos V100 COMPLETO")
