@@ -148,4 +148,16 @@ function shM(id){document.querySelectorAll('.mtc').forEach(function(s){s.classLi
 function closeM(){document.getElementById('modal').classList.remove('show');}
 window.addEventListener('load',function(){setTimeout(renderAll,200)});
 setTimeout(renderAll,800);
+<div id="partidos" style="padding:15px;color:white"></div>
+<script>
+const WORKER="https://jolly-shadow-3045.jazc2002.workers.dev";
+fetch(WORKER+"/?sport=soccer_mexico_ligamx").then(r=>r.json()).then(d=>{
+ let h=""; d.forEach(p=>{
+  if(!p.bookmakers[0])return;
+  const o=p.bookmakers[0].markets[0].outcomes;
+  h+=`<div style="background:#1e1e1e;padding:12px;border-radius:12px;margin:10px 0;border:1px solid #333"><b style="color:#FFD700">${p.home_team} vs ${p.away_team}</b><br><small>${new Date(p.commence_time).toLocaleString()}</small><br><br>${o.map(x=>`${x.name}: ${x.price}`).join(' | ')}</div>`;
+ });
+ document.getElementById("partidos").innerHTML=h||"No hay partidos";
+});
+</script>
 </script></body></html>
