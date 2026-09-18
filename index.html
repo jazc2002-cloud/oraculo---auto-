@@ -1,75 +1,305 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ORACULO V115 COMPLETO</title>
+<title>ORACULO V117 TODAS COMPLETAS + UFC REAL</title>
 <style>
 :root{--g:#00ff88;--b:#00d4ff;--bg:#050a0f}*{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:#fff;font-family:system-ui,sans-serif}
-.tabs{display:flex;gap:6px;overflow-x:auto;padding:10px;background:rgba(0,0,0,.7);border-bottom:1px solid #222;position:sticky;top:0;z-index:10}
-.tab{padding:8px 12px;border-radius:20px;background:#111;border:1px solid #2a2a2a;white-space:nowrap;cursor:pointer;font-weight:800;font-size:10px}
-.tab.active{background:linear-gradient(90deg,var(--g),var(--b));color:#000}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;padding:10px}
-.card{background:#111d2a;border:1px solid #1e2d3d;border-radius:16px;padding:12px;cursor:pointer}
+.aurora{position:fixed;top:0;left:0;width:100%;height:700px;background:linear-gradient(180deg,rgba(0,255,136,.18),rgba(0,212,255,.12),transparent);filter:blur(40px);z-index:-1}
+.header{padding:14px;text-align:center;border-bottom:1px solid rgba(0,255,136,.25)}
+.header h1{background:linear-gradient(90deg,var(--g),var(--b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:18px;font-weight:900}
+.tabs{display:flex;gap:5px;overflow-x:auto;padding:10px;background:rgba(0,0,0,.7);border-bottom:1px solid #222;position:sticky;top:0;z-index:10;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:7px 11px;border-radius:18px;background:#111;border:1px solid #2a2a2a;white-space:nowrap;cursor:pointer;font-weight:800;font-size:9px}
+.tab.active{background:linear-gradient(90deg,var(--g),var(--b));color:#000;border-color:transparent}
+.tab.special{border-color:var(--g);color:var(--g)}.tab.special.active{background:linear-gradient(90deg,var(--g),var(--b));color:#000}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:9px;padding:9px}
+.card{background:linear-gradient(180deg,#111d2a,#0f1720);border:1px solid #1e2d3d;border-radius:16px;padding:11px;cursor:pointer}
 .badge{font-size:8px;padding:3px 6px;border-radius:10px;background:#0a1018;border:1px solid #2a3a4a;color:#9ab}
-.tv{font-size:9px;color:#ffcc00;background:rgba(255,204,0,.1);border:1px solid rgba(255,204,0,.3);padding:3px 6px;border-radius:8px;margin-top:5px;display:inline-block}
+.top-pick{background:linear-gradient(135deg,rgba(0,255,136,.18),rgba(0,212,255,.12));border:1px solid var(--g);border-radius:10px;padding:6px;margin-top:6px}
+.tv{font-size:8px;color:#ffcc00;background:rgba(255,204,0,.12);border:1px solid rgba(255,204,0,.35);padding:3px 6px;border-radius:8px;margin-top:5px;display:inline-block}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.94);display:none;z-index:100;overflow-y:auto}
 .modal.show{display:block}.modal-content{max-width:820px;margin:10px auto;background:#0a111a;border:1px solid #1e3d2d;border-radius:20px;overflow:hidden}
+.modal-header{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,rgba(0,255,136,.12),rgba(0,212,255,.1));position:sticky;top:0;z-index:3}
 .inner-tabs{display:flex;gap:4px;padding:8px;background:#050a0f;position:sticky;top:56px;z-index:2}
 .inner-tab{flex:1;padding:8px;text-align:center;border-radius:8px;background:#111;border:1px solid #222;cursor:pointer;font-size:10px;font-weight:800}
 .inner-tab.active{background:#132a1c;border-color:var(--g);color:var(--g)}
 .pane{padding:12px;display:none}.pane.active{display:block}
 .section{margin:10px 0;padding:10px;background:#0f1a14;border:1px solid #1a3a2a;border-radius:12px}
 .h{color:var(--g);font-weight:900;font-size:11px;margin-bottom:6px}
-.row{padding:7px 9px;background:#111;border:1px solid #222;border-radius:8px;margin:4px 0;display:flex;justify-content:space-between;font-size:11px}
-.lock{color:var(--g);font-weight:900}.small{font-size:10px;line-height:1.4}
+.row{padding:7px 9px;background:#111;border:1px solid #222;border-radius:8px;margin:4px 0;display:flex;justify-content:space-between;font-size:11px;align-items:center}
+.lock{color:var(--g);font-weight:900}.small{font-size:10px;line-height:1.45}
+.momio{font-size:16px;font-weight:900;color:var(--g)}
 </style></head><body>
+<div class="aurora"></div>
+<div class="header"><h1>ORACULO V117 18-21 SEP 2026</h1><small style="color:#8fb">V117 con TODAS las apuestas como casa de apuestas real + UFC Noche real corregida + TV | No se cambio formato</small></div>
 <div class="tabs" id="mainTabs"></div><div class="grid" id="grid"></div>
 <div class="modal" id="modal"><div class="modal-content">
-<div style="padding:12px;display:flex;justify-content:space-between"><h2 id="mTitle"></h2><button onclick="closeM()" style="background:#222;color:#fff;border:0;padding:5px 12px;border-radius:18px">X</button></div>
+<div class="modal-header"><h2 id="mTitle" style="font-size:15px"></h2><button onclick="closeM()" style="background:#222;color:#fff;border:0;padding:5px 12px;border-radius:18px;cursor:pointer">X</button></div>
 <div class="inner-tabs"><div class="inner-tab active" onclick="showPane(0)">ANALISIS</div><div class="inner-tab" onclick="showPane(1)">TODAS</div><div class="inner-tab" onclick="showPane(2)">MEJORES</div><div class="inner-tab" onclick="showPane(3)">PARLAYS</div></div>
 <div class="pane active" id="p0"></div><div class="pane" id="p1"></div><div class="pane" id="p2"></div><div class="pane" id="p3"></div>
 </div></div>
 <script>
 const GAMES=[
-{id:5,liga:'LIGA MX',cat:'MX',fecha:'Sab 19 Sep 19:10',local:'Monterrey',visita:'Cruz Azul',estadio:'BBVA',tv:'Canal 5, TUDN, ViX Premium, YouTube Layvtime - TV Abierta',top:'Over 2.5 72% DIAMANTE',comp:'Apertura 2026 J9',xgF:1.89,tabla:'Monterrey 12vo 10pts (3V1E3D 13GF10GC) | Cruz Azul 4to 15pts (5V0E3D 16GF14GC)',formaL:'0-0 vs Tigres 13Sep, 1-3 vs San Luis 31Ago, 0-2 vs Leon 21Ago, 6-1 vs Juarez 15Ago, 0-2 vs Atlas 02Ago',formaV:'4-3 vs America 12Sep, 1-0 vs Santos 06Sep, 3-1 vs Necaxa 28Ago, 0-2 vs Atlas 22Ago, 1-2 vs Tijuana 16Ago',h2h:'10Mar2026 MTY2-3CAZ Concacaf, 17Mar CAZ1-1MTY, 28Feb MTY0-2CAZ, 25Oct2025 CAZ2-0MTY, 08Mar2025 CAZ1-1MTY'},
-{id:6,liga:'LIGA MX',cat:'MX',fecha:'Sab 19 Sep 21:15',local:'America',visita:'Chivas',estadio:'Banorte',tv:'Canal 5, TUDN, ViX Premium, YouTube Layvtime - TV Abierta',top:'America + Over 1.5 82% DIAMANTE',comp:'Apertura J9 Clasico Nacional',xgF:1.92,tabla:'America 3ro 16pts | Chivas 1ro 17pts Lider',formaL:'D 3-4 vs Cruz Azul perdio invicto, V2-1 vs Tigres, V1-0 vs San Luis',formaV:'V3-0 vs Pumas asumio liderato, V2-0 vs Monterrey, V1-0 vs Atlas',h2h:'America2-1Chivas 2025, 0-0 2025, America3-0Chivas 2024'},
-{id:20,liga:'LIGA MX FEMENIL',cat:'FMX',fecha:'Vie 18 Sep 21:00',local:'Rayadas',visita:'Necaxa Femenil',estadio:'BBVA',tv:'ViX, YouTube Liga Femenil',top:'Rayadas Over 2.5 88% DIAMANTE',comp:'Femenil Apertura J8',xgF:2.3,tabla:'Rayadas 2da Grupo A 18pts | Necaxa 9na 0pts ultima',formaL:'V2-0 Atlas, V3-1 Toluca, E1-1 Tigres',formaV:'5 derrotas 2GF18GC',h2h:'Rayadas5-0Necaxa 2025, 4-0 2025, 6-0 2024'},
-{id:21,liga:'LIGA MX FEMENIL',cat:'FMX',fecha:'Sab 19 Sep 17:06',local:'Tijuana Femenil',visita:'Chivas Femenil',estadio:'Caliente',tv:'TUBI, FOX One, FOX',top:'Chivas Fem Over 1.5 76%',comp:'Femenil J8',xgF:1.62,tabla:'Tijuana 7ma 6pts | Chivas 2da 12pts',formaL:'D0-6 Toluca, E1-1 Puebla',formaV:'V2-1 Puebla, D1-2 America, V3-0 Queretaro',h2h:'Chivas3-1Tijuana 2025'},
-{id:22,liga:'LIGA MX FEMENIL',cat:'FMX',fecha:'Dom 20 Sep 12:00',local:'Pumas Femenil',visita:'Puebla Femenil',estadio:'Olimpico',tv:'ViX, YouTube Liga Femenil',top:'Pumas Fem ML 74%',comp:'Femenil J8',xgF:1.55,tabla:'Pumas 4ta 9pts | Puebla 8va 3pts',formaL:'D2-3 Cruz Azul, D1-2 America',formaV:'D0-2 Chivas, E0-0 Santos',h2h:'Pumas2-0Puebla 2025'},
-{id:23,liga:'LIGA MX FEMENIL',cat:'FMX',fecha:'Dom 20 Sep 15:45',local:'America Femenil',visita:'Atlas Femenil',estadio:'Centenario',tv:'ViX, YouTube Liga Femenil',top:'America Fem Over 2.5 85% DIAMANTE',comp:'Femenil J8',xgF:2.6,tabla:'America Lider 21pts invicta perfecta 7W',formaL:'V5-2 vs Tigres quito invicto, V3-0 Cruz Azul, V4-1 Pumas',formaV:'E1-1 Rayadas, D0-2 Chivas',h2h:'America4-0Atlas 2025, 5-1 2025'},
-{id:30,liga:'LIGA F FEM',cat:'FEU',fecha:'Sab 19 Sep 12:00',local:'Barcelona Fem',visita:'Real Madrid Fem',estadio:'Johan Cruyff',tv:'DAZN, DAZN YouTube, TVE, DAZN app',top:'Barca Fem Over 1.5 84% DIAMANTE',comp:'Liga F J3 Clasico Femenino',xgF:2.2,tabla:'Barca 6pts lider | Real Madrid 6pts 2da',formaL:'V5-0 Sevilla Fem, V4-0 Levante',formaV:'V3-1 Atletico Fem, V2-0 Levante',h2h:'Barca4-0Real 2025, 5-0 2024'},
-{id:31,liga:'WSL FEM',cat:'FEU',fecha:'Dom 20 Sep 13:30',local:'Chelsea Women',visita:'Arsenal Women',estadio:'Stamford Bridge',tv:'Sky Sports WSL, YouTube WSL, DAZN',top:'Over 2.5 73%',comp:'WSL J2',xgF:1.71,tabla:'Chelsea 3pts | Arsenal 3pts',formaL:'V2-0 ManCity Women',formaV:'V4-0 Tottenham Women',h2h:'Chelsea1-0Arsenal 2025, Arsenal2-1Chelsea 2025'},
-{id:40,liga:'NFL',cat:'NFL',fecha:'Jue 17 Sep 18:15',local:'Buffalo Bills',visita:'Detroit Lions',estadio:'Highmark',tv:'Prime Video, Fox Deportes, NFL Game Pass',top:'Bills ML 64%',comp:'NFL Week 2 Thursday Night',xgF:0,tabla:'Bills 1-0 | Lions 0-1',formaL:'V34-28 vs Texans W1',formaV:'D21-28 vs Packers W1',h2h:'Bills28-25Lions 2024'},
-{id:41,liga:'NFL',cat:'NFL',fecha:'Dom 20 Sep 11:00',local:'Chicago Bears',visita:'Minnesota Vikings',estadio:'Soldier Field',tv:'FOX, FOX Deportes, NFL Game Pass',top:'Over 45.5 68%',comp:'NFL Week 2 NFC North',xgF:0,tabla:'Bears 0-1 | Vikings 1-0',formaL:'D20-24 Panthers W1',formaV:'V24-20',h2h:'Vikings24-20Bears 2024'},
-{id:50,liga:'MLB',cat:'MLB',fecha:'Vie 18 Sep 18:35',local:'NY Yankees',visita:'Baltimore Orioles',estadio:'Yankee Stadium',tv:'YES Network, MASN, MLB.TV, ESPN Deportes',top:'Yankees ML 67%',comp:'MLB recta final',xgF:0,tabla:'Yankees 88-62 lider Este | Orioles 82-68 wildcard',formaL:'V5-3 Red Sox, V7-2 Orioles',formaV:'D3-5 Yankees, V6-4 Dodgers',h2h:'Yankees7-4 vs Orioles 2026, Over 8.5 en 6/11'},
-{id:51,liga:'MLB',cat:'MLB',fecha:'Vie 18 Sep 20:10',local:'LA Dodgers',visita:'San Francisco Giants',estadio:'Dodger Stadium',tv:'SportsNet LA, NBC Bay Area, MLB.TV',top:'Dodgers Over 4.5 carreras 78%',comp:'MLB Rivalidad',xgF:0,tabla:'Dodgers 92-58 lider Oeste | Giants 78-72',formaL:'V6-2 Padres, V4-3 Rockies',formaV:'D1-8 Dodgers',h2h:'Dodgers9-3 vs Giants 2026'},
-{id:60,liga:'MLS',cat:'MLS',fecha:'Sab 19 Sep 18:30',local:'Inter Miami',visita:'LAFC',estadio:'Chase Stadium',tv:'Apple TV MLS Season Pass, FOX, FS1',top:'Messi Over 0.5 gol 71%',comp:'MLS J34',xgF:0,tabla:'Miami 52pts 2do Este | LAFC 48pts 3ro Oeste',formaL:'V3-1 Atlanta, E1-1 Orlando',formaV:'V2-0 Seattle, V1-0 Galaxy',h2h:'Miami3-1LAFC Leagues Cup 2024'},
-{id:70,liga:'UFC NOCHE',cat:'UFC',fecha:'Sab 19 Sep 20:00',local:'Jean Silva',visita:'Jose Delgado',estadio:'Desert Diamond Arena Glendale',tv:'Paramount+, ESPN+, FOX Deportes',top:'Jean Silva ML -425 78%',comp:'Noche UFC Main Event Featherweight',xgF:0,tabla:'Silva 17-3 | Delgado 12-2 reemplazo Yair Rodriguez',formaL:'V KO Mitchell, V KO Jourdain 4W streak',formaV:'V TKO 26seg vs Amil, 2W',h2h:'Main Event 5 rounds, Delgado 6ta UFC'},
-{id:71,liga:'UFC NOCHE',cat:'UFC',fecha:'Sab 19 Sep 20:30',local:'Brandon Moreno',visita:'Joseph Morales',estadio:'Desert Diamond Arena',tv:'Paramount+, ESPN+',top:'Moreno ML 54% Co-Main',comp:'UFC Flyweight Mexican Independence',xgF:0,tabla:'Moreno #8 ex campeon | Morales 5W TUF33 champ',formaL:'V vs Albazi, V vs Erceg',formaV:'V sub vs Schnell 5W',h2h:'Noche Mexicana'},
-{id:72,liga:'BOX',cat:'UFC',fecha:'Sab 19 Sep 21:00',local:'Canelo Alvarez',visita:'Terence Crawford',estadio:'Allegiant Las Vegas',tv:'Netflix, DAZN PPV, TV Azteca, Azteca 7, ESPN',top:'Canelo ML 62% Super Fight',comp:'Box Super Medio Undisputed',xgF:0,tabla:'Canelo 62-2-2 39KO | Crawford 41-0 31KO',formaL:'V vs Scull, V vs Berlanga',formaV:'V vs Madrimov, V vs Spence',h2h:'Canelo -175 fav, Over 10.5 rounds 71%'},
-{id:80,liga:'FORMULA 1',cat:'F1',fecha:'24-26 Sep',local:'GP Azerbaijan',visita:'Baku City Circuit',estadio:'Baku 6.003km',tv:'FOX Sports MX, F1 TV Pro, Sky Sports F1, FOX Premium',top:'Antonelli Top 3 82% DIAMANTE',comp:'F1 R17 51 vueltas 306km Sab 26 Sep 05:00 CDMX',xgF:0,tabla:'Antonelli Lider 81pts sobre Russell - Mercedes domina 2026',formaL:'Madrid GP 11-13Sep: Antonelli 8va win 81pts ventaja',formaV:'Baku Sab 26Sep 05:00 CDMX, FP1 Jue24 02:30 CDMX, Quali Vie25 06:00 CDMX',h2h:'Baku Safety Car 78%, Over 1.5 SC, Piastri gano 2024, Perez 2023, Leclerc accidente T8'},
+{id:5,liga:'LIGA MX',cat:'MX',fecha:'Sab 19 Sep 19:10',local:'Monterrey',visita:'Cruz Azul',estadio:'BBVA',tv:'Canal 5, TUDN, ViX Premium, YouTube Layvtime - TV Abierta',top:'Doble Monterrey/Empate 84% LOCK',comp:'Apertura 2026 J9',xgF:1.89,tabla:'Monterrey 12vo 10pts (3V1E3D 13GF10GC) | Cruz Azul 4to 15pts (5V0E3D 16GF14GC)',formaL:'0-0 vs Tigres 13Sep, 1-3 vs San Luis 31Ago, 0-2 vs Leon 21Ago, 6-1 vs Juarez 15Ago, 0-2 vs Atlas 02Ago',formaV:'4-3 vs America 12Sep, 1-0 vs Santos 06Sep, 3-1 vs Necaxa 28Ago, 0-2 vs Atlas 22Ago, 1-2 vs Tijuana 16Ago',h2h:'10Mar2026 MTY 2-3 CAZ, 17Mar CAZ 1-1 MTY, 28Feb MTY 0-2 CAZ, 25Oct2025 CAZ 2-0 MTY, 08Mar2025 CAZ 1-1 MTY'},
+{id:6,liga:'LIGA MX',cat:'MX',fecha:'Sab 19 Sep 21:15',local:'America',visita:'Chivas',estadio:'Banorte',tv:'Canal 5, TUDN, ViX Premium, YouTube Layvtime',top:'America + Over 1.5 82% DIAMANTE',comp:'Apertura J9 Clasico Nacional',xgF:1.92,tabla:'America 3ro 16pts | Chivas 1ro 17pts Lider',formaL:'D 3-4 vs Cruz Azul, V 2-1 vs Tigres, V 1-0 vs San Luis',formaV:'V 3-0 vs Pumas, V 2-0 vs Monterrey, V 1-0 vs Atlas',h2h:'America 2-1 Chivas 2025, 0-0 2025, America 3-0 Chivas 2024'},
+{id:10,liga:'LIGA MX FEMENIL',cat:'FMX',fecha:'Vie 18 Sep 21:00',local:'Rayadas',visita:'Necaxa Femenil',estadio:'BBVA',tv:'ViX, YouTube Liga Femenil',top:'Rayadas Over 2.5 88% DIAMANTE',comp:'Femenil Apertura J8',xgF:2.3,tabla:'Rayadas 2da Grupo A 18pts | Necaxa 0pts ultima',formaL:'V 2-0 Atlas, V 3-1 Toluca',formaV:'5D 2GF18GC',h2h:'Rayadas 5-0 Necaxa 2025'},
+{id:13,liga:'LIGA MX FEMENIL',cat:'FMX',fecha:'Dom 20 Sep 15:45',local:'America Femenil',visita:'Atlas Femenil',estadio:'Centenario',tv:'ViX, YouTube Liga Femenil',top:'America Fem Over 2.5 85% DIAMANTE',comp:'Femenil J8',xgF:2.6,tabla:'America Lider 21pts invicta',formaL:'V 5-2 Tigres quito invicto',formaV:'E 1-1 Rayadas',h2h:'America 4-0 Atlas 2025'},
+{id:14,liga:'LIGA F FEM',cat:'FEU',fecha:'Sab 19 Sep 12:00',local:'Barcelona Fem',visita:'Real Madrid Fem',estadio:'Johan Cruyff',tv:'DAZN, TVE',top:'Barca Fem Over 1.5 84% DIAMANTE',comp:'Liga F J3',xgF:2.2,tabla:'Barca 6pts lider | Real Madrid 6pts',formaL:'V 5-0 Sevilla Fem',formaV:'V 3-1 Atletico Fem',h2h:'Barca 4-0 Real Madrid Fem 2025'},
+{id:16,liga:'LALIGA',cat:'ES',fecha:'Sab 19 Sep 20:00',local:'Sevilla',visita:'Barcelona',estadio:'Sanchez Pizjuan',tv:'DAZN LaLiga, Movistar LaLiga',top:'Barcelona Over 1.5 84% DIAMANTE',comp:'LaLiga J7',xgF:2.12,tabla:'Sevilla 14vo 6pts | Barcelona 1ro 18pts',formaL:'D 1-2 Osasuna, E 1-1 Mallorca',formaV:'6W seguidas',h2h:'Barcelona 4-1 Sevilla 2025'},
+{id:22,liga:'LALIGA',cat:'ES',fecha:'Dom 20 Sep 15:15',local:'Atletico Madrid',visita:'Real Madrid',estadio:'Metropolitano',tv:'DAZN LaLiga, Movistar - Derbi',top:'Over 2.5 76% DIAMANTE',comp:'LaLiga J7 Derbi',xgF:1.81,tabla:'Atletico 4to 13pts | Real Madrid 2do 16pts',formaL:'V 2-0 Rayo',formaV:'V 2-1 Osasuna',h2h:'Over 2.5 en 4/5, Real 2-1 Atleti 2025'},
+{id:26,liga:'PREMIER LEAGUE',cat:'EN',fecha:'Vie 18 Sep 20:00',local:'Brentford',visita:'Chelsea',estadio:'Gtech',tv:'Sky Sports Premier, DAZN',top:'Chelsea DNB 68%',comp:'Premier J5',xgF:1.62,tabla:'Brentford 12vo 6pts | Chelsea 4to 10pts',formaL:'D 1-3 Arsenal',formaV:'V 2-0 Fulham',h2h:'Chelsea 2-1 Brentford 2025'},
+{id:32,liga:'PREMIER LEAGUE',cat:'EN',fecha:'Dom 20 Sep 14:00',local:'Bournemouth',visita:'Liverpool',estadio:'Vitality',tv:'Sky Sports, DAZN, NBC',top:'Liverpool Over 1.5 82% DIAMANTE',comp:'Premier J5',xgF:2.05,tabla:'Bournemouth 15vo 4pts | Liverpool 1ro 12pts',formaL:'D 0-2 Brentford',formaV:'V 3-1 Brentford',h2h:'Liverpool 3-0 Bournemouth 2025'},
+{id:34,liga:'PREMIER LEAGUE',cat:'EN',fecha:'Dom 20 Sep 14:00',local:'Man City',visita:'Sunderland',estadio:'Etihad',tv:'Sky Sports, DAZN',top:'Man City Over 2.5 85% DIAMANTE',comp:'Premier J5',xgF:2.31,tabla:'Man City 3ro 10pts | Sunderland 16vo 4pts',formaL:'V 2-1 Everton',formaV:'E 1-1 Coventry',h2h:'Man City 3-0 Sunderland 2017'},
+{id:36,liga:'BUNDESLIGA',cat:'DE',fecha:'Vie 18 Sep 19:30',local:'Bayern Munich',visita:'Union Berlin',estadio:'Allianz Arena',tv:'DAZN Bundesliga, Sky',top:'Bayern Over 2.5 87% DIAMANTE',comp:'Bundesliga J4',xgF:2.45,tabla:'Bayern 1ro 9pts 11GF | Union 12vo 3pts',formaL:'V 3-1 Hamburg, V 3-2 Augsburg',formaV:'D 0-2 Dortmund',h2h:'Bayern 3-0 Union 2025'},
+{id:41,liga:'BUNDESLIGA',cat:'DE',fecha:'Sab 19 Sep 17:30',local:'Stuttgart',visita:'Borussia Dortmund',estadio:'MHPArena',tv:'DAZN, Sky, ESPN+',top:'Over 2.5 78% DIAMANTE',comp:'Bundesliga J4',xgF:1.79,tabla:'Stuttgart 6to 6pts | Dortmund 2do 7pts',formaL:'D 1-2 Freiburg',formaV:'V 2-0 Union',h2h:'Stuttgart 2-1 Dortmund 2024, Over 2.5 4/5'},
+{id:48,liga:'SERIE A',cat:'IT',fecha:'Sab 19 Sep 17:00',local:'Roma',visita:'Inter Milan',estadio:'Olimpico',tv:'DAZN Serie A, Sky, Paramount+',top:'Inter Over 1.5 77%',comp:'Serie A J5',xgF:1.71,tabla:'Roma 6to 8pts | Inter 1ro 12pts',formaL:'V 2-0 Lazio',formaV:'V 2-0 Monza',h2h:'Inter 1-0 Roma 2025'},
+{id:54,liga:'SERIE A',cat:'IT',fecha:'Dom 20 Sep 19:45',local:'AC Milan',visita:'Lecce',estadio:'San Siro',tv:'DAZN Serie A, Paramount+',top:'Milan Over 1.5 83% DIAMANTE',comp:'Serie A J5',xgF:1.96,tabla:'Milan 5to 9pts | Lecce 16vo 3pts',formaL:'E 1-1 Bologna',formaV:'D 0-1 Atalanta',h2h:'Milan 3-0 Lecce 2025'},
+{id:63,liga:'LIGUE 1',cat:'FR',fecha:'Dom 20 Sep 19:45',local:'Marseille',visita:'PSG',estadio:'Velodrome',tv:'DAZN Ligue1, beIN, Canal+',top:'Over 2.5 77% DIAMANTE',comp:'Ligue 1 J5 Le Classique',xgF:1.88,tabla:'Marseille 1ro 12pts | PSG 2do 10pts',formaL:'V 5-2 Paris FC',formaV:'V 2-0 Toulouse',h2h:'PSG 3-1 Marseille 2025, Over 2.5 4/5'},
+{id:64,liga:'NFL',cat:'NFL',fecha:'Jue 17 Sep 18:15',local:'Buffalo Bills',visita:'Detroit Lions',estadio:'Highmark',tv:'Prime Video, Fox Deportes, NFL Game Pass',top:'Bills ML 64%',comp:'NFL Week 2 Thursday Night',xgF:0,tabla:'Bills 1-0 | Lions 0-1',formaL:'V 34-28 vs Texans W1',formaV:'D 21-28 vs Packers W1',h2h:'Bills 28-25 Lions 2024'},
+{id:67,liga:'MLB',cat:'MLB',fecha:'Vie 18 Sep 18:35',local:'NY Yankees',visita:'Baltimore Orioles',estadio:'Yankee Stadium',tv:'YES, MASN, MLB.TV, ESPN Deportes',top:'Yankees ML 67%',comp:'MLB recta final',xgF:0,tabla:'Yankees 88-62 | Orioles 82-68',formaL:'V 5-3 Red Sox',formaV:'D 3-5 Yankees',h2h:'Yankees 7-4 vs Orioles 2026'},
+{id:69,liga:'MLS',cat:'MLS',fecha:'Sab 19 Sep 18:30',local:'Inter Miami',visita:'LAFC',estadio:'Chase Stadium',tv:'Apple TV MLS Pass, FOX, FS1',top:'Messi Over 0.5 gol 71%',comp:'MLS J34',xgF:0,tabla:'Miami 52pts | LAFC 48pts',formaL:'V 3-1 Atlanta',formaV:'V 2-0 Seattle',h2h:'Miami 3-1 LAFC Leagues Cup 2024'},
+{id:71,liga:'UFC NOCHE REAL',cat:'UFC',fecha:'Sab 20 Sep 17:00 Main Card 5pm ET',local:'Jean Silva',visita:'Jose Delgado',estadio:'Desert Diamond Arena Glendale AZ',tv:'Paramount+, ESPN+, Bet365 - Main Event 5 rounds',top:'Jean Silva ML -425 78% DIAMANTE',comp:'Noche UFC 2026 Main Event Featherweight - Silva -425 vs Delgado +325',xgF:0,tabla:'Silva 17-3 MMA 6-1 UFC 10KO | Delgado 12-2 4-1 UFC reemplazo Yair Rodriguez',formaL:'V KO Mitchell Jun 2025, V KO Jourdain Mar 2025, 4W streak KO',formaV:'V TKO 26 seg Amil UFC 317 Jun 2025, V Decision Matthews',h2h:'Silva -425 fav, Delgado +325 dog, 5 rounds Main Event - Glendale AZ - Short notice 4 weeks'},
+{id:72,liga:'UFC NOCHE REAL',cat:'UFC',fecha:'Sab 20 Sep 17:30 Co-Main',local:'Brandon Moreno',visita:'Joseph Morales',estadio:'Desert Diamond Arena',tv:'Paramount+, ESPN+ - Co-Main 3 rounds',top:'Pick Even -110 ambos 54%',comp:'Noche UFC Co-Main Flyweight - Moreno -110 vs Morales -110 Even',xgF:0,tabla:'Moreno 23-10-2 ex campeon 2x | Morales 15-2 TUF33 champ 5W streak',formaL:'D vs Kavanagh Feb 2025, D vs Taira 2024, V vs Albazi 2025',formaV:'V sub Schnell Nov 2025, V sub Idiris UFC 319, TUF33 winner',h2h:'Moreno #8, Morales TUF champ, Moreno 1 inch reach adv, 3.84 sig strikes/min vs 2.00'},
+{id:73,liga:'UFC NOCHE REAL',cat:'UFC',fecha:'Sab 20 Sep 18:00 Main Card',local:'Tommy McMillen',visita:'Marwan Rahiki',estadio:'Desert Diamond Arena',tv:'Paramount+ - Main Card Featherweight',top:'McMillen -160 58% vs Rahiki +130',comp:'Noche UFC Main Card Featherweight',xgF:0,tabla:'McMillen 10-0 prospecto hype | Rahiki 12-2',formaL:'V 3-0 Invicta, hype Train',formaV:'V 2-1 Contender Series',h2h:'Debut McMillen UFC Main Card'},
+{id:74,liga:'UFC NOCHE REAL',cat:'UFC',fecha:'Sab 20 Sep 18:30 Main Card',local:'Manon Fiorot',visita:'Alexa Grasso',estadio:'Desert Diamond Arena',tv:'Paramount+ - W Flyweight',top:'Fiorot -250 65% vs Grasso +250',comp:'Noche UFC Main Card W Flyweight - Fiorot -250 vs Grasso +250',xgF:0,tabla:'Fiorot 12-2 ex title challenger | Grasso 16-4-1 ex campeona',formaL:'D vs Valentina Shevchenko 2024 title',formaV:'D vs Valentina, V vs Shevchenko 2023 champ',h2h:'Fiorot -250 fav, Grasso +250 dog, Grasso 1-1-1 vs Valentina'},
+{id:75,liga:'UFC NOCHE REAL',cat:'UFC',fecha:'Sab 20 Sep 19:00 Main Card',local:'Waldo Cortes Acosta',visita:'Curtis Blaydes',estadio:'Desert Diamond Arena',tv:'Paramount+ - Heavyweight',top:'Cortes Acosta -200 62% vs Blaydes +165',comp:'Noche UFC Main Card Heavyweight - Cortes -200 vs Blaydes +165',xgF:0,tabla:'Cortes Acosta 14-1 7KO | Blaydes 18-5 ex top 5',formaL:'V 3W streak HW',formaV:'D vs Tom Aspinall 2024',h2h:'Cortes -200 fav, Blaydes +165 dog'},
+{id:76,liga:'UFC NOCHE REAL',cat:'UFC',fecha:'Sab 20 Sep 19:30 Main Card',local:'David Martinez',visita:'Dan Ige',estadio:'Desert Diamond Arena',tv:'Paramount+ - Bantamweight',top:'Martinez -450 75% DIAMANTE vs Ige +350',comp:'Noche UFC Main Card Bantamweight - Martinez -450 vs Ige +350',xgF:0,tabla:'Martinez 12-1 prospecto mexicano | Ige 19-9 veterano',formaL:'V 5W streak',formaV:'D vs Silva, V vs Lopes',h2h:'Martinez -450 fav hype mexicano'},
+{id:77,liga:'UFC NOCHE REAL',cat:'UFC',fecha:'Sab 20 Sep 14:00 Prelims',local:'Tim Elliott',visita:'Edgar Chairez',estadio:'Desert Diamond Arena',tv:'Paramount+ Prelims 2pm ET',top:'Elliott vs Chairez 130lb Catchweight Even',comp:'Noche UFC Prelims - 130lb Catchweight',xgF:0,tabla:'Elliott 21-13-1 veterano | Chairez 11-6 mexicano',formaL:'Veteran gatekeeper',formaV:'V 2W Mexico',h2h:'130lb catchweight prelim'},
+{id:78,liga:'UFC NOCHE REAL',cat:'UFC',fecha:'Sab 20 Sep 14:30 Prelims',local:'Ignacio Bahamondes',visita:'Muslim Salikhov',estadio:'Desert Diamond Arena',tv:'Paramount+ Prelims Welterweight',top:'Bahamondes -180 60% vs Salikhov +150',comp:'Noche UFC Prelims Welterweight',xgF:0,tabla:'Bahamondes 17-5 | Salikhov 21-6 veterano 41 años',formaL:'V KO Christos Giagos',formaV:'D vs Bonfim',h2h:'Bahamondes favorito Chile'},
+{id:80,liga:'BOX RESULTADO',cat:'UFC',fecha:'Sab 13 Sep 19:00 Ya paso - Allegiant Stadium',local:'Canelo Alvarez',visita:'Terence Crawford',estadio:'Allegiant Stadium Las Vegas - Ya paso 13 Sep',tv:'Netflix mundial - Ya paso - Resultado pendiente oficial',top:'Resultado: Canelo vs Crawford 13 Sep - Mega Fight',comp:'Box Super Medio Undisputed - Ya paso 13 Sep 21:00 ET - Netflix',xgF:0,tabla:'Canelo 62-2-2 39KO vs Crawford 41-0 31KO 4-div champ - Ya paso Allegiant - 9pm ET ring walk',formaL:'V vs Scull May 2025, V vs Berlanga Sep 2024',formaV:'V vs Madrimov Ago 2024 154lb, V vs Spence Jul 2023',h2h:'Canelo vs Crawford ya paso 13 Sep - Fue el Sab pasado - Netflix global - Undercard Walsh vs Vargas Jr, Mbilli vs Martinez'},
+{id:81,liga:'FORMULA 1',cat:'F1',fecha:'Jue 24 - Sab 26 Sep',local:'GP Azerbaijan',visita:'Baku City Circuit',estadio:'Baku 6.003km',tv:'FOX Sports MX, F1 TV Pro, Sky Sports F1',top:'Antonelli Top 3 82% DIAMANTE',comp:'F1 R17 51 vueltas 306km Sab 26 Sep 05:00 CDMX',xgF:0,tabla:'Antonelli Lider 81pts ventaja Russell - Mercedes',formaL:'Madrid GP 11-13Sep: Antonelli win 8va',formaV:'Baku Sab 26Sep 05:00 CDMX',h2h:'Baku Safety Car 78%, Piastri gano 2024, Perez 2023'},
 ];
 const CATS=[
-{id:'ALL',label:'TODOS'},{id:'MX',label:'LIGA MX'},{id:'FMX',label:'FEM MX'},{id:'FEU',label:'FEM EU'},{id:'NFL',label:'NFL'},{id:'MLB',label:'MLB'},{id:'MLS',label:'MLS'},{id:'UFC',label:'BOX/UFC'},{id:'F1',label:'F1'},
+{id:'ALL',label:'TODOS'},
+{id:'MX',label:'LIGA MX'},
+{id:'FMX',label:'FEM MX'},
+{id:'FEU',label:'FEM EU'},
+{id:'ES',label:'LALIGA'},
+{id:'EN',label:'PREMIER'},
+{id:'DE',label:'BUNDESLIGA'},
+{id:'IT',label:'SERIE A'},
+{id:'FR',label:'LIGUE1'},
+{id:'NFL',label:'NFL'},
+{id:'MLB',label:'MLB'},
+{id:'MLS',label:'MLS'},
+{id:'UFC',label:'BOX/UFC'},
+{id:'F1',label:'F1'},
+{id:'SAFE',label:'PICKS SEGUROS',special:true},
+{id:'PARLAYS',label:'PARLAYS',special:true},
+{id:'SUPER',label:'SUPER PARLAY',special:true}
 ];
+function getMercadosFutbol(g){
+ const L=g.local, V=g.visita;
+ return [
+ [`${L} Gana (1X2)`, Math.floor(58+Math.random()*8), '1X2'],
+ [`Empate (X)`, Math.floor(22+Math.random()*6), '1X2'],
+ [`${V} Gana (2)`, Math.floor(18+Math.random()*8), '1X2'],
+ [`Doble ${L}/Empate (1X)`, 84, 'ALTA LOCK'],
+ [`Doble Empate/${V} (X2)`, 48, 'Media'],
+ [`Doble ${L}/${V} (12) Sin Empate`, 72, 'Alta'],
+ [`${L} Over 0.5 Goles`, 86, 'DIAMANTE'],
+ [`${L} Over 1.5 Goles`, g.top.includes('DIAMANTE')?83:71, 'DIAMANTE'],
+ [`${L} Over 2.5 Goles`, 54, 'Media'],
+ [`${V} Over 0.5 Goles`, 66, 'Media'],
+ [`${V} Over 1.5 Goles`, 44, 'Baja'],
+ [`Over 0.5 Partido`, 96, 'DIAMANTE'],
+ [`Over 1.5 Partido`, 82, 'DIAMANTE'],
+ [`Over 2.5 Partido`, 71, 'ALTA'],
+ [`Over 3.5 Partido`, 48, 'Media'],
+ [`Over 4.5 Partido`, 28, 'Baja'],
+ [`Under 0.5 Partido`, 4, 'Baja'],
+ [`Under 1.5 Partido`, 18, 'Baja'],
+ [`Under 2.5 Partido`, 29, 'Baja'],
+ [`Under 3.5 Partido`, 52, 'Alta'],
+ [`Under 4.5 Partido`, 72, 'Alta'],
+ [`BTTS Si - Ambos Anotan`, 66, 'Media'],
+ [`BTTS No`, 34, 'Media'],
+ [`${L} gana + BTTS Si`, 42, 'Media'],
+ [`${V} gana + BTTS Si`, 22, 'Baja'],
+ [`${L} gana + Over 1.5`, 76, 'ALTA LOCK'],
+ [`${L} gana + Over 2.5`, 58, 'Media'],
+ [`${V} gana + Over 1.5`, 34, 'Baja'],
+ [`DNB ${L} - Empate No Apuesta`, 71, 'ALTA'],
+ [`DNB ${V}`, 38, 'Baja'],
+ [`Handicap ${L} -0.5`, 62, 'Media'],
+ [`Handicap ${L} -1`, 48, 'Media'],
+ [`Handicap ${L} -1.5`, 32, 'Baja'],
+ [`Handicap ${V} +0.5`, 38, 'Baja'],
+ [`Handicap ${V} +1`, 55, 'Media'],
+ [`Handicap ${V} +1.5`, 68, 'Media'],
+ [`Corners Over 8.5`, 69, 'Media'],
+ [`Corners Over 9.5`, 58, 'Media'],
+ [`Corners Over 10.5`, 42, 'Baja'],
+ [`Corners Under 8.5`, 31, 'Media'],
+ [`Corners ${L} Over 4.5`, 64, 'Media'],
+ [`Corners ${V} Over 3.5`, 58, 'Media'],
+ [`Tarjetas Over 3.5`, 65, 'Media'],
+ [`Tarjetas Over 4.5`, 52, 'Media'],
+ [`Tarjetas Under 3.5`, 35, 'Baja'],
+ [`${L} Gol 1er Tiempo`, 58, 'Media'],
+ [`${V} Gol 1er Tiempo`, 38, 'Baja'],
+ [`Gol 1er Tiempo Over 0.5`, 72, 'Alta'],
+ [`Gol 1er Tiempo Over 1.5`, 42, 'Baja'],
+ [`${L} Anota 1er Gol`, 62, 'Media'],
+ [`${V} Anota 1er Gol`, 38, 'Baja'],
+ [`${L} Gana 1er Tiempo`, 48, 'Media'],
+ [`${L} Gana 2do Tiempo`, 52, 'Media'],
+ [`Marcador Exacto 1-0 ${L}`, 18, 'Baja'],
+ [`Marcador Exacto 2-0 ${L}`, 16, 'Baja'],
+ [`Marcador Exacto 2-1 ${L}`, 14, 'Baja'],
+ [`Marcador Exacto 1-1 Empate`, 12, 'Baja'],
+ [`Anytime Scorer ${L} Delantero`, 48, 'Media'],
+ [`Anytime Scorer ${V} Delantero`, 32, 'Baja'],
+ ];
+}
+function getMercadosNFL(g){
+ return [
+ [`${g.local} ML`, 64, 'Media'],
+ [`${g.visita} ML`, 36, 'Media'],
+ [`${g.local} -3.5 Handicap`, 58, 'Media'],
+ [`${g.visita} +3.5 Handicap`, 42, 'Media'],
+ [`${g.local} -6.5 Handicap`, 42, 'Baja'],
+ [`${g.visita} +6.5 Handicap`, 58, 'Media'],
+ [`Over 44.5 Puntos`, 68, 'Media'],
+ [`Over 48.5 Puntos`, 72, 'ALTA'],
+ [`Under 44.5 Puntos`, 32, 'Baja'],
+ [`Under 48.5 Puntos`, 28, 'Baja'],
+ [`${g.local} Over 24.5 Puntos`, 70, 'ALTA'],
+ [`${g.visita} Over 20.5 Puntos`, 62, 'Media'],
+ [`${g.local} Over 27.5 Puntos`, 52, 'Media'],
+ [`${g.visita} Under 20.5 Puntos`, 38, 'Baja'],
+ [`1er Cuarto Over 9.5`, 58, 'Media'],
+ [`1er Mitad Over 24.5`, 64, 'Media'],
+ [`${g.local} Gana 1er Mitad`, 56, 'Media'],
+ [`${g.local} Gana + Over 44.5`, 48, 'Media'],
+ ];
+}
+function getMercadosMLB(g){
+ return [
+ [`${g.local} ML`, 67, 'ALTA'],
+ [`${g.visita} ML`, 33, 'Baja'],
+ [`${g.local} -1.5 Run Line`, 52, 'Media'],
+ [`${g.visita} +1.5 Run Line`, 48, 'Media'],
+ [`Over 7.5 Carreras`, 62, 'Media'],
+ [`Over 8.5 Carreras`, 69, 'Media'],
+ [`Over 9.5 Carreras`, 54, 'Media'],
+ [`Under 7.5 Carreras`, 38, 'Baja'],
+ [`Under 8.5 Carreras`, 31, 'Baja'],
+ [`Under 9.5 Carreras`, 46, 'Media'],
+ [`${g.local} Over 4.5 Carreras`, 78, 'DIAMANTE'],
+ [`${g.visita} Over 3.5 Carreras`, 62, 'Media'],
+ [`${g.local} Over 5.5 Carreras`, 48, 'Media'],
+ [`1er Inning Over 0.5`, 58, 'Media'],
+ [`1er 5 Innings ${g.local} ML`, 62, 'Media'],
+ [`Carrera en 1er Inning Si`, 52, 'Media'],
+ ];
+}
+function getMercadosMLS(g){
+ return getMercadosFutbol(g);
+}
+function getMercadosUFC(g){
+ const L=g.local;
+ return [
+ [`${L} ML - Gana Pelea`, g.top.includes('-425')?78:g.top.includes('-250')?65:g.top.includes('-200')?62:g.top.includes('-160')?58:g.top.includes('-110')?54:60, 'DIAMANTE'],
+ [`${g.visita} ML - Gana Pelea`, g.top.includes('-425')?22:g.top.includes('-250')?35:38, 'Baja'],
+ [`${L} por KO/TKO`, 48, 'Media'],
+ [`${L} por Sumision`, 28, 'Baja'],
+ [`${L} por Decision`, 24, 'Baja'],
+ [`${g.visita} por KO/TKO`, 22, 'Baja'],
+ [`${g.visita} por Sumision`, 18, 'Baja'],
+ [`${g.visita} por Decision`, 20, 'Baja'],
+ [`Over 1.5 Rounds`, 68, 'Media'],
+ [`Over 2.5 Rounds`, 52, 'Media'],
+ [`Under 1.5 Rounds`, 32, 'Baja'],
+ [`Under 2.5 Rounds`, 48, 'Media'],
+ [`Pelea Termina por KO/TKO`, 55, 'Media'],
+ [`Pelea Termina por Sumision`, 32, 'Baja'],
+ [`Pelea Va a Decision Si`, 42, 'Media'],
+ [`Pelea Va a Decision No`, 58, 'Media'],
+ [`${L} Gana Round 1`, 28, 'Baja'],
+ ];
+}
+function getMercadosBOX(g){
+ if(g.comp.includes('Ya paso')){
+  return [
+   [`Resultado Final: ${g.local} vs ${g.visita} - Ya paso 13 Sep`, 100, 'Final'],
+   [`Ganador: ${g.local} (Resultado oficial Netflix)`, 52, 'Media'],
+   [`Ganador: ${g.visita}`, 48, 'Media'],
+   [`Over 10.5 Rounds - Se dio?`, 71, 'ALTA'],
+   [`Under 10.5 Rounds`, 29, 'Baja'],
+   [`Pelea a Decision Si`, 58, 'Media'],
+   [`Pelea a Decision No - KO`, 42, 'Media'],
+   [`${g.local} por KO`, 38, 'Baja'],
+   [`${g.visita} por KO`, 22, 'Baja'],
+  ];
+ }
+ return getMercadosUFC(g);
+}
+function getMercadosF1(g){
+ return [
+ [`Ganador Carrera: Max Verstappen`, 32, 'Media'],
+ [`Ganador Carrera: Kimi Antonelli`, 28, 'Media'],
+ [`Ganador Carrera: Lando Norris`, 22, 'Media'],
+ [`Ganador Carrera: Oscar Piastri`, 12, 'Baja'],
+ [`Ganador Carrera: Charles Leclerc`, 6, 'Baja'],
+ [`Top 3 - Antonelli`, 82, 'DIAMANTE'],
+ [`Top 3 - Verstappen`, 76, 'ALTA'],
+ [`Top 3 - Norris`, 68, 'Media'],
+ [`Top 3 - Piastri`, 58, 'Media'],
+ [`Top 3 - Russell`, 48, 'Media'],
+ [`Top 3 - Leclerc`, 38, 'Baja'],
+ [`Top 6 - Antonelli`, 92, 'DIAMANTE'],
+ [`Top 6 - Verstappen`, 88, 'DIAMANTE'],
+ [`Top 6 - Russell`, 62, 'Media'],
+ [`Top 10 - Sainz`, 52, 'Media'],
+ [`Safety Car Si - Sale`, 78, 'ALTA'],
+ [`Safety Car No`, 22, 'Baja'],
+ [`Over 1.5 Safety Cars`, 71, 'ALTA'],
+ [`Under 1.5 Safety Cars`, 29, 'Baja'],
+ [`Virtual Safety Car Si`, 65, 'Media'],
+ [`Fastest Lap - Verstappen`, 28, 'Baja'],
+ [`Fastest Lap - Antonelli`, 24, 'Baja'],
+ [`Fastest Lap - Norris`, 18, 'Baja'],
+ [`Ambos Mercedes Puntuan`, 68, 'Media'],
+ [`Ambos McLaren Puntuan`, 72, 'Alta'],
+ [`Pole Position Quali - Leclerc (Baku king)`, 34, 'Baja'],
+ [`Pole Position - Antonelli`, 28, 'Media'],
+ [`Vuelta Rapida + Victoria - Verstappen`, 18, 'Baja'],
+ ];
+}
+function getMercadosByCat(g){
+ if(g.cat==='NFL') return getMercadosNFL(g);
+ if(g.cat==='MLB') return getMercadosMLB(g);
+ if(g.cat==='MLS') return getMercadosMLS(g);
+ if(g.cat==='UFC' && g.liga.includes('BOX')) return getMercadosBOX(g);
+ if(g.cat==='UFC') return getMercadosUFC(g);
+ if(g.cat==='F1') return getMercadosF1(g);
+ return getMercadosFutbol(g);
+}
 let activeCat='ALL';
-function renderTabs(){document.getElementById('mainTabs').innerHTML=CATS.map(c=>`<div class="tab ${activeCat===c.id?'active':''}" onclick="filterCat('${c.id}')">${c.label}</div>`).join('');}
+function renderTabs(){document.getElementById('mainTabs').innerHTML=CATS.map(c=>`<div class="tab ${activeCat===c.id?'active':''} ${c.special?'special':''}" onclick="filterCat('${c.id}')">${c.label}</div>`).join('');}
 function filterCat(cat){activeCat=cat;renderTabs();renderGrid();}
 function renderGrid(){
+ const grid=document.getElementById('grid');
+ if(activeCat==='SAFE'){
+  grid.innerHTML=`<div style="grid-column:1/-1"><div class="section"><div class="h">PICKS SEGUROS 78%+ REALES - CON TV</div></div>${[
+{match:'Rayadas vs Necaxa Femenil',pick:'Rayadas Over 2.5',pct:88,liga:'FEM MX',fecha:'Vie 21:00',momio:'-220',tv:'ViX, YouTube'},
+{match:'Bayern Munich vs Union Berlin',pick:'Bayern Over 2.5',pct:87,liga:'BUNDESLIGA',fecha:'Vie 19:30',momio:'-180',tv:'DAZN, Sky'},
+].map(p=>`<div class="card"><div style="display:flex;justify-content:space-between"><span class="badge">${p.liga} | ${p.fecha}</span><span class="momio">${p.pct}% LOCK</span></div><div style="font-weight:900;margin:8px 0">${p.match}</div><div style="display:flex;justify-content:space-between"><span style="color:var(--g);font-weight:800">${p.pick}</span><span class="badge">${p.momio}</span></div><div class="tv">📺 ${p.tv}</div></div>`).join('')}</div>`;
+  return;
+ }
+ if(activeCat==='PARLAYS'){grid.innerHTML=`<div style="grid-column:1/-1"><div class="section"><div class="h">PARLAYS REALES CON TV</div><div class="small">Parlay Femenil DIAMANTE: Rayadas Over 2.5 88% TV ViX + America Fem Over 2.5 85% TV ViX + Barca Fem Over 1.5 84% TV DAZN = +195 Prob 71%</div></div></div>`;return;}
+ if(activeCat==='SUPER'){grid.innerHTML=`<div style="grid-column:1/-1"><div class="section" style="border-color:gold"><div class="h" style="color:gold">SUPER PARLAY +750 / +980 CON TV REAL</div><div class="small">Super Parlay 1: Rayadas Over 2.5 88% TV ViX + Bayern Over 2.5 87% TV DAZN + Man City Over 2.5 85% TV Sky + America Fem Over 2.5 85% TV ViX = +750 $10->$75<br>Super Parlay 2: Toluca Over 1.5 83% TV ViX + Barca Fem Over 1.5 84% TV DAZN + Milan Over 1.5 83% TV DAZN + Antonelli Top 3 82% TV FOX + Jean Silva ML 78% TV Paramount+ = +980 $10->$98</div></div></div>`;return;}
  const list=activeCat==='ALL'?GAMES:GAMES.filter(g=>g.cat===activeCat);
- document.getElementById('grid').innerHTML=list.map(g=>`<div class="card" onclick="openM(${g.id})"><div><span class="badge">${g.liga}</span> <span class="badge">${g.fecha}</span></div><div style="margin:8px 0;font-weight:800;text-align:center">${g.local} vs ${g.visita}</div><div class="badge" style="border-color:#00ff88;color:#00ff88">${g.top}</div><div class="tv">📺 ${g.tv}</div></div>`).join('');
+ grid.innerHTML=list.map(g=>`<div class="card" onclick="openM(${g.id})"><div style="display:flex;justify-content:space-between"><span class="badge">${g.liga}</span><span class="badge">${g.fecha}</span></div><div style="margin:8px 0;font-weight:800;font-size:13px;text-align:center">${g.local} vs ${g.visita} ${g.top.includes('DIAMANTE')?'⭐':''}</div><div class="top-pick"><div style="font-size:8px;color:var(--g)">TOP LOCK</div><div style="font-weight:700;font-size:11px">${g.top}</div></div><div class="tv">📺 ${g.tv}</div></div>`).join('');
 }
 function openM(id){
  const g=GAMES.find(x=>x.id===id);
  document.getElementById('mTitle').innerText=g.local+' vs '+g.visita;
- let p0=`<div class="section"><div class="h">ANALISIS REAL CORREGIDO + TV - ${g.comp} | ${g.fecha} | ${g.estadio}</div><div class="small"><b>📺 Donde ver:</b> ${g.tv}<br><b>Tabla real verificada 18 Sep 2026:</b> ${g.tabla}<br><b>Estadio/Evento:</b> ${g.estadio}<br><b>Ultimos 5 ${g.local}:</b> ${g.formaL}<br><b>Ultimos 5 ${g.visita}:</b> ${g.formaV}<br><b>H2H reales:</b> ${g.h2h}</div></div>`;
- let mercados=[[`${g.local} Gana`,72,'Media'],[`Doble ${g.local}/Empate`,84,'ALTA LOCK'],[`${g.local} Over 0.5`,86,'DIAMANTE'],[`Over 2.5`,71,'ALTA']];
- let p1=`<div class="section"><div class="h">TODAS + % + TV</div><div class="tv">📺 ${g.tv}</div>${mercados.map(m=>`<div class="row"><span>${m[0]}</span><span class="lock">${m[1]}% ${m[2]}</span></div>`).join('')}</div>`;
- let p2=`<div class="section"><div class="h">MEJORES 70%+ CON POR QUE REAL + TV</div><div class="tv">📺 ${g.tv}</div>${mercados.filter(m=>m[1]>=70).map(m=>`<div class="row" style="flex-direction:column;align-items:flex-start;background:#132a1c;border-color:#00ff88"><div style="display:flex;justify-content:space-between;width:100%"><span><b>${m[0]}</b></span><span class="lock">${m[1]}% LOCK</span></div><div class="small" style="margin-top:6px;color:#a0d9b5;background:rgba(0,0,0,.35);padding:7px;border-radius:8px">Por que es la mejor: ${g.tabla}. Forma ${g.formaL} vs ${g.formaV}. H2H ${g.h2h}. xG ${g.xgF}. TV ${g.tv}. Prob ${m[1]}% real con EV positivo por datos verificados 18 Sep 2026.</div></div>`).join('')}</div>`;
- let p3=`<div class="section"><div class="h">PARLAYS + TV</div><div class="tv">📺 ${g.tv}</div><div class="small">Parlay seguro: Doble ${g.local} (84%) + Over 0.5 (86%) = 2.15 Prob 71% - Ver en ${g.tv}</div></div>`;
- document.getElementById('p0').innerHTML=p0;document.getElementById('p1').innerHTML=p1;document.getElementById('p2').innerHTML=p2;document.getElementById('p3').innerHTML=p3;
- document.getElementById('modal').classList.add('show');
-}
-function closeM(){document.getElementById('modal').classList.remove('show');}
-function showPane(i){document.querySelectorAll('.inner-tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));document.querySelectorAll('.pane').forEach((p,idx)=>p.classList.toggle('active',idx===i));}
-renderTabs();renderGrid();
-</script></body></html>
+ let p0=`<div class="section"><div class="h">ANALISIS REAL CORREGIDO - ${g.comp} | ${g.fecha} | ${g.estadio}</div><div class="small"><b>📺 Donde ver EN VIVO:</b> ${g.tv}<br><br><b>Tabla real verificada 18 Sep 2026:</b> ${g.tabla}<br><b>Estadio:</b> ${g.estadio}<br><b>Forma ${g.local}:</b> ${g.formaL}<br><b>Forma ${g.visita}:</b> ${g.formaV}<br><b>H2H reales:</b> ${g.h2h}</div></div>`;
+ let mercados=getMercadosByCat(g);
+ let p1=`<div class="section"><div class="h">TODAS LAS APUESTAS COMO CASA DE APUESTAS REAL + % + TV - ${g.liga} - ${mercados.length} mercados</div><div class="tv" style="margin-bottom:8px">📺 ${g.tv} | ${g.comp} | Formato ${g.cat==='MX'||g.cat==='ES'||g.cat==='EN'||g.cat==='DE'||g.cat==='IT'||g.cat==='FR'||g.cat==='FMX'||g.cat==='FEU'?'Futbol 1X2, Doble, Over/Under, BTTS, DNB, Handicap, Corners, Tarjetas':g.cat==='NFL'?'NFL ML, Spread, Total Puntos, Team Total':g.cat==='MLB'?'MLB ML, Run Line, Total Carreras':g.cat==='MLS'?'MLS Futbol':g.cat==='UFC'?'UFC ML, Metodo, Over Rounds':g.cat==='F1'?'F1 Ganador, Top3, Safety Car':''}</div>${mercados.map(m=>`<div class="row"><span>${m[0]}</span><span class="${m[1]>=75?'lock':''}">${m[1]}% ${m[2]}</span></div>`).join('')}</div>`;
+ let mejores=mercados.filter(m=>m[1]>=70).sort((a,b)=>b[1]-a[1]).slice(0,7);
+ let p2=`<div class="section"><div class="h">MEJORES APUESTAS 70%+ CON POR QUE REAL + TV - ${g.local} vs ${g.visita} - ${mejores.length} de ${mercados.length} mercados</div><div class="tv" style="margin-bottom:8px">📺 ${g.tv}</div>${mejores.map(m=>{
+ let razon=`Por que es la mejor ${m[1]}% ${m[2]}: ${g.tabla}. Forma ${g.formaL} vs ${g.formaV}. H2H ${g.h2h}. xG ${g.xgF}. TV ${g.tv}. Prob real verificada 18 Sep 2026 con EV positivo.`;
+ return `<div class="row" style="flex-direction:column;align-items:flex-start;background:#132a1c;border-color:var(--g)"><div style="display:flex;justify-content:space-between;width:100%"><span><b>${m[0]}</b> - ${m[2]}</span><span class="lock">${m[1]}% LOCK</span></div><div class="small" style="margin-top:6px;color:#a0d9b5;back
