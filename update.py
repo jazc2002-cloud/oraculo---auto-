@@ -1,64 +1,16 @@
-import json, datetime
-# V100 COMPLETO 57 EVENTOS - TODAS + F1 + EUROPA FEM - AUTO GRATIS - FORMATO ORIGINAL
-respaldo = [
-    ("mx_14_1","14/09 - Leon vs Atletico San Luis J8","MX J7-J8","Leon","Atletico San Luis","Leon 19:00 FOX One HOY",54),
-    ("mx_18_1","18/09 - Puebla vs Atlante J9","MX J7-J8","Puebla","Atlante","Cuauhtemoc 19:00 Azteca 7",55),
-    ("mx_18_2","18/09 - FC Juarez vs Tigres J9","MX J7-J8","FC Juarez","Tigres UANL","Olimpico Juarez 21:00 FOX One",57),
-    ("mx_19_1","19/09 - Atletico San Luis vs Necaxa J9","MX J7-J8","Atletico San Luis","Necaxa","Alfonso Lastras 17:00 ESPN",53),
-    ("mx_19_2","19/09 - Atlas vs Pumas J9","MX J7-J8","Atlas","Pumas UNAM","Jalisco 17:00 TUDN",56),
-    ("mx_19_3","19/09 - Monterrey vs Cruz Azul J9","MX J7-J8","Monterrey","Cruz Azul","BBVA 19:00 TUDN",64),
-    ("mx_19_4","19/09 - America vs Chivas Clasico Nacional J9","MX J7-J8","America","Guadalajara","Azteca 21:00 TUDN",67),
-    ("mx_20_1","20/09 - Toluca vs Santos Laguna J9","MX J7-J8","Toluca","Santos Laguna","Nemesio Diez 18:00 TUDN",63),
-    ("mx_20_2","20/09 - Pachuca vs Tijuana J9","MX J7-J8","Pachuca","Tijuana","Hidalgo 18:00 FOX One",58),
-    ("mx_20_3","20/09 - Queretaro vs Leon J9","MX J7-J8","Queretaro","Leon","Corregidora 20:00 FOX One",55),
-    ("fem_14_1","14/09 - Toluca Fem vs Tijuana Fem J7","MX FEM J9-J10","Toluca Femenil","Tijuana Femenil","Nemesio Diez HOY",70),
-    ("fem_14_2","14/09 - Pachuca Fem vs Leon Fem J7","MX FEM J9-J10","Pachuca Femenil","Leon Femenil","Hidalgo 22:00 HOY",74),
-    ("fem_19_1","19/09 - Monterrey Fem vs Necaxa Fem J8","MX FEM J9-J10","Monterrey Femenil","Necaxa Femenil","BBVA 00:00",68),
-    ("fem_19_2","19/09 - Tijuana Fem vs Guadalajara Fem J8","MX FEM J9-J10","Tijuana Femenil","Guadalajara Femenil","Caliente 20:06",62),
-    ("fem_20_1","20/09 - America Fem vs Atlas Fem J8","MX FEM J9-J10","America Femenil","Atlas Femenil","Azteca 18:45 VIX",71),
-    ("fem_21_1","21/09 - Toluca Fem vs Tigres Fem J8","MX FEM J9-J10","Toluca Femenil","Tigres UANL","Nemesio Diez",69),
-    ("laliga_14_1","14/09 - Villarreal vs Real Betis LaLiga J5","EUROPA","Villarreal","Real Betis","Ceramica 13:00 ESPN+ HOY",62),
-    ("laliga_14_2","14/09 - Real Sociedad vs Atletico Madrid LaLiga J5","EUROPA","Real Sociedad","Atletico Madrid","Reale Arena 15:30 ESPN HOY",65),
-    ("laliga_15_1","15/09 - Rayo Vallecano vs Espanyol LaLiga J6","EUROPA","Rayo Vallecano","Espanyol","Vallecas 13:00 ESPN",58),
-    ("laliga_16_1","16/09 - Elche vs Real Madrid LaLiga J6","EUROPA","Elche","Real Madrid","Martinez Valero 15:30 ESPN",80),
-    ("laliga_17_1","17/09 - Barcelona vs Racing Santander LaLiga J6","EUROPA","Barcelona","Racing Santander","Camp Nou 15:30 ESPN",72),
-    ("laliga_19_1","19/09 - Sevilla vs Barcelona LaLiga J7","EUROPA","Sevilla","Barcelona","Sanchez Pizjuan 15:00 DAZN",73),
-    ("prem_14_1","14/09 - Leeds vs Newcastle Premier J4","EUROPA","Leeds United","Newcastle United","Elland Road 20:00 Sky HOY",67),
-    ("prem_19_1","19/09 - Tottenham vs Aston Villa Premier J5","EUROPA","Tottenham","Aston Villa","Tottenham 12:30 TNT",66),
-    ("prem_20_1","20/09 - Arsenal vs Man City Premier J5 TOP","EUROPA","Arsenal","Man City","Emirates 16:30 Sky",74),
-    ("prem_20_2","20/09 - Liverpool vs Everton Derby Premier J5","EUROPA","Liverpool","Everton","Anfield 12:30 TNT",77),
-    ("serie_14_1","14/09 - Torino vs Roma Serie A J4","EUROPA","Torino","AS Roma","Olimpico Grande 17:30 DAZN HOY",62),
-    ("serie_14_2","14/09 - Como vs Parma Serie A J4","EUROPA","Como","Parma","Sinigaglia 17:30 DAZN HOY",58),
-    ("serie_14_3","14/09 - Inter vs Udinese Serie A J4","EUROPA","Inter Milan","Udinese","San Siro 19:45 DAZN HOY",71),
-    ("serie_19_1","19/09 - Roma vs Inter Serie A J5 CLASICO","EUROPA","AS Roma","Inter Milan","Olimpico 17:00 DAZN",73),
-    ("serie_20_1","20/09 - Juventus vs Atalanta Serie A J5","EUROPA","Juventus","Atalanta","Allianz 17:30 DAZN",72),
-    ("serie_20_2","20/09 - Milan vs Lecce Serie A J5","EUROPA","AC Milan","Lecce","San Siro 19:45 DAZN",70),
-    ("bund_18_1","18/09 - Bayern Munich vs Union Berlin Bundesliga J4","EUROPA","Bayern Munich","Union Berlin","Allianz 20:30 ESPN",78),
-    ("bund_19_1","19/09 - Stuttgart vs Dortmund Bundesliga J4","EUROPA","Stuttgart","Borussia Dortmund","MHPArena 18:30 ESPN",69),
-    ("bund_20_1","20/09 - Leverkusen vs RB Leipzig Bundesliga J4","EUROPA","Leverkusen","RB Leipzig","BayArena 15:30 ESPN",70),
-    ("ligue_18_1","18/09 - Monaco vs Lens Ligue 1 J5","EUROPA","Monaco","Lens","Louis II 20:45 ESPN",66),
-    ("ligue_19_1","19/09 - Paris FC vs Strasbourg Ligue 1 J5","EUROPA","Paris FC","Strasbourg","Jean Bouin 17:15 ESPN",61),
-    ("ligue_20_1","20/09 - Marseille vs PSG Ligue 1 J5 CLASICO","EUROPA","Marseille","PSG","Velodrome 20:45 ESPN",79),
-    ("beis_14_1","14/09 - Toros vs Olmecas J5 Serie del Rey LMB","BEIS FINAL","Toros de Tijuana","Olmecas de Tabasco","Mobil Park 19:30 HOY",76),
-    ("beis_15_1","15/09 - Olmecas vs Toros J6 Serie del Rey LMB","BEIS FINAL","Olmecas de Tabasco","Toros de Tijuana","Centenario 19:30",75),
-    ("beis_16_1","16/09 - Olmecas vs Toros J7 Serie del Rey FINAL","BEIS FINAL","Olmecas de Tabasco","Toros de Tijuana","Centenario 19:30 FINAL",74),
-    ("nfl_14_1","14/09 - Broncos vs Chiefs MNF W1","NFL S2-S3","Denver Broncos","Kansas City Chiefs","Mile High 20:15 ESPN HOY",70),
-    ("nfl_17_1","17/09 - Lions vs Bills TNF W2","NFL S2-S3","Detroit Lions","Buffalo Bills","Highmark 20:15 Amazon",69),
-    ("nfl_20_1","20/09 - Vikings vs Bears NFL W2","NFL S2-S3","Minnesota Vikings","Chicago Bears","Soldier Field 13:00 FOX",65),
-    ("nfl_20_2","20/09 - Cowboys vs Commanders NFL W2","NFL S2-S3","Dallas Cowboys","Washington Commanders","AT&T 16:25 FOX",66),
-    ("nfl_20_3","20/09 - Colts vs Chiefs SNF W2","NFL S2-S3","Indianapolis Colts","Kansas City Chiefs","Arrowhead 20:20 NBC",68),
-    ("nfl_21_1","21/09 - Giants vs Rams MNF W2","NFL S2-S3","New York Giants","Los Angeles Rams","SoFi 20:15 ESPN",64),
-    ("box_20_1","20/09 - Canelo vs Berlanga II BOX","BOX/UFC","Canelo Alvarez","Edgar Berlanga","Vegas PPV 22:00",81),
-    ("f1_19_1","19/09 - GP Azerbaijan F1 Sprint","F1 2026","Max Verstappen","Lando Norris","Baku 07:00 FOX Sports PREMIUM",78),
-    ("f1_20_1","20/09 - GP Azerbaijan F1 Carrera Principal","F1 2026","Max Verstappen","Charles Leclerc","Baku 07:00 FOX Sports PREMIUM",79),
-    ("f1_21_1","21/09 - GP Singapur F1 Practicas","F1 2026","Lewis Hamilton","Oscar Piastri","Marina Bay 06:00 FOX Sports",72),
-    ("fem_eu_14_1","14/09 - Barcelona Fem vs Real Madrid Fem Clasico Liga F","EUROPA FEM","Barcelona Femenil","Real Madrid Femenil","Johan Cruyff 12:00 DAZN HOY",82),
-    ("fem_eu_14_2","14/09 - Chelsea Fem vs Arsenal Fem WSL","EUROPA FEM","Chelsea Women","Arsenal Women","Stamford Bridge 13:30 Sky HOY",76),
-    ("fem_eu_17_1","17/09 - Lyon Fem vs PSG Fem UWCL","EUROPA FEM","Lyon Femenil","PSG Femenil","Groupama 18:45 DAZN",80),
-    ("fem_eu_18_1","18/09 - Barcelona Fem vs Chelsea Fem UWCL","EUROPA FEM","Barcelona Femenil","Chelsea Women","Johan Cruyff 18:45 DAZN",81),
-    ("fem_eu_19_1","19/09 - Wolfsburg Fem vs Bayern Munich Fem Bundesliga Fem","EUROPA FEM","Wolfsburg Femenil","Bayern Munich Femenil","AOK 18:00 DAZN",74),
-    ("fem_eu_20_1","20/09 - Juventus Fem vs Roma Fem Serie A Fem","EUROPA FEM","Juventus Femenil","AS Roma Femenil","Allianz 15:00 DAZN",71),
-]
-open("last_update.txt","w").write(str(datetime.datetime.now()))
-open("data.json","w",encoding="utf-8").write(json.dumps(respaldo,ensure_ascii=False))
-print(f"✅ PASO 2 LISTO - {len(respaldo)} eventos V100 COMPLETO")
+import requests
+import json
+import os
+
+API_KEY = os.getenv("ODDS_API_KEY") or "2b6a83e8d8e4b1e8b8e4b1e8b8e4b1e8b8e4b1e8b8e4b1e8" # pon aquí tu key nueva si quieres
+SPORT = "soccer_mexico_ligamx"
+URL = f"https://api.the-odds-api.com/v4/sports/{SPORT}/odds/?apiKey={API_KEY}&regions=us,eu,mx&markets=h2h&oddsFormat=decimal"
+
+r = requests.get(URL)
+data = r.json()
+
+# Guardamos solo lo necesario para tu formato
+with open("data.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+
+print(f"Listo! {len(data)} partidos guardados")
