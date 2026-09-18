@@ -3,24 +3,70 @@ on:
   push:
   workflow_dispatch:
   schedule:
-    - cron: '0 */3 * * *'
+    - cron: "*/30 * * * *"
+
+permissions:
+  contents: write
+
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
+      
       - run: pip install requests
+      
       - name: Jalar momios reales
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-        run: python update.py
+        run: |
+          python << 'PY'
+          import os, requests, json, datetime
+          key = os.getenv("ODDS_API_KEY")
+          print(f"Usando key que termina en: ...{key[-4:]}")
+          
+          # NFL + NBA + Soccer (cambia deportes si quieres)
+          sports = ["americanfootball_nfl", "basketball_nba", "soccer_epl"]
+          all_games = []
+          
+          for sport in sports:
+              url = f"https://api.the-odds-api.com/v4/sports/{sport}/odds"
+              params = {
+                  "apiKey": key,
+                  "regions": "us",
+                  "markets": "h2h",
+                  "oddsFormat": "american"
+              }
+              try:
+                  r = requests.get(url, params=params, timeout=20)
+                  print(f"{sport} -> Status: {r.status_code}")
+                  if r.status_code == 200:
+                      data = r.json()
+                      all_games.extend(data[:5])  # top 5 de cada liga
+                  else:
+                      print(r.text[:200])
+              except Exception as e:
+                  print(f"Error {sport}: {e}")
+          
+          out = {
+              "updated": datetime.datetime.utcnow().isoformat() + "Z",
+              "total": len(all_games),
+              "games": all_games
+          }
+          with open("data.json", "w", encoding="utf-8") as f:
+              json.dump(out, f, indent=2, ensure_ascii=False)
+          
+          print(f"data.json actualizado con {len(all_games)} juegos")
+          PY
+      
       - name: Subir data.json
         run: |
           git config user.name "bot"
-          git config user.email "bot@bot.com"
+          git config user.email "bot@github.com"
           git add data.json
-          git commit -m "auto update" || true
+          git diff --staged --quiet || git commit -m "auto: actualizar momios $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git push
