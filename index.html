@@ -3,71 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oráculo - Momios Auto</title>
+<title>Oráculo Auto - V2</title>
 <style>
-body{background:#0a0a0a;color:#fff;font-family:Arial, sans-serif;padding:20px}
+body{background:#0a0a0a;color:#fff;font-family:Arial,sans-serif;padding:20px}
 .card{background:#1a1a1a;border-radius:12px;padding:16px;margin:12px 0;border:1px solid #333}
 .green{color:#00ff88}.red{color:#ff4444}
 button{background:#00ff88;color:#000;border:0;padding:12px 20px;border-radius:8px;font-weight:bold;cursor:pointer;width:100%}
 h1{color:#00ff88}
-.small{font-size:12px;color:#888}
+.small{font-size:12px;color:#888;word-break:break-all}
+pre{font-size:11px;white-space:pre-wrap;background:#111;padding:10px;border-radius:8px}
 </style>
 </head>
 <body>
 <h1>🔮 ORÁCULO AUTO</h1>
-<p class="small">Worker: <span id="worker-url"></span> | Auto-update: cada hora</p>
+<p class="small">Worker: https://jolly-shadow-3045.jazc2002.workers.dev | Auto-update cada hora</p>
 <button onclick="cargar()">🔄 Actualizar Momios Liga MX</button>
 <div id="status"></div>
 <div id="lista"></div>
+<div id="debug"></div>
 
 <script>
-// === WORKER BUENO CORREGIDO - SIN -cloud ===
 const WORKER_URL = "https://jolly-shadow-3045.jazc2002.workers.dev";
-document.getElementById('worker-url').textContent = WORKER_URL;
 
 async function cargar(){
   const status = document.getElementById('status');
   const lista = document.getElementById('lista');
-  status.innerHTML = "Cargando...";
-  lista.innerHTML = "";
+  const debug = document.getElementById('debug');
+  status.innerHTML = "Cargando..."; lista.innerHTML=""; debug.innerHTML="";
   try{
-    const url = `${WORKER_URL}/?sport=soccer_mexico_ligamx`;
-    console.log("Fetching:", url);
-    const res = await fetch(url);
-    if(!res.ok) throw new Error("HTTP "+res.status+" - "+await res.text());
-    const data = await res.json();
+    const res = await fetch(`${WORKER_URL}/?sport=soccer_mexico_ligamx`);
+    const text = await res.text();
+    let data;
+    try{ data = JSON.parse(text); } catch(e){ throw new Error("No es JSON: "+text.slice(0,200)); }
 
-    if(!data || data.length===0){
-      status.innerHTML = `<p class="red">No hay partidos ahora</p>`;
-      return;
+    // El Worker puede mandar [] directo o {data: []} o {odds: []}
+    let partidos = [];
+    if(Array.isArray(data)) partidos = data;
+    else if(Array.isArray(data.data)) partidos = data.data;
+    else if(Array.isArray(data.odds)) partidos = data.odds;
+    else {
+      debug.innerHTML = `<pre>Respuesta del Worker:\n${text.slice(0,1000)}</pre>`;
+      throw new Error("Formato inesperado, no es array. Mira abajo el JSON");
     }
 
-    status.innerHTML = `<p class="green">✅ ${data.length} partidos cargados</p>`;
+    if(partidos.length===0){ status.innerHTML=`<p class="green">✅ Conectado pero sin partidos ahora</p>`; return; }
 
-    data.forEach(j=>{
-      const home = j.home_team;
-      const away = j.away_team;
-      const bookie = j.bookmakers && j.bookmakers[0];
-      let momios = "Sin momios";
-      if(bookie && bookie.markets){
-        const m = bookie.markets.find(x=>x.key==='h2h');
-        if(m){
-          momios = m.outcomes.map(o=>`${o.name}: ${o.price}`).join(" | ");
-        }
-      }
-      lista.innerHTML += `
-        <div class="card">
-          <b>${home} vs ${away}</b><br>
-          <span class="green">${momios}</span><br>
-          <span class="small">${new Date(j.commence_time).toLocaleString()}</span>
-        </div>`;
+    status.innerHTML = `<p class="green">✅ ${partidos.length} partidos cargados</p>`;
+    partidos.forEach(j=>{
+      const home=j.home_team||"Local"; const away=j.away_team||"Visita";
+      let momios="Sin momios"; const book=j.bookmakers?.[0];
+      const m=book?.markets?.find(x=>x.key==='h2h');
+      if(m) momios=m.outcomes.map(o=>`${o.name}: ${o.price}`).join(" | ");
+      lista.innerHTML+=`<div class="card"><b>${home} vs ${away}</b><br><span class="green">${momios}</span><br><span class="small">${j.commence_time||''}</span></div>`;
     });
   }catch(e){
-    status.innerHTML = `<p class="red">Error: Failed to fetch<br>${e.message}<br>Worker usado: ${WORKER_URL}</p>`;
+    status.innerHTML=`<p class="red">Error: ${e.message}<br><span class="small">Worker: ${WORKER_URL}</span></p>`;
     console.error(e);
   }
 }
-// carga automática al abrir
 cargar();
 </script>
 </body>
