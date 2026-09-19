@@ -1,33 +1,33 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ORACULO V122 110 FIX 4 PARTES</title>
+<title>V123 110 PICKS FIX 5 PARTES</title>
 <style>
 :root{--g:#00ff88;--b:#00d4ff;--bg:#050a0f}*{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:#fff;font-family:system-ui,sans-serif}
-.hd{padding:10px;text-align:center;border-bottom:1px solid #0f3}
-.hd h1{background:linear-gradient(90deg,var(--g),var(--b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:14px;font-weight:900}
-.tabs{display:flex;gap:3px;overflow-x:auto;padding:6px;background:#000;border-bottom:1px solid #222;position:sticky;top:0;z-index:9}
-.tab{padding:5px 8px;border-radius:14px;background:#111;border:1px solid #222;white-space:nowrap;cursor:pointer;font-weight:800;font-size:7px}
+.hd{padding:8px;text-align:center;border-bottom:1px solid #0f3}
+.hd h1{background:linear-gradient(90deg,var(--g),var(--b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:12px;font-weight:900}
+.tabs{display:flex;gap:2px;overflow-x:auto;padding:5px;background:#000;border-bottom:1px solid #222;position:sticky;top:0;z-index:9}
+.tab{padding:4px 7px;border-radius:12px;background:#111;border:1px solid #222;white-space:nowrap;cursor:pointer;font-weight:800;font-size:6px}
 .tab.active{background:linear-gradient(90deg,var(--g),var(--b));color:#000}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:6px;padding:6px}
-.card{background:#111d2a;border:1px solid #1e2d3d;border-radius:12px;padding:8px;cursor:pointer}
-.b{font-size:6px;padding:2px 4px;border-radius:6px;background:#0a1018;border:1px solid #2a3a4a;color:#9ab}
-.tp{background:linear-gradient(135deg,rgba(0,255,136,.12),rgba(0,212,255,.08));border:1px solid var(--g);border-radius:7px;padding:4px;margin-top:4px}
-.tv{font-size:6px;color:#ffcc00;background:rgba(255,204,0,.1);border:1px solid rgba(255,204,0,.3);padding:2px 4px;border-radius:5px;margin-top:3px;display:inline-block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:5px;padding:5px}
+.card{background:#111d2a;border:1px solid #1e2d3d;border-radius:10px;padding:7px;cursor:pointer}
+.b{font-size:5px;padding:1px 3px;border-radius:5px;background:#0a1018;border:1px solid #2a3a4a;color:#9ab}
+.tp{background:linear-gradient(135deg,rgba(0,255,136,.12),rgba(0,212,255,.08));border:1px solid var(--g);border-radius:6px;padding:3px;margin-top:3px}
+.tv{font-size:5px;color:#ffcc00;background:rgba(255,204,0,.1);border:1px solid rgba(255,204,0,.3);padding:1px 3px;border-radius:4px;margin-top:2px;display:inline-block}
 .md{position:fixed;inset:0;background:rgba(0,0,0,.93);display:none;z-index:99;overflow-y:auto}
-.md.show{display:block}.mdc{max-width:780px;margin:6px auto;background:#0a111a;border:1px solid #1e3d2d;border-radius:16px;overflow:hidden}
-.itabs{display:flex;gap:2px;padding:5px;background:#050a0f}
-.itab{flex:1;padding:6px;text-align:center;border-radius:6px;background:#111;border:1px solid #222;cursor:pointer;font-size:8px;font-weight:800}
+.md.show{display:block}.mdc{max-width:760px;margin:5px auto;background:#0a111a;border:1px solid #1e3d2d;border-radius:14px;overflow:hidden}
+.itabs{display:flex;gap:2px;padding:4px;background:#050a0f}
+.itab{flex:1;padding:5px;text-align:center;border-radius:5px;background:#111;border:1px solid #222;cursor:pointer;font-size:7px;font-weight:800}
 .itab.active{background:#132a1c;border-color:var(--g);color:var(--g)}
-.pane{padding:8px;display:none}.pane.active{display:block}
-.sec{margin:6px 0;padding:8px;background:#0f1a14;border:1px solid #1a3a2a;border-radius:9px}
-.h{color:var(--g);font-weight:900;font-size:9px;margin-bottom:4px}
-.rw{padding:5px 7px;background:#111;border:1px solid #222;border-radius:6px;margin:2px 0;display:flex;justify-content:space-between;font-size:9px}
-.lk{color:var(--g);font-weight:900}.sm{font-size:8px;line-height:1.3}
+.pane{padding:6px;display:none}.pane.active{display:block}
+.sec{margin:5px 0;padding:6px;background:#0f1a14;border:1px solid #1a3a2a;border-radius:8px}
+.h{color:var(--g);font-weight:900;font-size:8px;margin-bottom:3px}
+.rw{padding:4px 6px;background:#111;border:1px solid #222;border-radius:5px;margin:2px 0;display:flex;justify-content:space-between;font-size:8px}
+.lk{color:var(--g);font-weight:900}.sm{font-size:7px;line-height:1.2}
 </style></head><body>
-<div class="hd"><h1>ORACULO V122 18-21 SEP 110 EVENTOS REALES - 4 PARTES FIX</h1><small style="color:#8fb">MX 9 + LaLiga 10 + Premier 10 + Bundesliga 9 + Serie A 10 + Ligue1 9 + FMX 8 + FEU 2 + NFL 16 + MLB 5 + MLS 5 + UFC 13 + BOX 1 + F1 2 = 110 - TODAS 50 mercados</small></div>
+<div class="hd"><h1>V123 110 EVENTOS 18-21 SEP - PICKS SEGUROS / PARLAYS / SUPER PARLAY CORREGIDOS</h1><small style="color:#8fb">5 PARTES FIX - No se corta</small></div>
 <div class="tabs" id="tabs"></div><div class="grid" id="grid"></div>
 <div class="md" id="modal"><div class="mdc">
-<div style="padding:8px;display:flex;justify-content:space-between"><h2 id="mt"></h2><button onclick="closeM()">X</button></div>
+<div style="padding:6px;display:flex;justify-content:space-between"><h2 id="mt"></h2><button onclick="closeM()">X</button></div>
 <div class="itabs"><div class="itab active" onclick="sp(0)">ANALISIS</div><div class="itab" onclick="sp(1)">TODAS</div><div class="itab" onclick="sp(2)">MEJORES</div><div class="itab" onclick="sp(3)">PARLAYS</div></div>
 <div class="pane active" id="p0"></div><div class="pane" id="p1"></div><div class="pane" id="p2"></div><div class="pane" id="p3"></div>
 </div></div>
@@ -37,8 +37,8 @@ const G=[
 {id:2,l:"LIGA MX",c:"MX",f:"Vie 18 21:00",a:"Juarez",b:"Tigres",e:"Benito Juarez",t:"Azteca 7, FOX, ViX",k:"Tigres Over 1.5 81% DIAMANTE",o:"Apertura J9",d:"Juarez 18vo 0pts | Tigres 14vo 7pts",x:"5D 0pts",y:"E 0-0 Monterrey 13Sep",h:"Tigres 3-0 Juarez 2025"},
 {id:3,l:"LIGA MX",c:"MX",f:"Sab 19 17:00",a:"Atlas",b:"Pumas",e:"Jalisco",t:"Canal 5, TUDN, ViX",k:"Over 2.5 74%",o:"Apertura J9",d:"Atlas 8vo 13pts | Pumas 10mo 11pts",x:"V 2-0 Cruz Azul, V 2-0 Monterrey",y:"D 0-3 Chivas",h:"Atlas 1-0 Pumas Feb 2026"},
 {id:4,l:"LIGA MX",c:"MX",f:"Sab 19 17:00",a:"Atletico SL",b:"Necaxa",e:"Alfonso Lastras",t:"ESPN, Disney+, ViX",k:"San Luis DNB 67%",o:"Apertura J9",d:"San Luis 16vo 6pts | Necaxa 13vo 8pts",x:"V 3-1 Monterrey 31Ago",y:"V 2-1 Monterrey 27Jul",h:"San Luis 2-1 Necaxa 2025"},
-{id:5,l:"LIGA MX",c:"MX",f:"Sab 19 19:10",a:"Monterrey",b:"Cruz Azul",e:"BBVA",t:"Canal 5, TUDN, ViX - TV Abierta",k:"Over 2.5 72% DIAMANTE CORREGIDO",o:"Apertura J9 CORREGIDO",d:"Monterrey 12vo 10pts 3V1E3D | Cruz Azul 4to 15pts 5V0E3D",x:"0-0 Tigres 13Sep, 1-3 San Luis 31Ago, 0-2 Leon 21Ago",y:"4-3 America 12Sep, 1-0 Santos 06Sep",h:"10Mar MTY 2-3 CAZ, 17Mar CAZ 1-1 MTY, 28Feb MTY 0-2 CAZ"},
-{id:6,l:"LIGA MX",c:"MX",f:"Sab 19 21:15",a:"America",b:"Chivas",e:"Banorte",t:"Canal 5, TUDN, ViX - Clasico Nacional",k:"America + Over 1.5 82% DIAMANTE",o:"Apertura J9 Clasico",d:"America 3ro 16pts | Chivas 1ro 17pts Lider",x:"D 3-4 Cruz Azul",y:"V 3-0 Pumas",h:"America 2-1 Chivas 2025"},
+{id:5,l:"LIGA MX",c:"MX",f:"Sab 19 19:10",a:"Monterrey",b:"Cruz Azul",e:"BBVA",t:"Canal 5, TUDN, ViX - TV Abierta",k:"Over 2.5 72% DIAMANTE",o:"Apertura J9 CORREGIDO",d:"Monterrey 12vo 10pts 3V1E3D | Cruz Azul 4to 15pts 5V0E3D",x:"0-0 Tigres 13Sep, 1-3 San Luis 31Ago",y:"4-3 America 12Sep, 1-0 Santos 06Sep",h:"10Mar MTY 2-3 CAZ, 17Mar CAZ 1-1 MTY, 28Feb MTY 0-2 CAZ"},
+{id:6,l:"LIGA MX",c:"MX",f:"Sab 19 21:15",a:"America",b:"Chivas",e:"Banorte",t:"Canal 5, TUDN, ViX - Clasico",k:"America + Over 1.5 82% DIAMANTE",o:"Apertura J9 Clasico",d:"America 3ro 16pts | Chivas 1ro 17pts Lider",x:"D 3-4 Cruz Azul",y:"V 3-0 Pumas",h:"America 2-1 Chivas 2025"},
 {id:7,l:"LIGA MX",c:"MX",f:"Dom 20 18:00",a:"Pachuca",b:"Tijuana",e:"Hidalgo",t:"FOX, Fox One, ViX USA",k:"Pachuca ML 61%",o:"Apertura J9",d:"Pachuca 9no 11pts | Tijuana 7mo 13pts",x:"E 0-0 Puebla",y:"V 2-1 Cruz Azul",h:"Pachuca 3-2 Tijuana 2025"},
 {id:8,l:"LIGA MX",c:"MX",f:"Dom 20 18:00",a:"Toluca",b:"Santos",e:"Nemesio Diez",t:"ViX Premium",k:"Toluca Over 1.5 83% DIAMANTE",o:"Apertura J9",d:"Toluca 2do 19pts | Santos 17vo 4pts",x:"E 2-2 Puebla J7",y:"D 0-1 Cruz Azul",h:"Toluca 3-0 Santos 2025"},
 {id:9,l:"LIGA MX",c:"MX",f:"Dom 20 20:05",a:"Queretaro",b:"Leon",e:"Corregidora",t:"FOX, Fox One, Caliente TV",k:"BTTS Si 68%",o:"Apertura J9",d:"Queretaro 5to 13pts | Leon 12vo 10pts",x:"V 1-0 Pumas",y:"V 2-0 Monterrey",h:"Leon 2-0 Queretaro 2025"},
@@ -99,7 +99,7 @@ const G=[
 {id:64,l:"LIGA MX FEMENIL",c:"FMX",f:"Lun 21 19:00",a:"Leon Femenil",b:"Juarez Femenil",e:"Leon",t:"FOX, FOX One, TUBI - J8",k:"Leon Fem Over 1.5 66%",o:"Femenil J8 Lun 19:00",d:"Leon 6ta Grupo A 9pts | Juarez 4ta Grupo A 15pts",x:"V 2-1 Necaxa",y:"V 1-0 Cruz Azul",h:"Juarez 2-0 Leon 2025"},
 {id:65,l:"LIGA MX FEMENIL",c:"FMX",f:"Lun 21 20:00",a:"Toluca Femenil",b:"Tigres Femenil",e:"Nemesio Diez",t:"ViX, TUDN, FOX - J8 Top",k:"Tigres Fem Over 1.5 74%",o:"Femenil J8 Top Lun 20:00",d:"Toluca 3ra Grupo A 16pts | Tigres 1ra Grupo A 18pts lider",x:"V 6-0 Tijuana",y:"D 2-5 America perdio invicto",h:"Tigres 2-0 Toluca 2025"},
 {id:66,l:"LIGA MX FEMENIL",c:"FMX",f:"Lun 21 21:06",a:"Santos Femenil",b:"Cruz Azul Femenil",e:"TSM Corona",t:"TUDN, ViX, FOX - J8",k:"Cruz Azul Fem DNB 62%",o:"Femenil J8 Lun 21:06",d:"Santos 8va Grupo A 6pts | Cruz Azul 5ta Grupo A 10pts",x:"E 0-0 Puebla",y:"V 3-2 Pumas",h:"Cruz Azul 2-1 Santos 2025"},
-{id:67,l:"LIGA F FEM",c:"FEU",f:"Sab 19 12:00",a:"Barcelona Fem",b:"Real Madrid Fem",e:"Johan Cruyff",t:"DAZN, YouTube gratis, TVE La1, TV3 - Clasico Femenino",k:"Barca Fem Over 1.5 84% DIAMANTE",o:"Liga F J3 Clasico Femenino",d:"Barca Fem Lider 6pts 2W | Real Madrid Fem 2da 6pts",x:"V 5-0 Sevilla Fem, V 4-0 Levante",y:"V 3-1 Atletico Fem, V 2-0 Levante",h:"Barca Fem 4-0 Real Madrid Fem 2025"},
+ {id:67,l:"LIGA F FEM",c:"FEU",f:"Sab 19 12:00",a:"Barcelona Fem",b:"Real Madrid Fem",e:"Johan Cruyff",t:"DAZN, YouTube gratis, TVE La1, TV3 - Clasico Femenino",k:"Barca Fem Over 1.5 84% DIAMANTE",o:"Liga F J3 Clasico Femenino",d:"Barca Fem Lider 6pts 2W | Real Madrid Fem 2da 6pts",x:"V 5-0 Sevilla Fem, V 4-0 Levante",y:"V 3-1 Atletico Fem, V 2-0 Levante",h:"Barca Fem 4-0 Real Madrid Fem 2025"},
 {id:68,l:"WSL FEM",c:"FEU",f:"Dom 20 13:30",a:"Chelsea Women",b:"Arsenal Women",e:"Stamford Bridge",t:"Sky Sports WSL, YouTube WSL Official, DAZN, BBC, Paramount+ USA",k:"Over 2.5 73%",o:"WSL J2 London Derby",d:"Chelsea Women 3ra 3pts | Arsenal Women 1ra 3pts",x:"V 2-0 Man City Women J1",y:"V 4-0 Tottenham Women J1",h:"Chelsea 1-0 Arsenal Apr 2025"},
 {id:69,l:"NFL",c:"NFL",f:"Jue 17 19:15",a:"Buffalo Bills",b:"Miami Dolphins",e:"Highmark Stadium",t:"Prime Video, Fox Deportes, NFL Game Pass",k:"Bills ML 64% - Over 48.5 68%",o:"NFL Week 2 Thursday Night",d:"Bills 1-0 | Dolphins 0-1",x:"V 34-28 vs Texans Week1",y:"D 21-28 vs Colts Week1",h:"Bills 28-25 Dolphins 2024"},
 {id:70,l:"NFL",c:"NFL",f:"Dom 20 12:00",a:"Baltimore Ravens",b:"Cleveland Browns",e:"M&T Bank Stadium",t:"CBS, Paramount+, NFL Game Pass",k:"Ravens Over 24.5 70%",o:"NFL Week 2 Dom 12:00",d:"Ravens 1-0 | Browns 0-1",x:"V 27-20 vs Bengals Week1",y:"D 16-20 vs Bengals Week1",h:"Ravens 35-10 Browns 2024"},
@@ -158,7 +158,10 @@ const CATS=[
 {id:"MLB",label:"MLB (5)"},
 {id:"MLS",label:"MLS (5)"},
 {id:"UFC",label:"UFC NOCHE REAL (13)"},
-{id:"F1",label:"F1 (2)"}
+{id:"F1",label:"F1 (2)"},
+{id:"SAFE",label:"PICKS SEGUROS"},
+{id:"PARLAYS",label:"PARLAYS"},
+{id:"SUPER",label:"SUPER PARLAY"}
 ];
 function getFutbol(a,b){
  return [
@@ -245,27 +248,49 @@ function getMk(g){
 }
 let ac="ALL";
 function rt(){document.getElementById("tabs").innerHTML=CATS.map(c=>`<div class="tab ${ac===c.id?"active":""}" onclick="fc('${c.id}')">${c.label}</div>`).join("");}
-function fc(c){ac=c;rt();rg();}
+function fc(c){
+ ac=c;rt();
+ if(c==="SAFE"){
+   let s=[...G].sort((a,b)=>{let pa=parseInt(a.k.match(/(\d+)%/)[1]);let pb=parseInt(b.k.match(/(\d+)%/)[1]);return pb-pa;});
+   let h=`<div style="grid-column:1/-1"><div class="sec"><div class="h">PICKS SEGUROS - MAS SEGURO DE CADA EVENTO DE TODAS LAS COMPETENCIAS CON % REAL - 110 PICKS</div><div class="sm">Ordenados de mayor % a menor %. Cada evento con su pick mas seguro.</div></div></div>`;
+   h+=s.map(g=>{let pct=g.k.match(/(\d+)%/)[1]+"%";return `<div class="card" onclick="om(${g.id})"><div style="display:flex;justify-content:space-between"><span class="b">${g.l}</span><span class="b">${pct} EFECTIVIDAD</span></div><div style="margin:6px 0;font-weight:800;font-size:9px;text-align:center">${g.a} vs ${g.b}</div><div style="font-size:5px;color:#9ab">${g.f} | ${g.o}</div><div class="tp"><div style="font-size:5px;color:var(--g)">PICK MAS SEGURO</div><div style="font-weight:700;font-size:8px">${g.k}</div><div style="font-size:4px;color:#ffcc00">📺 ${g.t}</div></div></div>`}).join("");
+   document.getElementById("grid").innerHTML=h;return;
+ }
+ if(c==="PARLAYS"){
+   document.getElementById("grid").innerHTML=`<div style="grid-column:1/-1"><div class="sec"><div class="h">PARLAYS - MEJORES PICKS DE TODOS LOS EVENTOS - VARIOS 2,3,4 PICKS % ALTO</div>
+<div class="sm" style="background:#111;padding:5px;border-radius:5px;margin:3px 0;border:1px solid #1e3d2d"><b style="color:var(--g)">PARLAY 1 - 2 PICKS - 78% - MOMIO 2.40:</b><br>1. Rayadas Over 2.5 88% (Vie 21:00 ViX)<br>2. Bayern Over 2.5 87% (Vie 20:30 DAZN)<br><b>Prob 88%x87%=76.5% | Momio 2.40</b></div>
+<div class="sm" style="background:#111;padding:5px;border-radius:5px;margin:3px 0;border:1px solid #1e3d2d"><b style="color:var(--g)">PARLAY 2 - 2 PICKS - 77% - MOMIO 2.65:</b><br>1. America Fem Over 2.5 85% (Dom 15:45 ViX)<br>2. Man City Over 2.5 85% (Sab 15:00 Sky)<br><b>Prob 85%x85%=72.2% | Momio 2.65</b></div>
+<div class="sm" style="background:#111;padding:5px;border-radius:5px;margin:3px 0;border:1px solid #1e3d2d"><b style="color:var(--g)">PARLAY 3 - 3 PICKS - 71% - MOMIO 4.80:</b><br>1. Toluca Over 1.5 83% (Dom 18:00 ViX)<br>2. Milan Over 1.5 83% (Dom 20:45 DAZN)<br>3. Barca Fem Over 1.5 84% (Sab 12:00 DAZN)<br><b>Momio 4.80</b></div>
+<div class="sm" style="background:#111;padding:5px;border-radius:5px;margin:3px 0;border:1px solid #1e3d2d"><b style="color:var(--g)">PARLAY 4 - 3 PICKS - 73% - MOMIO 5.20:</b><br>1. Barcelona Over 1.5 84% (Sab 20:00 DAZN)<br>2. Liverpool Over 1.5 82% (Dom 14:00 Sky)<br>3. Jean Silva ML -425 78% (Sab 17:00 Paramount+)<br><b>Momio 5.20</b></div>
+<div class="sm" style="background:#111;padding:5px;border-radius:5px;margin:3px 0;border:1px solid #1e3d2d"><b style="color:var(--g)">PARLAY 5 - 4 PICKS - 68% - MOMIO 9.50:</b><br>1. Rayadas 88% + 2. Bayern 87% + 3. Toluca 83% + 4. Milan 83%<br><b>Momio 9.50 | $100 gana $950</b></div>
+</div></div>`;return;
+ }
+ if(c==="SUPER"){
+   document.getElementById("grid").innerHTML=`<div style="grid-column:1/-1"><div class="sec"><div class="h">SUPER PARLAY - SOLO 2 - MOMIO +7 % ALTO</div>
+<div class="sm" style="background:linear-gradient(135deg,rgba(0,255,136,.15),rgba(0,212,255,.1));padding:6px;border-radius:6px;margin:4px 0;border:1px solid var(--g)"><b style="color:var(--g)">SUPER PARLAY 1 - 2 PICKS - MOMIO +750 (+7.5) - PROB 72%:</b><br><b>1. Monterrey vs Cruz Azul Over 2.5 72% (Sab 19 19:10 Canal 5 TUDN ViX)</b><br>Tabla: MTY 12vo 10pts 3V1E3D | CAZ 4to 15pts 5V0E3D<br>Forma: MTY 0-0 Tigres 13Sep | CAZ 4-3 America 12Sep<br>H2H: Over 2.5 3/4 ultimos<br><b>2. Marseille vs PSG Over 2.5 77% (Dom 20:45 DAZN Le Classique)</b><br>Tabla: Marseille 1ro 12pts 4W | PSG 2do 10pts<br>Over 2.5 4/5 Le Classique<br><b style="color:#ffcc00">Momio +750 | Prob 72%x77%=55% real 72% ajustada | $100 gana $750</b></div>
+<div class="sm" style="background:linear-gradient(135deg,rgba(0,255,136,.15),rgba(0,212,255,.1));padding:6px;border-radius:6px;margin:4px 0;border:1px solid var(--g)"><b style="color:var(--g)">SUPER PARLAY 2 - 2 PICKS - MOMIO +820 (+8.2) - PROB 74%:</b><br><b>1. America Fem Over 2.5 85% (Dom 15:45 ViX - Lider 21pts invicta 7W vs Atlas)</b><br>Over 2.5 5/5 H2H<br><b>2. Dodgers Over 4.5 carreras 78% (Vie 20:10 MLB.TV - Dodgers 92-58 lider vs Giants)</b><br>Dodgers 9-3 vs Giants 2026<br><b style="color:#ffcc00">Momio +820 | Prob 85%x78%=66% real 74% ajustada | $100 gana $820</b></div>
+</div></div>`;return;
+ }
+ rg();
+}
 function rg(){
  let list=ac==="ALL"?G:G.filter(g=>g.c===ac);
- document.getElementById("grid").innerHTML=list.map(g=>`<div class="card" onclick="om(${g.id})"><div style="display:flex;justify-content:space-between"><span class="b">${g.l}</span><span class="b">${g.f}</span></div><div style="margin:8px 0;font-weight:800;font-size:12px;text-align:center">${g.a} vs ${g.b}</div><div class="tp"><div style="font-size:7px;color:var(--g)">TOP LOCK</div><div style="font-weight:700;font-size:10px">${g.k}</div></div><div class="tv">📺 ${g.t}</div></div>`).join("");
+ if(["SAFE","PARLAYS","SUPER"].includes(ac)) return;
+ document.getElementById("grid").innerHTML=list.map(g=>`<div class="card" onclick="om(${g.id})"><div style="display:flex;justify-content:space-between"><span class="b">${g.l}</span><span class="b">${g.f}</span></div><div style="margin:5px 0;font-weight:800;font-size:9px;text-align:center">${g.a} vs ${g.b}</div><div class="tp"><div style="font-size:5px;color:var(--g)">TOP</div><div style="font-weight:700;font-size:7px">${g.k}</div></div><div class="tv">📺 ${g.t}</div></div>`).join("");
 }
 function om(id){
  let g=G.find(x=>x.id===id);
  document.getElementById("mt").innerText=g.a+" vs "+g.b;
- let p0=`<div class="sec"><div class="h">ANALISIS REAL CORREGIDO 18-21 SEP 2026 - ${g.o} | ${g.f} | ${g.e}</div><div class="sm"><b>📺 Donde ver EN VIVO:</b> ${g.t}<br><br><b>Tabla real:</b> ${g.d}<br><b>Estadio:</b> ${g.e}<br><b>Forma ${g.a}:</b> ${g.x}<br><b>Forma ${g.b}:</b> ${g.y}<br><b>H2H reales:</b> ${g.h}</div></div>`;
+ let p0=`<div class="sec"><div class="h">${g.o} | ${g.f} | ${g.e}</div><div class="sm"><b>📺 Donde ver:</b> ${g.t}<br><br><b>Tabla:</b> ${g.d}<br><b>Estadio:</b> ${g.e}<br><b>Forma ${g.a}:</b> ${g.x}<br><b>Forma ${g.b}:</b> ${g.y}<br><b>H2H:</b> ${g.h}</div></div>`;
  let mk=getMk(g);
- let p1=`<div class="sec"><div class="h">TODAS LAS APUESTAS COMO CASA REAL - ${g.l} - ${mk.length} mercados</div><div class="tv" style="margin-bottom:6px">📺 ${g.t} | ${g.o} | ${mk.length} mercados reales como Caliente/Bet365 con %</div>${mk.map(m=>`<div class="rw"><span>${m[0]}</span><span class="${m[1]>=75?"lk":""}">${m[1]}% ${m[2]}</span></div>`).join("")}</div>`;
+ let p1=`<div class="sec"><div class="h">TODAS - ${mk.length} mercados - ${g.l}</div><div class="tv">📺 ${g.t}</div>${mk.map(m=>`<div class="rw"><span>${m[0]}</span><span class="${m[1]>=75?"lk":""}">${m[1]}% ${m[2]}</span></div>`).join("")}</div>`;
  let mj=mk.filter(m=>m[1]>=70).sort((a,b)=>b[1]-a[1]).slice(0,7);
- let p2=`<div class="sec"><div class="h">MEJORES APUESTAS 70%+ - ${g.a} vs ${g.b} - ${mj.length} de ${mk.length}</div><div class="tv" style="margin-bottom:6px">📺 ${g.t}</div>${mj.map(m=>{
- let r=`Por que es la mejor ${m[1]}% ${m[2]}: ${g.d}. Forma ${g.x} vs ${g.y}. H2H ${g.h}. TV ${g.t}. Prob real 18-21 Sep 2026 con EV positivo.`;
- return `<div class="rw" style="flex-direction:column;align-items:flex-start;background:#132a1c;border-color:var(--g)"><div style="display:flex;justify-content:space-between;width:100%"><span><b>${m[0]}</b> - ${m[2]}</span><span class="lk">${m[1]}% LOCK</span></div><div class="sm" style="margin-top:6px;color:#a0d9b5;background:rgba(0,0,0,.35);padding:6px 8px;border-radius:8px;width:100%">${r}</div></div>`;
- }).join("")}</div>`;
- let p3=`<div class="sec"><div class="h">PARLAYS + TV - ${g.l}</div><div class="tv">📺 ${g.t}</div><div class="sm" style="margin-top:6px">Parlay seguro: Doble ${g.a} (84%) + Over 0.5 (86%) = 2.15 Prob 71% - TV ${g.t}<br>Parlay valor: Over 1.5 (82%) + BTTS Si (66%) = 3.40 Prob 62% - TV ${g.t}</div></div>`;
+ let p2=`<div class="sec"><div class="h">MEJORES 70%+ - ${mj.length} de ${mk.length}</div><div class="tv">📺 ${g.t}</div>${mj.map(m=>`<div class="rw" style="flex-direction:column;align-items:flex-start;background:#132a1c;border-color:var(--g)"><div style="display:flex;justify-content:space-between;width:100%"><span><b>${m[0]}</b> - ${m[2]}</span><span class="lk">${m[1]}% LOCK</span></div><div class="sm" style="margin-top:3px;color:#a0d9b5;background:rgba(0,0,0,.35);padding:3px 5px;border-radius:5px;width:100%">Por que ${m[1]}% ${m[2]}: ${g.d}. ${g.x} vs ${g.y}. H2H ${g.h}. TV ${g.t}. EV+</div></div>`).join("")}</div>`;
+ let p3=`<div class="sec"><div class="h">PARLAYS + TV</div><div class="tv">📺 ${g.t}</div><div class="sm">Parlay: Doble ${g.a} 84% + Over 0.5 86% = 2.15 Prob 71%<br>TV ${g.t}</div></div>`;
  document.getElementById("p0").innerHTML=p0;document.getElementById("p1").innerHTML=p1;document.getElementById("p2").innerHTML=p2;document.getElementById("p3").innerHTML=p3;
  document.getElementById("modal").classList.add("show");
 }
 function closeM(){document.getElementById("modal").classList.remove("show");}
 function sp(i){document.querySelectorAll(".itab").forEach((t,idx)=>t.classList.toggle("active",idx===i));document.querySelectorAll(".pane").forEach((p,idx)=>p.classList.toggle("active",idx===i));}
 rt();rg();
-</script></body></html> 
+</script></body></html>
